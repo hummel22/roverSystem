@@ -10,7 +10,8 @@ class HRadioButton : public QRadioButton
 private:
     int ButtonIdentifier;
 public:
-    explicit HRadioButton(int num, QWidget *parent = 0);
+    explicit HRadioButton(QWidget *parent = 0);
+    void initialize(int identifier);
 
 signals:
     void clicked(int num);

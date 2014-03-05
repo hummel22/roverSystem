@@ -1,12 +1,16 @@
 #include "hradiobutton.h"
 
-HRadioButton::HRadioButton(int num,QWidget *parent) :
+HRadioButton::HRadioButton(QWidget *parent) :
     QRadioButton(parent)
 {
-    ButtonIdentifier=num;
+    ButtonIdentifier=0;
     QObject::connect(this,SIGNAL(toggled(bool)),this,SLOT(toggledOn(bool)));
 }
 
+void HRadioButton::initialize(int identifier)
+{
+    ButtonIdentifier = identifier;
+}
 
 void HRadioButton::toggledOn(bool onOff)
 {

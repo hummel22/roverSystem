@@ -73,132 +73,87 @@ int main(int argc, char *argv[])
 
 
 
-    //WORKERS AND SLIDERS--------------------------------------------------------------------//
-    //Create Windows
+    //WORKERS / SLIDERS / RADIOBUTTONS--------------------------------------------------------------------//
+    //Testing
+    int NumberOfServors = 9;
+
+    //Create Window containing sliders
     QWidget *windowSlider = new QWidget;
     windowSlider->setWindowTitle("slider");//Contains Sliders
-    //Create Sliders
-    QSlider *slider1 = new QSlider;
-    Worker *switcher1 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher1,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher1->Initialize(slider1,1);
-    QSlider *slider2 = new QSlider;
-    Worker *switcher2 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher2,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher2->Initialize(slider2,2);
-    QSlider *slider3 = new QSlider;
-    Worker *switcher3 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher3,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher3->Initialize(slider3,3);
-    QSlider *slider4 = new QSlider;
-    Worker *switcher4 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher4,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher4->Initialize(slider4,4);
-    QSlider *slider5 = new QSlider;
-    Worker *switcher5 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher5,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher5->Initialize(slider5,5);
-    QSlider *slider6 = new QSlider;
-    Worker *switcher6 = new Worker;
-    //switcher1 to Internal Terminal
-    QObject::connect(switcher6,SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    switcher6->Initialize(slider6,6);
+
     //Create Socket and Initialize
     UDPwork *mysock = new UDPwork;
     //Thread
     QThread cThread;
     myThread cObject;
-    //Connect All Workers to socket
-    QObject::connect(switcher1,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-    QObject::connect(switcher2,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-    QObject::connect(switcher3,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-    QObject::connect(switcher4,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-    QObject::connect(switcher5,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-    QObject::connect(switcher6,SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
-        //UDP to Terminals
+    //UDP to Terminals
     QObject::connect(mysock,SIGNAL(UDPtoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(mysock,SIGNAL(UDPtoTerminalSend(QString)),TerminalSent,SLOT(appendPlainText(QString)));
     QObject::connect(mysock,SIGNAL(Received(QString)),TerminalReceived,SLOT(appendPlainText(QString)));
+
     //Workerall
     WorkerAll *All = new WorkerAll;
-    All->addWorker(switcher1);
-    All->addWorker(switcher2);
-    All->addWorker(switcher3);
-    All->addWorker(switcher4);
-    All->addWorker(switcher5);
-    All->addWorker(switcher6);
-
-   //Rover Worker
+    //Rover Driver
     WorkerRover *rWorker = new WorkerRover;
-    //WORKERS AND SLIDERS---------------------------------------------------------------------------//
 
-
-
-
-    //RADIO BUTTONS--------------------------------------------------------------------------------//
-    //Testing
-    int NumberOfServors = 9;
+    //Build Workers and Sliders Lists
     QList<Worker*> workerList;
-    //
-    HRadioButton *radioButton1 = new HRadioButton(1);
-    HRadioButton *radioButton2 = new HRadioButton(2);
-    HRadioButton *radioButton3 = new HRadioButton(3);
-    HRadioButton *radioButton4 = new HRadioButton(4);
-    HRadioButton *radioButton5 = new HRadioButton(5);
-    HRadioButton *radioButton6 = new HRadioButton(6);
-    HRadioButton *radioButtonAll = new HRadioButton(7);
-    HRadioButton *radioButtonRover = new HRadioButton(8);
-    radioButtonAll->setText("All Servos");
-    radioButtonRover->setText("Rover Control");
-    //Connect Radio Buttons to Internal Terminal
-    QObject::connect(radioButton1,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButton2,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButton3,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButton4,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButton5,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButton6,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButtonAll,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(radioButtonRover,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+    QList<QSlider*> sliderList;
+    QList<HRadioButton*> radioButtonList;
+
     //KEY INPUT
     keyWindoe *test = new keyWindoe;
     test->setMaximumHeight(200);
     test->setMaximumWidth(200);
+
     //Radio Controller
     RadioList *myList = new RadioList(test);
-    myList->addslide(switcher1);
-    myList->addslide(switcher2);
-    myList->addslide(switcher3);
-    myList->addslide(switcher4);
-    myList->addslide(switcher5);
-    myList->addslide(switcher6);
-    myList->wAll = All;
-    myList->wRover = rWorker;
-    //Add radio Buttons to List
-    myList->addButton(radioButton1);
-    myList->addButton(radioButton2);
-    myList->addButton(radioButton3);
-    myList->addButton(radioButton4);
-    myList->addButton(radioButton5);
-    myList->addButton(radioButton6);
-    myList->addButton((radioButtonAll));
-    myList->addButton(radioButtonRover);
     //Connect RadioList to socket
     QObject::connect(myList,SIGNAL(toSend(QString)),mysock,SLOT(Send(QString)));
-    //Connect RadioButtons to Radio List
-    QObject::connect(radioButton1,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButton2,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButton3,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButton4,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButton5,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButton6,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
+
+
+
+    //For Loop to build dynamically
+    for(int i = 0;i <NumberOfServors;i++)
+    {
+        //Create each Worker and Slider
+        workerList.append(new Worker);
+        sliderList.append(new QSlider);
+        radioButtonList.append(new HRadioButton);
+
+        radioButtonList.at(i)->initialize(i);
+        workerList.at(i)->Initialize(sliderList.at(i),i);
+
+        //Connect to Terminal And Socket
+        QObject::connect(workerList.at(i),SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+        QObject::connect(workerList.at(i),SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
+        QObject::connect(radioButtonList.at(i),SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+        QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
+
+        //Add Workers to Main Controller [workerALL Class]
+        All->addWorker(workerList.at(i));
+        myList->addslide(workerList.at(i));
+        myList->addButton(radioButtonList.at(i));
+
+    }
+
+    //Create Drive and Arm Objects
+    HRadioButton *radioButtonAll = new HRadioButton();
+    HRadioButton *radioButtonRover = new HRadioButton();
+    radioButtonAll->initialize(NumberOfServors);
+    radioButtonRover->initialize(NumberOfServors+1);
+    radioButtonAll->setText("All Servos");
+    radioButtonRover->setText("Drive Control");
+    QObject::connect(radioButtonAll,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+    QObject::connect(radioButtonRover,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+    myList->wAll = All;
+    myList->wRover = rWorker;
+    myList->addButton(radioButtonAll);
+    myList->addButton(radioButtonRover);
     QObject::connect(radioButtonAll,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
     QObject::connect(radioButtonRover,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    //RADIO BUTTONS--------------------------------------------------------------------------------//
+    //WORKERS / SLIDERS / RADIOBUTTONS---------------------------------------------------------------------------//
+
 
 
 
@@ -244,9 +199,9 @@ int main(int argc, char *argv[])
 
     //ARM VIEW
     armWindow *arm = new armWindow;
-    QObject::connect(slider1,SIGNAL(valueChanged(int)),arm,SLOT(Angle1(int)));
-    QObject::connect(slider2,SIGNAL(valueChanged(int)),arm,SLOT(Angle2(int)));
-    QObject::connect(slider4,SIGNAL(valueChanged(int)),arm,SLOT(ClawAngle(int)));
+    QObject::connect(sliderList.at(0),SIGNAL(valueChanged(int)),arm,SLOT(Angle1(int)));
+    QObject::connect(sliderList.at(1),SIGNAL(valueChanged(int)),arm,SLOT(Angle2(int)));
+    QObject::connect(sliderList.at(3),SIGNAL(valueChanged(int)),arm,SLOT(ClawAngle(int)));
     QObject::connect(jInput,SIGNAL(buttons(int)),arm,SLOT(Buttons(int)));
     //ARM VIEW
 
@@ -265,6 +220,8 @@ int main(int argc, char *argv[])
     QPushButton *showJoystick = new QPushButton;
     QPushButton *showKeyInput = new QPushButton;
     QPushButton *showRover  = new QPushButton;
+    QPushButton *showDiagnostics = new QPushButton;
+    showDiagnostics->setText("Diagnostics");
     showRover->setText("Rover View");
     showKeyInput->setText("Key Input");
     syncButton->setText("Sync Servos");
@@ -303,25 +260,19 @@ int main(int argc, char *argv[])
     leftPanelLayout->addWidget(showJoystick);
     leftPanelLayout->addWidget(showKeyInput);
     leftPanelLayout->addWidget(showRover);
+    leftPanelLayout->addWidget(showDiagnostics);
     //Slider Window---------------------------
     QGridLayout *layerslid = new QGridLayout;
     //layers
-    layerslid->addWidget(slider1,0,0);
-    layerslid->addWidget(slider2,0,1);
-    layerslid->addWidget(slider3,0,2);
-    layerslid->addWidget(slider4,0,3);
-    layerslid->addWidget(slider5,0,4);
-    layerslid->addWidget(slider6,0,5);
-    layerslid->addWidget(radioButton1,1,0);
-    layerslid->addWidget(radioButton2,1,1);
-    layerslid->addWidget(radioButton3,1,2);
-    layerslid->addWidget(radioButton4,1,3);
-    layerslid->addWidget(radioButton5,1,4);
-    layerslid->addWidget(radioButton6,1,5);
+    for(int k = 0;k<NumberOfServors;k++)
+    {
+        layerslid->addWidget(sliderList.at(k),0,k);
+        layerslid->addWidget(radioButtonList.at(k),1,k);
+    }
     QGridLayout *sidebar = new QGridLayout;
     sidebar->addWidget(radioButtonAll,0,0);
     sidebar->addWidget(radioButtonRover,1,0);
-    layerslid->addLayout(sidebar,0,6,2,1);
+    layerslid->addLayout(sidebar,0,NumberOfServors,2,1);
     //Slider Window --------------------------
     //Add to layouts to windows
     //windowSlider->setLayout(layerslid);
@@ -355,7 +306,7 @@ int main(int argc, char *argv[])
     cThread.start();
 
     //Initialize radioButtons
-    radioButton1->setChecked(true);
+    radioButtonList.at(0)->setChecked(true);
 
 
 

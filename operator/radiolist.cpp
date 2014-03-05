@@ -65,29 +65,21 @@ void RadioList::setConfiguration(int A)
     disconnect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),wAll,SLOT(axisR(int,int,int,int,int,int)));
     disconnect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
 
-    switch(A)
+    if(A < switches.count())
     {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-            switches.at(A-1)->slidePointer->setEnabled(true);
-            connect(keys,SIGNAL(sendKey(QString)),switches.at(A-1),SLOT(keyInput(QString)));
-            connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),switches.at(A-1),SLOT(joyInput(int,int,int,int,int,int)));
-            break;
-        case 7:
-            connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),wAll,SLOT(axisR(int,int,int,int,int,int)));
-            break;
-        case 8:
-            connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));        
-            break;
-        default:
-            break;
+        switches.at(A)->slidePointer->setEnabled(true);
+        connect(keys,SIGNAL(sendKey(QString)),switches.at(A),SLOT(keyInput(QString)));
+        connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),switches.at(A),SLOT(joyInput(int,int,int,int,int,int)));
 
+    } else if(A == switches.count())
+    {
+        connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),wAll,SLOT(axisR(int,int,int,int,int,int)));
+
+    } else if(A == switches.count() + 1)
+    {
+        connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
     }
 
-    CurrentValue = A;
+    CurrentValue = A + 1;
 
 }

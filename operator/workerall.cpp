@@ -36,8 +36,8 @@ void WorkerAll::axisR(int x0, int x1, int x2, int x3, int x4, int x5)
     x[4] = ClawSpinadd;
     x[5] = Xadd + Clawadd;
 
-
-    for(int i = 0;i < workerList.count();i++)
+    //int NumberOfClawServos = 6    - hard coded at current moment
+    for(int i = 0;i < 6;i++)
     {
         if(workerList.at(i)->slideValue + x[i] > 175)
         {
