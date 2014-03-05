@@ -19,7 +19,8 @@ TODO
 			- setAngle(int newAngle)
 				-set the Servos new Target angle
 			
-	Allow Sending Errors 
+	Allow Sending Errors
+	Add MIN/MAX 
 
 VERSIONS
 V3.0 
