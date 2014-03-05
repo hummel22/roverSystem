@@ -11,6 +11,7 @@ class Worker : public QObject
 private:
     int servoNumber;
     QString send;
+    int map(int angleDegree);
 
 
 public:
@@ -18,6 +19,8 @@ public:
     QSlider *slidePointer;
     explicit Worker(QObject *parent = 0);
     void Initialize(QSlider *one,int servo);
+    int upperValue;
+    int lowerValue;
 
 signals:
     void WorkerToTerminalInternal(QString out);

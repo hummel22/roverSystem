@@ -25,6 +25,7 @@
 #include <joythread.h>
 #include <roverwindow.h>
 #include <armwindow.h>
+#include <diagnostics.h>
 
 int main(int argc, char *argv[])
 {
@@ -140,6 +141,10 @@ int main(int argc, char *argv[])
 
 
     //RADIO BUTTONS--------------------------------------------------------------------------------//
+    //Testing
+    int NumberOfServors = 9;
+    QList<Worker*> workerList;
+    //
     HRadioButton *radioButton1 = new HRadioButton(1);
     HRadioButton *radioButton2 = new HRadioButton(2);
     HRadioButton *radioButton3 = new HRadioButton(3);
@@ -244,6 +249,13 @@ int main(int argc, char *argv[])
     QObject::connect(slider4,SIGNAL(valueChanged(int)),arm,SLOT(ClawAngle(int)));
     QObject::connect(jInput,SIGNAL(buttons(int)),arm,SLOT(Buttons(int)));
     //ARM VIEW
+
+
+
+    //DIAGNOSTICS
+    Diagnostics *diag = new Diagnostics;
+
+    //DIAGNOSTICS
 
 
 

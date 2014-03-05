@@ -8,11 +8,12 @@ roverWindow::roverWindow(QObject *parent) :
 void roverWindow::intialize()
 {
     scene = new QGraphicsScene(0,0,300,500,&m);
-    scene->setBackgroundBrush(QColor(51,102,153));
+    scene->setBackgroundBrush(QColor(112,244,213));
     m.setScene(scene);
     m.setWindowTitle("Rover");
     m.setMinimumHeight(500);
     m.setMinimumWidth(300);
+    scene->addRect(100,90,90,145,QColor(51,102,153),QColor(51,102,153));
 
     FL = new QGraphicsRectItem;
     ML = new QGraphicsRectItem;
@@ -23,24 +24,30 @@ void roverWindow::intialize()
     leftView = new QGraphicsLineItem;
     rightView = new QGraphicsLineItem;
     FL->setRect(60,75,20,35);
+    FL->setBrush(QColor(34,227,9));
     FR->setRect(210,75,20,35);
+    FR->setBrush(QColor(34,227,9));
     ML->setRect(60,145,20,35);
+    ML->setBrush(QColor(34,227,9));
     MR->setRect(210,145,20,35);
+    MR->setBrush(QColor(34,227,9));
     BL->setRect(60,215,20,35);
+    BL->setBrush(QColor(34,227,9));
     BR->setRect(210,215,20,35);
+    BR->setBrush(QColor(34,227,9));
     leftView->setLine(145,162,75,92);
     rightView->setLine(145,162,215,92);
     leftView->setPen(QPen(Qt::yellow));
     rightView->setPen(QPen(Qt::yellow));
-    scene->addItem(leftView);
-    scene->addItem(rightView);
+
     scene->addItem(FL);
     scene->addItem(FR);
     scene->addItem(ML);
     scene->addItem(MR);
     scene->addItem(BL);
     scene->addItem(BR);
-    scene->addRect(100,90,90,145);
+    scene->addItem(leftView);
+    scene->addItem(rightView);
     scene->addRect(265,90,10,140);
     Power = new QGraphicsRectItem;
     Power->setBrush(QBrush(Qt::green));

@@ -12,10 +12,10 @@ void joystickWindow::initialize()
     ButtonTerminal->setMinimumHeight(300);
     ButtonTerminal->setMinimumWidth(100);
     scene = new QGraphicsScene(0,0,1000,300,&m);
-    scene->setBackgroundBrush(QColor(51,102,153));
+    scene->setBackgroundBrush(QColor(112,244,213));
     m.setScene(scene);
-    scene->addEllipse(310,50,200,200);
-    scene->addEllipse(550,50,200,200);
+    scene->addEllipse(310,50,200,200,QColor(0,0,0),QColor(51,102,153));
+    scene->addEllipse(550,50,200,200,QColor(0,0,0),QColor(51,102,153));
     scene->addLine(410,20,410,280);
     scene->addLine(650,20,650,280);
     scene->addRect(775,50,35,200);
