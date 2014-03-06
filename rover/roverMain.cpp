@@ -79,6 +79,7 @@ main(){
 
         //check for commands from operator
         toInterpreter = socks.receive();
+        //cout <<"Socks:Receive: " << toInterpreter << endl;
          //TESTING PURPOSE
         //Pass command to Interpreter
 

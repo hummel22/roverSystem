@@ -8,10 +8,8 @@ class WorkerRover : public QObject
     Q_OBJECT
 private:
     //Upper and lower limits. * no need to hold value alwasy taken from controller
-    int motorUpper[3][2];
-    int motorLower[3][2];
-    int servoUpper[2][2];
-    int servoLower[2][2];
+    int motorLimits[3][4];
+    int servoLimits[2][4];
 
 
 public:
@@ -21,10 +19,12 @@ public:
 signals:
     void WorkerRoverToTerminalInternal(QString out);
     void WorkerRoverToSend(QString out);
+    void UpdateGUI(int x0,int x1,int x2,int x3,int x4,int x5);
 
 public slots:
     void keyInput(QString data);
-    void updateMotor(int upper[3][2],int lower[3][2]);
+    void updateMotor(int limits[3][4]);
+    void axisSteer(int x0,int x1,int x2,int x3,int x4,int x5);
 };
 
 #endif // WORKERROVER_H

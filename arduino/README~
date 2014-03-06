@@ -23,6 +23,11 @@ TODO
 	Add MIN/MAX 
 
 VERSIONS
+V3.1.1
+	Created servoRun.h
+V3.1
+	PIN 10 may be dead
+	Removed Safety Net
 V3.0 
 	Heavy Commenting
 	Handles Random Memory Error - Checks if new angle is within -+ 8 degrees of old

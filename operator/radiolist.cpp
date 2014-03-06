@@ -50,6 +50,19 @@ void RadioList::buttons(int x)
                 CurrentValue = 1;
             }
             rButtons.at(CurrentValue-1)->setChecked(true);
+            break;
+        case 2:
+        if (CurrentValue > 1)
+            {
+                CurrentValue--;
+            } else
+            {
+                CurrentValue = rButtons.count();
+            }
+            rButtons.at(CurrentValue-1)->setChecked(true);
+            break;
+
+
     }
 }
 

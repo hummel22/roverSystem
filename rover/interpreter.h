@@ -87,7 +87,9 @@ void Interpreter::interpret(const char* data){
     //if(headercheck(x[0]))   //make sure commands are in order
     if(true)
     {
+        //cout << "ID: " << x[1] <<endl;
         switch(x[1]){
+
             case 1:
             case 2:
             case 3:
@@ -96,6 +98,7 @@ void Interpreter::interpret(const char* data){
             case 6:
             case 7:
             case 8:
+                cout << "Switch Set Servo" << endl;
                 servoSet(x[1],x[2]);
                 break;
             case 22:

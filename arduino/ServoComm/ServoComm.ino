@@ -10,10 +10,10 @@ Servo Claw;
 
 //Set Servo locations
 int ShoulderPin = 11;
-int BasePin = 10;
-int ElbowPin = 8;
-int WristPin = 9;
-int ClawPin =10;
+int BasePin = 9;
+int ElbowPin = 6;
+int WristPin = 10;
+int ClawPin =7;
 int Angle;
 
 int maxShoulderAngle = 0;    //target angle
@@ -21,7 +21,7 @@ double currentShoulderAngle = 0;  //current Angle - used for smoothing
 
 int maxBaseAngle = 0;
 double currentBaseAngle = 0;
-int setAngle = 550;  //minimum number of microseconds (
+int setAngle = 900;  //minimum number of microseconds (
 
 int checkError;
 
@@ -36,7 +36,8 @@ void setup (){
   Claw.attach(ClawPin);
   Elbow.attach(ElbowPin);
   
-  Shoulder.writeMicroseconds(550); 
+  Shoulder.writeMicroseconds(900);
+  Base.writeMicroseconds(900); 
 }
 
 void loop(){
@@ -48,7 +49,8 @@ void loop(){
     case 1:
       //checks if new angle is within 8 degrees -- memory erros causes random numbers
       checkError = readData();
-      if ( (checkError>=maxShoulderAngle-8) && (checkError<=maxShoulderAngle+8))
+      //if ( (checkError>=maxShoulderAngle-8) && (checkError<=maxShoulderAngle+8))
+      if(true)
       {
         //if it is within -+8 degrees sets new target angle
         maxShoulderAngle = checkError;
@@ -57,7 +59,8 @@ void loop(){
     case 2:
       //checks if new angle is within 8 degrees -- memory erros causes random numbers
       checkError = readData();
-      if ( (checkError>=maxBaseAngle-8) && (checkError<=maxBaserAngle+8))
+      //if ( (checkError>=maxBaseAngle-8) && (checkError<=maxBaseAngle+8))
+      if(true)
       {
         //if it is within -+8 degrees sets new target angle
         maxBaseAngle = checkError;
@@ -67,11 +70,14 @@ void loop(){
   }
   //Smoothin Equations
   currentShoulderAngle = currentShoulderAngle +(maxShoulderAngle-currentShoulderAngle)*0.4;
-  setAngle = map(currentShoulderAngle,0,179,550,2200);
+  setAngle = map(currentShoulderAngle,0,179,900,2000);
   Shoulder.writeMicroseconds(setAngle);
+  //Serial.println("Pin 11");
+  //Serial.println(setAngle);
   currentBaseAngle = currentBaseAngle +(maxBaseAngle-currentBaseAngle)*0.4;
-  setAngle = map(currentBaseAngle,0,179,550,2200);
+  setAngle = map(currentBaseAngle,0,179,900,2000);
   Base.writeMicroseconds(setAngle);
+  //Serial.println(setAngle);
   
   delay(17);
   
