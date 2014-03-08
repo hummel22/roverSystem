@@ -53,9 +53,11 @@ void Interpreter::initialize(Arduino temp,UDP temp2){
 void Interpreter::interpret(const char* data){
 
     //split command in interger array
-    char* c = (char*)data;
-    char*ch = strtok(c,"/");
+    char* c = (char*)data;      //Change from constant Char*
+    char*ch = strtok(c,"/");    //Split data by '/' "
     int x[8];
+
+    //Convert data int integers
     int i = 0;
     while(ch != NULL)
     {
@@ -64,8 +66,10 @@ void Interpreter::interpret(const char* data){
         ch =  strtok(NULL,"/");
     }
 
-
-    //falied to receive is below 0. creates counter for number of fails in a ro
+    //TIMEOUT
+    //x[0] is the Header - if failed to recieve anything should be -10
+    //Will continously count number of recieve failures ina row
+    //if exceeds MAX sends ping until data is recieved and resets counter
     if (x[0] < 0)
     {
         shutdownCounter++;
@@ -77,7 +81,7 @@ void Interpreter::interpret(const char* data){
         }
     } else
     {
-        shutdownCounter = 0;
+        shutdownCounter = 0;    //reset counter
     }
 
 
@@ -98,17 +102,44 @@ void Interpreter::interpret(const char* data){
             case 6:
             case 7:
             case 8:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
                 cout << "Switch Set Servo" << endl;
                 servoSet(x[1],x[2]);
                 break;
+            case 20:
+                //Computer System [Timeout Count /  Header Count / Check Arduino Link]
             case 22:
                 //checked for commands from operator
                 cout << "Ping Answered Succesfully" << endl;
                 break;
+            case 23:
+                //set Pin refresh Rate
+            case 30:
+                //Arduino System [Check Values - ?]
             case 35:
                 //force servo sync
                 cout << "Force Servo Sync" << endl;
                 break;
+            case 40:
+                //Servo Settings [Limits / Filters]
+            case 50:
+                //motor Details
+            case 60:
+                //Sensor Details
+            case 70:
+                //Video Details [Change Video - BitRate ]
+
+
+
             default:
                 break;
 
@@ -155,9 +186,12 @@ void Interpreter::servoSet(int servo,int angle)
 //    command.append((char)(angle));
 //    command.append("/");
 
+    //Build String to send to Arduino
     std::ostringstream oss;
     oss << servo << "/" << angle << "/";
     cout<<"Made command "<< oss.str() << endl;
+
+    //Send Built String
     serial.send(oss.str());
 
 }

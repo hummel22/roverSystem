@@ -1,16 +1,8 @@
 #include <servoRun.h>
-
-
-
 //Takes input over Serial Command
 
 #include <Servo.h>
 
-Servo Base;
-Servo Shoulder;
-Servo Elbow;
-Servo Wrist;
-Servo Claw;
 
 //Set Servo locations
 int ShoulderPin = 11;
@@ -20,12 +12,10 @@ int WristPin = 10;
 int ClawPin =7;
 int Angle;
 
-int maxShoulderAngle = 0;    //target angle
-double currentShoulderAngle = 0;  //current Angle - used for smoothing
-
-int maxBaseAngle = 0;
-double currentBaseAngle = 0;
-int setAngle = 900;  //minimum number of microseconds (
+int largerServoUpper = 2000;
+int largerServoLower = 1000;
+servoRun Base;
+servoRun Shoulder;
 
 int checkError;
 
@@ -34,14 +24,11 @@ void setup (){
   Serial.begin(9600);
   
   //Assigns Servo to pIns
-  Shoulder.attach(ShoulderPin);
-  Base.attach(BasePin);
-  Wrist.attach(WristPin);
-  Claw.attach(ClawPin);
-  Elbow.attach(ElbowPin);
   
-  Shoulder.writeMicroseconds(900);
-  Base.writeMicroseconds(900); 
+  Base.buildServo(BasePin,1300);
+  Base.setBounds(largeServoLower,largeServoLower);
+  Shoulder.buildServo(ShoulderPin,1300);
+  Shoulder.setBounds(largeServoLower,largeServoLower);
 }
 
 void loop(){
@@ -57,7 +44,7 @@ void loop(){
       if(true)
       {
         //if it is within -+8 degrees sets new target angle
-        maxShoulderAngle = checkError;
+        Base.setTarget(checkError);
       }
       break;
     case 2:
@@ -67,20 +54,16 @@ void loop(){
       if(true)
       {
         //if it is within -+8 degrees sets new target angle
-        maxBaseAngle = checkError;
+        Shoulder.setTarget(checkError);
       }
       break;
       
   }
   //Smoothin Equations
-  currentShoulderAngle = currentShoulderAngle +(maxShoulderAngle-currentShoulderAngle)*0.4;
-  setAngle = map(currentShoulderAngle,0,179,900,2000);
-  Shoulder.writeMicroseconds(setAngle);
+  Shoulder.updateServo();
   //Serial.println("Pin 11");
   //Serial.println(setAngle);
-  currentBaseAngle = currentBaseAngle +(maxBaseAngle-currentBaseAngle)*0.4;
-  setAngle = map(currentBaseAngle,0,179,900,2000);
-  Base.writeMicroseconds(setAngle);
+  Base.updateServo();
   //Serial.println(setAngle);
   
   delay(17);
