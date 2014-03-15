@@ -50,6 +50,12 @@ TODO
 		
 
 VERSIONS
+V4.5.1
+	Added back button X to radioList
+	Bug need to send servo#+1   cant handle zero
+V4.5
+	Dynamically Create Variable Number of Servo Workers
+	Built Diagnostics Class
 V4.4.2
 	Added Arm Control Window
 	No Real Calculations Done (Angles not calculated/ Given explicity - Proof of Concept for graphing)

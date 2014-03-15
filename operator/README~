@@ -50,6 +50,17 @@ TODO
 		
 
 VERSIONS
+V4.5.1
+	Added back button X to radioList
+V4.5
+	Dynamically Create Variable Number of Servo Workers
+	Built Diagnostics Class
+V4.4.2
+	Added Arm Control Window
+	No Real Calculations Done (Angles not calculated/ Given explicity - Proof of Concept for graphing)
+	BUGS:
+		Double Sending
+		Need to Turn Workers ability to send off When total Arm On
 V4.4.1
 	Add Power Power to Rover Window
 	R2/L2 can be used as Tubro/Fine increments

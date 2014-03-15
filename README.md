@@ -24,3 +24,12 @@ The Operator program is built using the Qt developer.
 ## Arduino
 
 
+
+####ChangeLog
+Next
+* Communication Commands
+
+V1.1
+* Changed from angles to micro second in arduino
+* * Need to do same to GUI
+

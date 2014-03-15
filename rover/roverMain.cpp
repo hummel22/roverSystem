@@ -32,67 +32,62 @@ using namespace std;
 
 
 main(){
+    string sendArduino;
+    string sendOperator;
+    string toInterpreter;
+    int refreshRate = 10000;
 
     //Build class objects
     UDP socks;
     Arduino serial;
     Interpreter inter;
-
-
     //####Add FFmpeg videoStream Class####//
 
+
+    //INITIALIZE
     //Create Connection with arduino
     serial.initialize();
-
     //Create Connection with operator//
     socks.initialize("127.0.0.1","1153");
-
+    //Add sending and receieving to Interpreter
     inter.initialize(serial,socks);
-
     //####Initialize Video Stream Here##//
+
 
     //Wait for arduino to power on//
     usleep(3000000);
     cout << "Start" <<endl;
-
+    //Initiate Second Test After Arduino Load
     const char* test= "test";
     socks.send(test);
 
-    string sendArduino;
-    string sendOperator;
-    string toInterpreter;
 
     //loop forever
     while(true){
 
-        usleep(10000);
+        usleep(refreshRate);
 
-        //Command From rover//
+        //ARDUINO IN
         sendOperator = serial.receive();
         // Check if command was received
         if (sendOperator.length() > 0)
         {
-            //If comand received send to Operator
+            //If comand received from Arduino send to Operator
             socks.send(sendOperator.c_str());
             cout << sendOperator << endl;   //Display to terminal TESTING PURPOSES
         }
 
-        //check for commands from operator
+        //OPERATOR IN
         toInterpreter = socks.receive();
-         //TESTING PURPOSE
-        //Pass command to Interpreter
-
-
+        //Check if receieved
         if (toInterpreter.compare((string)"failed") == 0)
         {
             toInterpreter = "-10";
         } else{
              cout <<"Recieved Operator: "<< toInterpreter<<endl;
         }
-
+        //Pass to interpreter
         inter.interpret(toInterpreter.c_str());
-
-
     }
 
 
