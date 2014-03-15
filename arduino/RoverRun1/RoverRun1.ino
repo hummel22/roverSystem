@@ -1,14 +1,11 @@
 #include <Servo.h>
 #include <servoRun.h>  //Custom Library
 
-
+//Tom update as of 3.15
 //MotorPins array
 int motorPins[6] = {
   7,8,9,10,11,12};
-//Specific Wheel straight positions - Allow trimming [Not Used]
-int wheelsStraightPositions[4] = {
-  1500,1500,1500,1500};
-  
+
 //Steering Servo Pins
 int frontLeftPin = 3;
 int frontRightPin = 4;
@@ -16,7 +13,7 @@ int backLeftPin = 5;
 int backRightPin = 6;
 
 //Min and max servo turns
-int largeServoUpper = 2000;
+int largeServoUpper = 2500;
 int largeServoLower = 1000;
 
 //Servo Objects
@@ -37,18 +34,26 @@ void setup()
     pinMode(motorPins[i],OUTPUT); 
   }
   
+   
+   //MOTORS OFF -------------------------------------
+  for(int i = 0;i<sizeof(motorPins);i++)
+  {
+    analogWrite(motorPins[i],0); 
+  }
+  //MOTORS OFF ------------------------------------- //
   //Set starting Locations of Servos and Min/Max
-  frontLeft.buildServo(frontLeftPin,1500);
-  frontRight.buildServo(frontRightPin,1500);
-  backLeft.buildServo(backLeftPin,1500);
-  backRight.buildServo(backRightPin,1500);
+ 
+  frontLeft.buildServo(frontLeftPin,1700);
+  frontRight.buildServo(frontRightPin,1540);
+  backLeft.buildServo(backLeftPin,1490);
+  backRight.buildServo(backRightPin,1900);
   frontLeft.setBounds(largeServoLower,largeServoLower);
   frontRight.setBounds(largeServoLower,largeServoLower);
   backLeft.setBounds(largeServoLower,largeServoLower);
   backRight.setBounds(largeServoLower,largeServoLower);
 }
 
-void loop() 
+ void loop ()
 {
   // Set all Motors Zero
   Serial.println("Straighten Wheels");  //Wrong SPOT
@@ -63,10 +68,10 @@ void loop()
   
   
   //WHEELS STRAIGHT -------------------------------------
-  backLeft.setTarget(1500);
-  backRight.setTarget(1500);
-  frontLeft.setTarget(1500);
-  frontRight.setTarget(1500);
+  backLeft.setTarget(1490);
+  backRight.setTarget(1900);
+  frontLeft.setTarget(1700);
+  frontRight.setTarget(1540);
   //increment wheels until target reached [Smoothing]
   for(int i=0;i<100;i++)
   {
@@ -79,10 +84,12 @@ void loop()
   //WHEELS STRAIGHT ------------------------------------- //
   
   
-  delay(5000);
-  
-  
-  //MOTORS ON -------------------------------------
+  delay(2000);
+ 
+ //front left - lower # = left
+ //front right - lower # = left
+ 
+ //MOTORS ON -------------------------------------
   Serial.println("Motors on 60%");
   //increment each motor from 0 to 150
   for(int k = 0;k<150;k++)
@@ -94,131 +101,23 @@ void loop()
     delay(5);  
   }
   //MOTORS ON ------------------------------------- //
-
   
-  delay(500);
+  delay(3000);
   
-  
-  //WHEELS LEFT -------------------------------------
-  Serial.println("Turn Wheels Left and Move Foward");
-  backLeft.setTarget(1300);
-  backRight.setTarget(1300);
-  frontLeft.setTarget(1300);
-  frontRight.setTarget(1300);
-  delay(17);
-  for(int i=0;i < 100;i++)
+   //MOTORS OFF -------------------------------------
+  for(int i = 0;i<sizeof(motorPins);i++)
   {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS LEFT ------------------------------------- //
-
-
-  delay(1500);
-  
-  
-  //WHEELS RIGHT -------------------------------------
-  Serial.println("Turn Wheels Right Move Foward");
-  backLeft.setTarget(1700);
-  backRight.setTarget(1700);
-  frontLeft.setTarget(1700);
-  frontRight.setTarget(1700);
-  delay(17);
-  for(int i=0;i < 100;i++)
-  {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS RIGHT ------------------------------------- //
-  
-
-  delay(1500);
-
-   
-  //WHEELS STRAIGHT -------------------------------------
-  Serial.println("Turn Wheels Straight and Move Foward");
-  backLeft.setTarget(1500);
-  backRight.setTarget(1500);
-  frontLeft.setTarget(1500);
-  frontRight.setTarget(1500);
-  for(int i=0;i<100;i++)
-  {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS STRAIGHT ------------------------------------- //
-  
-  
-  delay(1000);
-  
-  
-  //MOTORS OFF -------------------------------------
-  Serial.println("Motors to 0%");
-  for(int k = 150;k>=0;k--)
-  {
-    for(int i = 0;i<sizeof(motorPins);i++)
-    {
-      analogWrite(motorPins[i],k); 
-    }
-    delay(5);
+    analogWrite(motorPins[i],0); 
   }
   //MOTORS OFF ------------------------------------- //
   
   
- 
-  //WHEELS LEFT -------------------------------------
-  Serial.println("Turn Wheels Left");
-  backLeft.setTarget(1300);
-  backRight.setTarget(1300);
-  frontLeft.setTarget(1300);
-  frontRight.setTarget(1300);
-  delay(17);
-  for(int i=0;i < 100;i++)
-  {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS LEFT -------------------------------------//
-  
-  
-  
-  //WHEELS RIGHT -------------------------------------
-  Serial.println("Turn Wheels Right");
-  backLeft.setTarget(1700);
-  backRight.setTarget(1700);
-  frontLeft.setTarget(1700);
-  frontRight.setTarget(1700);
-  delay(17);
-  for(int i=0;i < 100;i++)
-  {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS RIGHT ------------------------------------- //
-  
-  
-  
-  //WHEELS LEFT -------------------------------------
-  Serial.println("Turn Wheels Left");
-  backLeft.setTarget(1300);
-  backRight.setTarget(1300);
-  frontLeft.setTarget(1300);
-  frontRight.setTarget(1300);
+    //WHEELS LEFT -------------------------------------
+  Serial.println("Turn Wheels Left and Move Foward");
+  backLeft.setTarget(1190);
+  backRight.setTarget(1600);
+  frontLeft.setTarget(1400);
+  frontRight.setTarget(1240);
   delay(17);
   for(int i=0;i < 100;i++)
   {
@@ -229,34 +128,16 @@ void loop()
     delay(17);
   }
   //WHEELS LEFT ------------------------------------- //
+
+  delay(2000);
   
   
-  
-  //WHEELS RIGHT -------------------------------------
-  Serial.println("Turn Wheels Right");
-  backLeft.setTarget(1700);
-  backRight.setTarget(1700);
+ //WHEELS STRAIGHT -------------------------------------
+  backLeft.setTarget(1490);
+  backRight.setTarget(1900);
   frontLeft.setTarget(1700);
-  frontRight.setTarget(1700);
-  delay(17);
-  for(int i=0;i < 100;i++)
-  {
-    frontLeft.updateServo();
-    frontRight.updateServo();
-    backLeft.updateServo();
-    backRight.updateServo();
-    delay(17);
-  }
-  //WHEELS RIGHT ------------------------------------- //
-  
-  
-  
-  //WHEELS STRAIGHT -------------------------------------
-  Serial.println("Turn Straight");
-  backLeft.setTarget(1500);
-  backRight.setTarget(1500);
-  frontLeft.setTarget(1500);
-  frontRight.setTarget(1500);
+  frontRight.setTarget(1540);
+  //increment wheels until target reached [Smoothing]
   for(int i=0;i<100;i++)
   {
     frontLeft.updateServo();
@@ -266,9 +147,26 @@ void loop()
     delay(17);
   }
   //WHEELS STRAIGHT ------------------------------------- //
-
-
+  
+  delay(2000);
+  
+  //WHEELS right -------------------------------------
+  Serial.println("Turn Wheels right and Move Foward");
+  backLeft.setTarget(1790);
+  backRight.setTarget(2200);
+  frontLeft.setTarget(2000);
+  frontRight.setTarget(1940);
+  delay(17);
+  for(int i=0;i < 100;i++)
+  {
+    frontLeft.updateServo();
+    frontRight.updateServo();
+    backLeft.updateServo();
+    backRight.updateServo();
+    delay(17);
+  }
+  //WHEELS right ------------------------------------- //
+  
+  delay(10000);
+  
 }
-
-
-
