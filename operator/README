@@ -50,6 +50,11 @@ TODO
 		
 
 VERSIONS
+V4.6
+	Converted workers from Angles to Microseconds
+	Add Upper and Lower limits for microseconds
+	Created start point
+	Removed Slider Sending Echo
 V4.5.1
 	Added back button X to radioList
 	Bug need to send servo#+1   cant handle zero

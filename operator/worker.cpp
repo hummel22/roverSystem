@@ -12,15 +12,19 @@ void Worker::Initialize(QSlider *one,int servo)
     //Default Limits
     upperValue = 175;
     lowerValue = 5;
+    endPointHigh = 2000;
+    endPointLow = 1000;
+    startPoint = 1500;
     //QSlider settings
     slidePointer->setRange(lowerValue,upperValue);          //set range of slider
     slidePointer->setTracking(true);        //user moves slider manually - fluid
     //Set slide value to current slider value
-    slideValue = slidePointer->value();
+    slideValue = startPoint;
     QObject::connect(slidePointer,SIGNAL(valueChanged(int)),this,SLOT(SliderRecieved(int)));
     servoNumber = servo;
     QString send = "WORKER INIT: Servo "+QString::number(servoNumber)+" Created";
     emit WorkerToTerminalInternal(send);
+    echo = false;
 
 
 }
@@ -32,24 +36,29 @@ void Worker::keyInput(QString data)
     {
         case 'w':
             slideValue++;
-            if(slideValue > upperValue+1)
+            if(slideValue > endPointHigh+1)
             {
-                slideValue = upperValue;
+                slideValue = endPointHigh;
             }
-            slidePointer->setValue(slideValue);     //move slider with key presses
+            echo = true;
+            slidePointer->setValue(map());     //move slider with key presses
             send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
             emit WorkerToSend(send);
+
             break;
         case 's':
             slideValue = slideValue--;
 
-            if(slideValue < lowerValue)
+            if(slideValue < endPointLow)
             {
-                slideValue = lowerValue;
+                slideValue = endPointLow
+                        ;
             }
-            slidePointer->setValue(slideValue);
+            echo = true;
+            slidePointer->setValue(map());
             send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
             emit WorkerToSend(send);
+
             break;
     }
 
@@ -60,19 +69,20 @@ void Worker::keyInput(QString data)
 void Worker::joyInput(int x0, int x1, int x2, int x3, int x4, int x5)
 {
     int add =-x1*3/32175;
-    if((add != 0) && (((add >0) && (slideValue < upperValue)) || ((add <0) && (slideValue > lowerValue))))
+    if((add != 0) && (((add >0) && (slideValue < endPointHigh)) || ((add <0) && (slideValue > endPointLow))))
         {
         slideValue += add;
-        if(slideValue>upperValue+1)
+        if(slideValue>endPointHigh+1)
         {
-            slideValue = upperValue;
+            slideValue = endPointHigh;
 
         }
-        if(slideValue<lowerValue)
+        if(slideValue<endPointLow)
         {
-            slideValue = lowerValue;
+            slideValue = endPointLow;
         }
-        slidePointer->setValue(slideValue);
+        echo = true;
+        slidePointer->setValue(map());
         send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
 
         //Possible source for double sending-- slider is changed which then initaes extra send
@@ -84,14 +94,20 @@ void Worker::joyInput(int x0, int x1, int x2, int x3, int x4, int x5)
 
 void Worker::SliderRecieved(int value)
 {
-    //Send data using just slider
-    slideValue = value;
-    send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
-    emit WorkerToSend(send);
+    //
+    if(echo == false)
+    {
+        //Inverse Degree to Micorseconds
+        slideValue = (int)(endPointLow + (((double)value-lowerValue)/(upperValue-lowerValue))*(endPointHigh-endPointLow));
+        send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
+        emit WorkerToSend(send);
+    }
+    echo = false;
+
 }
 
-//possible not needed
-int Worker::map(int angleDegree)
+//Returns Current Angle in Degrees
+int Worker::map()
 {
-    return (int)(angleDegree/(upperValue-lowerValue))+lowerValue;
+    return (int)(lowerValue + (slideValue-endPointLow) * (upperValue-lowerValue) / (endPointHigh-endPointLow));
 }

@@ -14,6 +14,11 @@ This system is designed to communicate between operator and rover using the UDP 
 Reliability of the communication is discussed below
 
 
+#### Commands Table
+|Command |Items|
+|---------|:---------:|
+
+
 
 ## Operator Program
 
@@ -23,4 +28,17 @@ The Operator program is built using the Qt developer.
 
 ## Arduino
 
+#### Pin Setup
+
+s
+####ChangeLog
+Next
+* Communication Commands to README
+
+V1.1.2
+* Changes Angles to microseconds to GUI
+
+V1.1.1
+* Changed from angles to micro second in arduino
+* * Need to do same to GUI
 

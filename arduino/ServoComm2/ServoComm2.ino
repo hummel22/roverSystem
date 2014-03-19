@@ -12,8 +12,8 @@ int WristPin = 10;
 int ClawPin =7;
 int Angle;
 
-int largerServoUpper = 2000;
-int largerServoLower = 1000;
+int largeServoUpper = 2000;
+int largeServoLower = 1000;
 servoRun Base;
 servoRun Shoulder;
 
