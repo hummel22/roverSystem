@@ -11,7 +11,7 @@ class Worker : public QObject
 private:
     int servoNumber;
     QString send;
-    int map();
+
 
 
 public:
@@ -25,6 +25,8 @@ public:
     int endPointHigh;
     int startPoint;
     bool echo;
+    int map();
+    void sendForce(int microValue);
 
 signals:
     void WorkerToTerminalInternal(QString out);

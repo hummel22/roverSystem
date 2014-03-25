@@ -16,6 +16,7 @@ int largeServoUpper = 2000;
 int largeServoLower = 1000;
 servoRun Base;
 servoRun Shoulder;
+servoRun Elbow;
 
 int checkError;
 
@@ -25,10 +26,12 @@ void setup (){
   
   //Assigns Servo to pIns
   
-  Base.buildServo(BasePin,1300);
-  Base.setBounds(largeServoLower,largeServoLower);
-  Shoulder.buildServo(ShoulderPin,1300);
-  Shoulder.setBounds(largeServoLower,largeServoLower);
+  Base.buildServo(BasePin,1500);
+  Base.setBounds(largeServoLower,largeServoUpper);
+  Shoulder.buildServo(ShoulderPin,1500);
+  Shoulder.setBounds(largeServoLower,largeServoUpper);
+  Elbow.buildServo(ElbowPin,1500);
+  Elbow.setBounds(largeServoLower,largeServoUpper);
 }
 
 void loop(){
@@ -56,6 +59,16 @@ void loop(){
         //if it is within -+8 degrees sets new target angle
         Shoulder.setTarget(checkError);
       }
+      break;  
+   case 3:
+      //checks if new angle is within 8 degrees -- memory erros causes random numbers
+      checkError = readData();
+      //if ( (checkError>=maxBaseAngle-8) && (checkError<=maxBaseAngle+8))
+      if(true)
+      {
+        //if it is within -+8 degrees sets new target angle
+        Elbow.setTarget(checkError);
+      }
       break;
       
   }
@@ -65,6 +78,7 @@ void loop(){
   //Serial.println(setAngle);
   Base.updateServo();
   //Serial.println(setAngle);
+  Serial.println(Elbow.updateServo());
   
   delay(17);
   

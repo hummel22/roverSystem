@@ -33,6 +33,7 @@ public slots:
     void keyInput(QString data);
     void axisR(int x0,int x1,int x2,int x3,int x4,int x5);
     void updateMinMax(int workerNumber,int Upper,int Lower);
+    void reset();
 };
 
 #endif // WORKERALL_H

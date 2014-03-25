@@ -221,18 +221,21 @@ int main(int argc, char *argv[])
     QPushButton *showKeyInput = new QPushButton;
     QPushButton *showRover  = new QPushButton;
     QPushButton *showDiagnostics = new QPushButton;
+    QPushButton *Reset = new QPushButton;
     showDiagnostics->setText("Diagnostics");
     showRover->setText("Rover View");
     showKeyInput->setText("Key Input");
     syncButton->setText("Sync Servos");
     showTerminals->setText("Terminals");
     showJoystick->setText("Joystick");
+    Reset->setText("Reset");
 
     QObject::connect(showTerminals,SIGNAL(clicked()),windowAll,SLOT(show()));
     QObject::connect(syncButton,SIGNAL(clicked()),myList,SLOT(forcesync()));
     QObject::connect(showJoystick,SIGNAL(clicked()),jWindow,SLOT(showBox()));
     QObject::connect(showKeyInput,SIGNAL(clicked()),test,SLOT(show()));
     QObject::connect(showRover,SIGNAL(clicked()),rWindow,SLOT(showRover()));
+    QObject::connect(Reset,SIGNAL(clicked()),All,SLOT(reset()));
     //BUTTONS--------------------------------------------------------------------------------------//
 
 
@@ -261,6 +264,7 @@ int main(int argc, char *argv[])
     leftPanelLayout->addWidget(showKeyInput);
     leftPanelLayout->addWidget(showRover);
     leftPanelLayout->addWidget(showDiagnostics);
+    leftPanelLayout->addWidget(Reset);
     //Slider Window---------------------------
     QGridLayout *layerslid = new QGridLayout;
     //layers

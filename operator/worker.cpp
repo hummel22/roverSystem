@@ -42,7 +42,7 @@ void Worker::keyInput(QString data)
             }
             echo = true;
             slidePointer->setValue(map());     //move slider with key presses
-            send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
+            send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
             emit WorkerToSend(send);
 
             break;
@@ -56,7 +56,7 @@ void Worker::keyInput(QString data)
             }
             echo = true;
             slidePointer->setValue(map());
-            send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
+            send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
             emit WorkerToSend(send);
 
             break;
@@ -83,7 +83,7 @@ void Worker::joyInput(int x0, int x1, int x2, int x3, int x4, int x5)
         }
         echo = true;
         slidePointer->setValue(map());
-        send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
+        send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
 
         //Possible source for double sending-- slider is changed which then initaes extra send
         //Test deleting
@@ -99,7 +99,7 @@ void Worker::SliderRecieved(int value)
     {
         //Inverse Degree to Micorseconds
         slideValue = (int)(endPointLow + (((double)value-lowerValue)/(upperValue-lowerValue))*(endPointHigh-endPointLow));
-        send = QString::number(servoNumber)+"/"+QString::number(slideValue)+"/";
+        send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
         emit WorkerToSend(send);
     }
     echo = false;
@@ -110,4 +110,13 @@ void Worker::SliderRecieved(int value)
 int Worker::map()
 {
     return (int)(lowerValue + (slideValue-endPointLow) * (upperValue-lowerValue) / (endPointHigh-endPointLow));
+}
+
+void Worker::sendForce(int microValue)
+{
+    slideValue = microValue;
+    echo = true;
+    slidePointer->setValue(map());
+    send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
+    emit WorkerToSend(send);
 }
