@@ -73,7 +73,7 @@ It also receives data from sensors and passes it to the onboard computer.
 
 #### Pin Setup
 | Pin | Item || Pin | Item || Pin | Item |
-|:----:|:----------:|:-:|:----:|:----------:|:-:|:----:|:----------:|
+|:----:|:--------------:|:-:|:----:|:--------------:|:-:|:----:|:--------------:|
 |2| Base Servo  ||21|  ||40|  |
 |3| Shoulder    ||22| FL Speed    ||41|  |
 |4| Elbow       ||23| FR Speed    ||42|  |
