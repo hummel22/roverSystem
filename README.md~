@@ -36,7 +36,7 @@ The Operator program is built using the Qt developer.
 
 ## Rover Program
 
-Rover Program is created using c++ and designed for a unix enviroment.
+Rover Program is created using c++ and designed for a unix enviroment. This program is used on the rovers onboard computer
 
 #### Overview
 * Establish connection (pull IP address of operator)
@@ -48,6 +48,9 @@ Rover Program is created using c++ and designed for a unix enviroment.
 
 ## Arduino
 
+The arduino will interact will hardware and motors. It will take commands and control servos as well motors. 
+It also receives data from sensors and passes it to the onboard computer.
+
 #### Overview
 * Receive/Send data to rover
 * Interact with sensors/motors/servos
@@ -56,44 +59,45 @@ Rover Program is created using c++ and designed for a unix enviroment.
 
 
 #### Items to connect
-* 6 Drive Servos
-* 4 Robotic Arm Servos
+* 6 Robotic Arm Servos
+* 4 Drive Servos
 * 2 Pand/Tilt Servos
 * 6 Motor Control - Speed
 * 6 Motor Control - Direction
 * 1 Motor Control - Break
-* 6 AcceleramotorOne inputs (Two
+* 6 AcceleramotorOne inputs
+* 1 GPS
 * 1 Current Sensor
 * 1 Voltage Sensor
 
 
 #### Pin Setup
-| Pin | Item |
-|:----:|:----------:|
-|2| Base Servo |
-|3| Shoulder |
-|4| Elbow |
-|5| Wrist |
-|6| Wrist Rotate |
-|7| Claw |
-|8| Pan |
-|9| Tilt |
-|10| FL - Servo |
-|11| FR - Servo |
-|12| BL - Servo |
-|13| BR - Servo |
-|22| FL Speed |
-|23| FR Speed |
-|24| ML Speed
-|25| MR Speed|
-|26| BL Speed|
-|27| BR Speed|
-|28| FL Direction|
-|29| FR Direction|
-|30| ML Direction|
-|31| MR Direction|
-|32| BL Direction|
-|33| BR Direction|
+| Pin | Item || Pin | Item || Pin | Item |
+|:----:|:----------:|:-:|:----:|:----------:|:----:|:----------:|
+|2| Base Servo ||21|  ||40|  |
+|3| Shoulder ||22| FL Speed ||41|  |
+|4| Elbow ||23| FR Speed ||42|  |
+|5| Wrist ||24| ML Speed||43|  |
+|6| Wrist Rotate ||25| MR Speed||45|  |
+|7| Claw ||26| BL Speed||A0|  |
+|8| Pan ||27| BR Speed||A1|  |
+|9| Tilt ||28| FL Direction||A2|  |
+|10| FL - Servo ||29| FR Direction||A3|  |
+|11| FR - Servo ||30| ML Direction||A4|  |
+|12| BL - Servo ||31| MR Direction||A5|  |
+|13| BR - Servo ||32| BL Direction||A6|  |
+|14| ||33| BR Direction||A7|  |
+|15| ||34|  ||A8|  |
+|16| ||35|  ||A9|  |
+|17| ||36|  ||A10|  |
+|18| ||37|  ||A11|  |
+|19| ||38|  ||A12|  |
+|20| ||39|  ||A13|  |
+
+
+
+
+
 |34| Motor Break|
 
 

@@ -72,32 +72,32 @@ It also receives data from sensors and passes it to the onboard computer.
 
 
 #### Pin Setup
-| Pin | Item |
-|:----:|:----------:|
-|2| Base Servo |
-|3| Shoulder |
-|4| Elbow |
-|5| Wrist |
-|6| Wrist Rotate |
-|7| Claw |
-|8| Pan |
-|9| Tilt |
-|10| FL - Servo |
-|11| FR - Servo |
-|12| BL - Servo |
-|13| BR - Servo |
-|22| FL Speed |
-|23| FR Speed |
-|24| ML Speed
-|25| MR Speed|
-|26| BL Speed|
-|27| BR Speed|
-|28| FL Direction|
-|29| FR Direction|
-|30| ML Direction|
-|31| MR Direction|
-|32| BL Direction|
-|33| BR Direction|
+| Pin | Item || Pin | Item || Pin | Item |
+|:----:|:----------:|:-:|:----:|:----------:|:----:|:----------:|
+|2| Base Servo ||21|  ||40|  |
+|3| Shoulder ||22| FL Speed ||41|  |
+|4| Elbow ||23| FR Speed ||42|  |
+|5| Wrist ||24| ML Speed||43|  |
+|6| Wrist Rotate ||25| MR Speed||45|  |
+|7| Claw ||26| BL Speed||A0|  |
+|8| Pan ||27| BR Speed||A1|  |
+|9| Tilt ||28| FL Direction||A2|  |
+|10| FL - Servo ||29| FR Direction||A3|  |
+|11| FR - Servo ||30| ML Direction||A4|  |
+|12| BL - Servo ||31| MR Direction||A5|  |
+|13| BR - Servo ||32| BL Direction||A6|  |
+|14| ||33| BR Direction||A7|  |
+|15| ||34|  ||A8|  |
+|16| ||35|  ||A9|  |
+|17| ||36|  ||A10|  |
+|18| ||37|  ||A11|  |
+|19| ||38|  ||A12|  |
+|20| ||39|  ||A13|  |
+
+
+
+
+
 |34| Motor Break|
 
 
