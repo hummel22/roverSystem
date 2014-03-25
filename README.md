@@ -16,14 +16,15 @@ Reliability of the communication is discussed below
 #### Commands Table
 Operator to Rover
 * Run on Rover - (All others passed to arduino)
-|Command|Sub|Sub|Items|
+
+|ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
 |1-20  |      |      |Servo Number|
 |---   |Angle |      |Set Given Servo Angle|
 |*21   |      |      |Check Arduino Connection|
 |*22   |      |      |Answering Ping|
 |*23   |      |      |Switch Protocol (UDP/TCP)|
-|*24   |      |      |
+|*24   |      |      ||
 |*25   |      |      |Reset Arduino|
 |*26   |      |      |Set new Header Count|
 |---   |0-9999|      |New Head Count|
