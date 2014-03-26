@@ -1,6 +1,7 @@
 # Rover Operating System
 
 ### Overview
+This is Project is for the NASA Robo-Ops Competition 2014. This README outlines the 
 
 ### 3 systems
 * Operator program  - User control software
@@ -16,14 +17,15 @@ Reliability of the communication is discussed below
 #### Commands Table
 Operator to Rover
 * Run on Rover - (All others passed to arduino)
-|Command|Sub|Sub|Items|
+
+|ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
 |1-20  |      |      |Servo Number|
 |---   |Angle |      |Set Given Servo Angle|
 |*21   |      |      |Check Arduino Connection|
 |*22   |      |      |Answering Ping|
 |*23   |      |      |Switch Protocol (UDP/TCP)|
-|*24   |      |      |
+|*24   |      |      ||
 |*25   |      |      |Reset Arduino|
 |*26   |      |      |Set new Header Count|
 |---   |0-9999|      |New Head Count|
@@ -58,7 +60,8 @@ Operator to Rover
 
 ## Operator Program
 
-The Operator program is built using the Qt developer.
+The Operator program is built using the Qt developer. This mainly a Graphic User interface that will allow
+a user to control the rover. 
 
 #### Overview
 * Send/Recieve to rover
@@ -133,8 +136,6 @@ It also receives data from sensors and passes it to the onboard computer.
 
 
 ####ChangeLog
-Next
-* Communication Commands to README
 
 V1.1.4
 * Added Command Table
