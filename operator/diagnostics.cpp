@@ -81,11 +81,12 @@ Diagnostics::Diagnostics(QObject *parent) :
         QList<QString> servoHeaders;        //Headers for Servo Table
         QList<QLabel*> servoTableLabels;
         QList<int> spacerNumbers;
-        spacerNumbers << 1 << 4;             //Pick where spaces are doubles
+        spacerNumbers << 1;             //Pick where spaces are doubles
         servoHeaders.append("Servo");
         servoHeaders.append("Upper");
         servoHeaders.append("Lower");
         servoHeaders.append("Filter");
+        servoHeaders.append("Center");
         servoHeaders.append("Status");
         servoHeaders.append("Update");
 
@@ -113,7 +114,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             servoTableLabels.append(new QLabel);
             servoTableLabels.at(i)->setText(servoHeaders.at(i));
             servoTableLabels.at(i)->setMinimumWidth(width);
-            servoTableLabels.at(i)->setAlignment(Qt::AlignCenter);
+            //servoTableLabels.at(i)->setAlignment(Qt::AlignCenter);
             mainLayout->addWidget(servoTableLabels.at(i),row-1,i+1+add,1,columnSpan);
 
         }
@@ -121,7 +122,7 @@ Diagnostics::Diagnostics(QObject *parent) :
 
 
         //Table -All servo Names
-        QList<QString> servoNames;
+
         servoNames.append("Base");
         servoNames.append("Shoulder");
         servoNames.append("Elbow");
@@ -136,13 +137,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         servoNames.append("Pan - V");
         //Items to placed in each servo row
         QList<QLabel*> servolabels;
-        QList<QTextEdit*> Uppers;
-        QList<QTextEdit*> Lowers;
-        QList<QTextEdit*> Filters;
-        QList<QPushButton*> Set;
         QList<QGraphicsEllipseItem*> statusCircles;
-        QList<QLabel*> statusLabels;
-        QList<QPushButton*> updateButtons;
         int buttonName = 0;
 
         //Build Servo Table
@@ -163,6 +158,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Uppers.at(i)->setAlignment(Qt::AlignRight);
             Uppers.at(i)->setMinimumHeight(height-5);
             Uppers.at(i)->setWordWrapMode(QTextOption::NoWrap);
+            Uppers.at(i)->setObjectName(QString::number(buttonName));
             //Uppers.at(i)->setReadOnly(true);
             mainLayout->addWidget(Uppers.at(i),row,3,1,1);
 
@@ -174,6 +170,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Lowers.at(i)->setMinimumHeight(height-5);
             Lowers.at(i)->setAlignment(Qt::AlignRight);
             Lowers.at(i)->setWordWrapMode(QTextOption::NoWrap);
+            Lowers.at(i)->setObjectName(QString::number(buttonName));
             //Lowers.at(i)->setReadOnly(true);
             mainLayout->addWidget(Lowers.at(i),row,4,1,1);
 
@@ -183,11 +180,23 @@ Diagnostics::Diagnostics(QObject *parent) :
             Filters.at(i)->setMaximumWidth(width);
             Filters.at(i)->setMinimumHeight(height-5);
             Filters.at(i)->setAlignment(Qt::AlignRight);
+            Filters.at(i)->setObjectName(QString::number(buttonName));
             Filters.at(i)->setWordWrapMode(QTextOption::NoWrap);
             //Filters.at(i)->setReadOnly(true);
             mainLayout->addWidget(Filters.at(i),row,5,1,1);
 
-            mainLayout->addItem(spacer,row,6,1,1);
+
+            Centers.append(new QTextEdit);
+            Centers.at(i)->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            Centers.at(i)->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            Centers.at(i)->setMaximumWidth(width);
+            Centers.at(i)->setMinimumHeight(height-5);
+            Centers.at(i)->setAlignment(Qt::AlignRight);
+            Centers.at(i)->setObjectName(QString::number(buttonName));
+            Centers.at(i)->setWordWrapMode(QTextOption::NoWrap);
+            //Filters.at(i)->setReadOnly(true);
+            mainLayout->addWidget(Centers.at(i),row,6,1,1);
+
            // mainLayout->addItem(spacer,row,7,1,1);
             mainLayout->addItem(spacer,row,9,1,1);
             //mainLayout->addItem(spacer,row,10,1,1);
@@ -199,10 +208,11 @@ Diagnostics::Diagnostics(QObject *parent) :
 
 
             statusLabels.append(new QLabel);
-            statusLabels.at(i)->setText("Wait");
+            statusLabels.at(i)->setText("Connect");
             statusLabels.at(i)->setMaximumWidth(width);
             statusLabels.at(i)->setMinimumWidth(width);
             statusLabels.at(i)->setAlignment(Qt::AlignCenter);
+            statusLabels.at(i)->setObjectName(QString::number(buttonName));
             mainLayout->addWidget(statusLabels.at(i),row,7,1,1);
 
             updateButtons.append(new QPushButton);
@@ -221,7 +231,6 @@ Diagnostics::Diagnostics(QObject *parent) :
         //Motor Table
         QList<QString> motorStrings;
         QList<QLabel*> motorLabels;
-        QList<QTextEdit*> motorUpper;
         motorStrings.append("FR");
         motorStrings.append("FL");
         motorStrings.append("MR");
@@ -293,11 +302,10 @@ Diagnostics::Diagnostics(QObject *parent) :
 
 
         //Items to add to each row
-        QList<QString> itemStrings;
+
         QList<QLabel*> itemLabels;
-        QList<QLabel*> itemStatus;
-        QList<QTextEdit*> itemText;
-        QList<QPushButton*> itemButton;
+
+
         itemStrings.append("New Header");
         itemStrings.append("Shutdown Limit");
         itemStrings.append("Loop Delay");
@@ -321,6 +329,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             itemText.at(i)->setMinimumHeight(height-5);
             itemText.at(i)->setAlignment(Qt::AlignRight);
             itemText.at(i)->setWordWrapMode(QTextOption::NoWrap);
+            itemText.at(i)->setObjectName(QString::number(buttonName));
             //Filters.at(i)->setReadOnly(true);
             mainLayout->addWidget(itemText.at(i),row+4+i,13,1,1);
 
@@ -330,6 +339,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             itemStatus.at(i)->setMaximumWidth(width);
             itemStatus.at(i)->setMinimumWidth(width);
             itemStatus.at(i)->setAlignment(Qt::AlignCenter);
+            itemStatus.at(i)->setObjectName(QString::number(buttonName));
             mainLayout->addWidget(itemStatus.at(i),row+4+i,14,1,1);
 
             //Item Buttons
@@ -365,5 +375,19 @@ void Diagnostics::showDiagnostics()
 void Diagnostics::updateButton()
 {
     QString id = QObject::sender()->objectName();
-    emit toInternalTerminal("Button Pressed: "+id);
+
+    if(id.toInt()<Filters.size())
+    {
+        emit toInternalTerminal("Button Pressed: "+id);
+        emit toInternalTerminal("Servo: " + servoNames.at(id.toInt()));
+        emit toInternalTerminal("Filters: " + Filters.at(id.toInt())->toPlainText());
+        emit toInternalTerminal("Uppers: " + Uppers.at(id.toInt())->toPlainText());
+        emit toInternalTerminal("Lowers: " + Lowers.at(id.toInt())->toPlainText());
+        emit toInternalTerminal("Center: " + Centers.at(id.toInt())->toPlainText());
+    } else
+    {
+        emit toInternalTerminal("Button Pressed: "+id);
+        emit toInternalTerminal("Item: " + itemStrings.at(id.toInt()-Filters.size()));
+        emit toInternalTerminal("Value: " + itemText.at(id.toInt()-Filters.size())->toPlainText());
+    }
 }
