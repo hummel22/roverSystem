@@ -18,8 +18,8 @@
 |---   |x/x/x/|      |All Servo angles to set|
 |31    |      |      |Set Upper/Lower Bounds of Servos|
 |---   |ID #  |      |Servo ID number to set|
-|---   |---   |U/L #s|Upper and Lower limts filter|
-|33    |      |      |Request Limits U/L filter|
+|---   |---   |U/L #s|Upper Lower filter Center|
+|33    |      |      |Request U/L filter Center|
 |---   |ID #  |      |Servo to Request|
 |34    |      |      |Set Loop Delay|
 |---   |0-9999|      |Microseconds|

@@ -129,12 +129,13 @@ Diagnostics::Diagnostics(QObject *parent) :
         servoNames.append("Wrist - R");
         servoNames.append("Wrist - V");
         servoNames.append("Claw");
-        servoNames.append("Steer - FR");
-        servoNames.append("Steer - FL");
-        servoNames.append("Steer - BR");
-        servoNames.append("Steer - BL");
         servoNames.append("Pan - H");
         servoNames.append("Pan - V");
+        servoNames.append("Steer - FL");
+        servoNames.append("Steer - FR");
+        servoNames.append("Steer - BL");
+        servoNames.append("Steer - BR");
+
         //Items to placed in each servo row
         QList<QLabel*> servolabels;
         QList<QGraphicsEllipseItem*> statusCircles;
@@ -159,7 +160,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Uppers.at(i)->setMinimumHeight(height-5);
             Uppers.at(i)->setWordWrapMode(QTextOption::NoWrap);
             Uppers.at(i)->setObjectName(QString::number(buttonName));
-            //Uppers.at(i)->setReadOnly(true);
+            Uppers.at(i)->setReadOnly(true);
             mainLayout->addWidget(Uppers.at(i),row,3,1,1);
 
 
@@ -171,7 +172,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Lowers.at(i)->setAlignment(Qt::AlignRight);
             Lowers.at(i)->setWordWrapMode(QTextOption::NoWrap);
             Lowers.at(i)->setObjectName(QString::number(buttonName));
-            //Lowers.at(i)->setReadOnly(true);
+            Lowers.at(i)->setReadOnly(true);
             mainLayout->addWidget(Lowers.at(i),row,4,1,1);
 
             Filters.append(new QTextEdit);
@@ -182,7 +183,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Filters.at(i)->setAlignment(Qt::AlignRight);
             Filters.at(i)->setObjectName(QString::number(buttonName));
             Filters.at(i)->setWordWrapMode(QTextOption::NoWrap);
-            //Filters.at(i)->setReadOnly(true);
+            Filters.at(i)->setReadOnly(true);
             mainLayout->addWidget(Filters.at(i),row,5,1,1);
 
 
@@ -194,7 +195,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             Centers.at(i)->setAlignment(Qt::AlignRight);
             Centers.at(i)->setObjectName(QString::number(buttonName));
             Centers.at(i)->setWordWrapMode(QTextOption::NoWrap);
-            //Filters.at(i)->setReadOnly(true);
+            Centers.at(i)->setReadOnly(true);
             mainLayout->addWidget(Centers.at(i),row,6,1,1);
 
            // mainLayout->addItem(spacer,row,7,1,1);
@@ -258,7 +259,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             motorUpper.at(i)->setMinimumHeight(height-5);
             motorUpper.at(i)->setAlignment(Qt::AlignRight);
             motorUpper.at(i)->setWordWrapMode(QTextOption::NoWrap);
-            //Filters.at(i)->setReadOnly(true);
+            motorUpper.at(i)->setReadOnly(true);
             mainLayout->addWidget(motorUpper.at(i),row+1,10+i,1,1);
 
         }
@@ -330,12 +331,12 @@ Diagnostics::Diagnostics(QObject *parent) :
             itemText.at(i)->setAlignment(Qt::AlignRight);
             itemText.at(i)->setWordWrapMode(QTextOption::NoWrap);
             itemText.at(i)->setObjectName(QString::number(buttonName));
-            //Filters.at(i)->setReadOnly(true);
+            itemText.at(i)->setReadOnly(true);
             mainLayout->addWidget(itemText.at(i),row+4+i,13,1,1);
 
             //Item Status Labels
             itemStatus.append(new QLabel);
-            itemStatus.at(i)->setText("Wait");
+            itemStatus.at(i)->setText("Connect");
             itemStatus.at(i)->setMaximumWidth(width);
             itemStatus.at(i)->setMinimumWidth(width);
             itemStatus.at(i)->setAlignment(Qt::AlignCenter);
@@ -375,19 +376,79 @@ void Diagnostics::showDiagnostics()
 void Diagnostics::updateButton()
 {
     QString id = QObject::sender()->objectName();
+    int currentSet = id.toInt();
 
-    if(id.toInt()<Filters.size())
+    if(currentSet<Filters.size())
     {
-        emit toInternalTerminal("Button Pressed: "+id);
-        emit toInternalTerminal("Servo: " + servoNames.at(id.toInt()));
-        emit toInternalTerminal("Filters: " + Filters.at(id.toInt())->toPlainText());
-        emit toInternalTerminal("Uppers: " + Uppers.at(id.toInt())->toPlainText());
-        emit toInternalTerminal("Lowers: " + Lowers.at(id.toInt())->toPlainText());
-        emit toInternalTerminal("Center: " + Centers.at(id.toInt())->toPlainText());
+        //Check if first Connection
+        if(Filters.at(id.toInt())->isReadOnly())
+        {
+            statusLabels.at(currentSet)->setText("Waiting");
+            emit Send("33/"+QString::number(currentSet+1)+"/");
+            emit toInternalTerminal("DIAG: Reqest Servo: " + servoNames.at(currentSet));
+        }
+
+
     } else
     {
-        emit toInternalTerminal("Button Pressed: "+id);
-        emit toInternalTerminal("Item: " + itemStrings.at(id.toInt()-Filters.size()));
-        emit toInternalTerminal("Value: " + itemText.at(id.toInt()-Filters.size())->toPlainText());
+        currentSet = currentSet - Filters.size();
+        //Check if first Connection
+        if(itemText.at(currentSet)->isReadOnly())
+        {
+            itemStatus.at(currentSet)->setText("Waiting");
+            emit Send("33/"+QString::number(currentSet+1)+"/");
+        }
+        emit toInternalTerminal("Item: " + itemStrings.at(currentSet));
+        emit toInternalTerminal("Value: " + itemText.at(currentSet)->toPlainText());
     }
+}
+
+
+void Diagnostics::receiveAttributes(QString list)
+{
+    //Itesm received as ID/U/L/F/C/
+    //Parse List
+    QStringList parsed = list.split("/");   //split using "/"
+    int x[4];
+    for(int i = 0;i<5;i++)
+    {
+        x[i] = parsed.at(i).toInt();        //Convert to interger and add to Array
+    }
+
+    //Check if items has been succesfully updated yet - if not requests data from rover
+    if(Filters.at(x[0])->isReadOnly())
+    {
+        //Update TextBoxes
+        Uppers.at(x[0])->setText(QString::number(x[1]));
+        Lowers.at(x[0])->setText(QString::number(x[1]));
+        Filters.at(x[0])->setText(QString::number(x[1]));
+        Centers.at(x[0])->setText(QString::number(x[1]));
+        //Update Status
+        itemStatus.at(x[0])->setText("Good");
+        //Change Read Only Status
+        Uppers.at(x[0])->setReadOnly(false);
+        Lowers.at(x[0])->setReadOnly(false);
+        Filters.at(x[0])->setReadOnly(false);
+        Centers.at(x[0])->setReadOnly(false);
+        //Set other GUI variables
+
+    }else
+    {
+        //bool check if incoming match what is currently in boxes
+        bool one = x[1] == Uppers.at(x[0])->toPlainText().toInt();
+        bool two = x[2] == Lowers.at(x[0])->toPlainText().toInt();
+        bool three = x[3] == Filters.at(x[0])->toPlainText().toInt();
+        bool four = x[4] == Centers.at(x[0])->toPlainText().toInt();
+
+        if(one && two && three && four)
+        {
+            statusLabels.at(x[0])->setText("Good");
+            //set other GUI variables to Upper/lower/Center
+        } else
+        {
+            statusLabels.at(x[0])->setText("Failed");
+        }
+    }
+
+
 }

@@ -50,6 +50,14 @@ TODO
 		
 
 VERSIONS
+V4.7.3
+	Created start Algorithm
+	Added Send Command (33/ID#) for Servos
+	Created Receive Function
+		Checks if first time Updating
+		Updates boxes/status label
+		Checks if updated - compares received values with current
+		Prints failed if not		
 V4.7.2
 	Added Centered Boxes
 	Connected Buttons and TextBoxes

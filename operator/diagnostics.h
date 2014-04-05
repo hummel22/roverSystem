@@ -26,7 +26,9 @@ private:
     QList<QTextEdit*> Centers;
     QList<QLabel*> statusLabels;
     QList<QPushButton*> updateButtons;
+
     QList<QTextEdit*> motorUpper;
+
     QList<QString> itemStrings;
     QList<QLabel*> itemStatus;
     QList<QTextEdit*> itemText;
@@ -43,6 +45,7 @@ signals:
 public slots:
     void showDiagnostics();
     void updateButton();
+    void receiveAttributes(QString list);
 
 
 

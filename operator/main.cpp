@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
     //DIAGNOSTICS
     Diagnostics *diag = new Diagnostics;
     QObject::connect(diag,SIGNAL(toInternalTerminal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-
+    QObject::connect(diag,SIGNAL(Send(QString)),mysock,SLOT(Send(QString)));
     //DIAGNOSTICS
 
 
