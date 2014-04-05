@@ -76,11 +76,9 @@ int main(int argc, char *argv[])
     //WORKERS / SLIDERS / RADIOBUTTONS--------------------------------------------------------------------//
     //Testing
     int NumberOfServors = 9;
-
     //Create Window containing sliders
     QWidget *windowSlider = new QWidget;
     windowSlider->setWindowTitle("slider");//Contains Sliders
-
     //Create Socket and Initialize
     UDPwork *mysock = new UDPwork;
     //Thread
@@ -90,16 +88,15 @@ int main(int argc, char *argv[])
     QObject::connect(mysock,SIGNAL(UDPtoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(mysock,SIGNAL(UDPtoTerminalSend(QString)),TerminalSent,SLOT(appendPlainText(QString)));
     QObject::connect(mysock,SIGNAL(Received(QString)),TerminalReceived,SLOT(appendPlainText(QString)));
-
     //Workerall
     WorkerAll *All = new WorkerAll;
     //Rover Driver
     WorkerRover *rWorker = new WorkerRover;
-
     //Build Workers and Sliders Lists
     QList<Worker*> workerList;
     QList<QSlider*> sliderList;
     QList<HRadioButton*> radioButtonList;
+
 
     //KEY INPUT
     keyWindoe *test = new keyWindoe;
@@ -111,8 +108,6 @@ int main(int argc, char *argv[])
     //Connect RadioList to socket
     QObject::connect(myList,SIGNAL(toSend(QString)),mysock,SLOT(Send(QString)));
 
-
-
     //For Loop to build dynamically
     for(int i = 0;i <NumberOfServors;i++)
     {
@@ -120,7 +115,6 @@ int main(int argc, char *argv[])
         workerList.append(new Worker);
         sliderList.append(new QSlider);
         radioButtonList.append(new HRadioButton);
-
         radioButtonList.at(i)->initialize(i);
         workerList.at(i)->Initialize(sliderList.at(i),i);
 
@@ -209,6 +203,7 @@ int main(int argc, char *argv[])
 
     //DIAGNOSTICS
     Diagnostics *diag = new Diagnostics;
+    QObject::connect(diag,SIGNAL(toInternalTerminal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
 
     //DIAGNOSTICS
 

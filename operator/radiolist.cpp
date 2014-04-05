@@ -68,7 +68,7 @@ void RadioList::buttons(int x)
 
 void RadioList::setConfiguration(int A)
 {
-
+    //Disconnet All Switches
     for(int i = 0;i < switches.count();i++)
     {
         switches.at(i)->slidePointer->setEnabled(false);
@@ -78,17 +78,18 @@ void RadioList::setConfiguration(int A)
     disconnect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),wAll,SLOT(axisR(int,int,int,int,int,int)));
     disconnect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
 
-    if(A < switches.count())
+    //Make New Connection
+    if(A < switches.count())        //Single Servo Connection
     {
         switches.at(A)->slidePointer->setEnabled(true);
         connect(keys,SIGNAL(sendKey(QString)),switches.at(A),SLOT(keyInput(QString)));
         connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),switches.at(A),SLOT(joyInput(int,int,int,int,int,int)));
 
-    } else if(A == switches.count())
+    } else if(A == switches.count())    //Arm Control
     {
         connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),wAll,SLOT(axisR(int,int,int,int,int,int)));
 
-    } else if(A == switches.count() + 1)
+    } else if(A == switches.count() + 1)    //Rover Control
     {
         connect(joys,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
     }

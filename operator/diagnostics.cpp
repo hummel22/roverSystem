@@ -10,17 +10,15 @@ Diagnostics::Diagnostics(QObject *parent) :
         int height = 30;
 
         //Build Main Window
-        scene = new QGraphicsScene(0,0,columns*width,rows*height,&m);
-
+        scene = new QGraphicsScene(0,0,columns*width,rows*height,&m); //Create Scene for Graphics
         m.setScene(scene);
         m.setWindowTitle("Diagnostics");
         m.setMinimumHeight(rows*height);
         m.setMinimumWidth(columns*width);
-        m.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);   //Remove SCroll Bars
         m.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-
-        QGridLayout *mainLayout = new QGridLayout;
+        QGridLayout *mainLayout = new QGridLayout; //Layout
+        //Set all row and columns with minimm height/width
         for(int i=0;i<columns;i++)
         {
             mainLayout->setColumnMinimumWidth(i,width);
@@ -91,7 +89,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         servoHeaders.append("Status");
         servoHeaders.append("Update");
 
-        //Build Servo Table
+        //Add Spacers
         QSpacerItem *spacer = new QSpacerItem(width,height);
         mainLayout->addItem(spacer,4,1,1,1);
         mainLayout->addItem(spacer,5,1,1,1);
@@ -99,13 +97,14 @@ Diagnostics::Diagnostics(QObject *parent) :
         mainLayout->addItem(spacer,row-1,8,1,1);
 
 
-        //Build Servo Table Header
+        //Create the servoTable Headlines
         int columnSpan;
         int add = 0;
         for(int i = 0; i < servoHeaders.size();i++)
         {
 
             columnSpan = 1;
+            //allow for different column spans
             if(spacerNumbers.contains(i))
             {
                 add++;
@@ -144,6 +143,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         QList<QGraphicsEllipseItem*> statusCircles;
         QList<QLabel*> statusLabels;
         QList<QPushButton*> updateButtons;
+        int buttonName = 0;
 
         //Build Servo Table
         for(int i = 0;i < servoNames.size();i++)
@@ -210,7 +210,10 @@ Diagnostics::Diagnostics(QObject *parent) :
             updateButtons.at(i)->setMaximumHeight(height-5);
             updateButtons.at(i)->setMaximumWidth(width);
             mainLayout->addWidget(updateButtons.at(i),row,8,1,1);
+            updateButtons.at(i)->setObjectName(QString::number(buttonName));
+            QObject::connect(updateButtons.at(i),SIGNAL(clicked()),this,SLOT(updateButton()));
 
+            buttonName++;
             row++;
         }
 
@@ -273,14 +276,14 @@ Diagnostics::Diagnostics(QObject *parent) :
         itemHeader->setMinimumWidth(width);
         itemHeader->setAlignment(Qt::AlignCenter);
         mainLayout->addWidget(itemHeader,row+3,10,1,2);
-        //Item Header
+        //Status Header
         QLabel *itemStatusHeader = new QLabel;
         itemStatusHeader->setText("Status");
         itemStatusHeader->setMaximumWidth(2*width);
         itemStatusHeader->setMinimumWidth(width);
         itemStatusHeader->setAlignment(Qt::AlignCenter);
         mainLayout->addWidget(itemStatusHeader,row+3,10+4,1,1);
-        //Item Update
+        //Item Update Buttons Header
         QLabel *itemUpdate = new QLabel;
         itemUpdate->setText("Update");
         itemUpdate->setMaximumWidth(2*width);
@@ -289,7 +292,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         mainLayout->addWidget(itemUpdate,row+3,10+5,1,1);
 
 
-
+        //Items to add to each row
         QList<QString> itemStrings;
         QList<QLabel*> itemLabels;
         QList<QLabel*> itemStatus;
@@ -300,7 +303,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         itemStrings.append("Loop Delay");
         itemStrings.append("Sheel Command");
 
-
+        //Build Item Table
         for (int i = 0; i < itemStrings.size();i++)
         {
             //Labels
@@ -321,6 +324,7 @@ Diagnostics::Diagnostics(QObject *parent) :
             //Filters.at(i)->setReadOnly(true);
             mainLayout->addWidget(itemText.at(i),row+4+i,13,1,1);
 
+            //Item Status Labels
             itemStatus.append(new QLabel);
             itemStatus.at(i)->setText("Wait");
             itemStatus.at(i)->setMaximumWidth(width);
@@ -328,14 +332,16 @@ Diagnostics::Diagnostics(QObject *parent) :
             itemStatus.at(i)->setAlignment(Qt::AlignCenter);
             mainLayout->addWidget(itemStatus.at(i),row+4+i,14,1,1);
 
-
+            //Item Buttons
             itemButton.append(new QPushButton);
             itemButton.at(i)->setText("Update");
             itemButton.at(i)->setMaximumHeight(height-5);
             itemButton.at(i)->setMaximumWidth(width);
             mainLayout->addWidget(itemButton.at(i),row+4+i,15,1,1);
+            itemButton.at(i)->setObjectName(QString::number(buttonName));
+            QObject::connect(itemButton.at(i),SIGNAL(clicked()),this,SLOT(updateButton()));
+            buttonName++;
         }
-
 
 
 
@@ -354,4 +360,10 @@ void Diagnostics::showDiagnostics()
         m.hide();
     }
 
+}
+
+void Diagnostics::updateButton()
+{
+    QString id = QObject::sender()->objectName();
+    emit toInternalTerminal("Button Pressed: "+id);
 }

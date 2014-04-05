@@ -24,9 +24,11 @@ public:
     QGraphicsScene *scene;
 
 signals:
+    void toInternalTerminal(QString send);
 
 public slots:
     void showDiagnostics();
+    void updateButton();
 
 
 
