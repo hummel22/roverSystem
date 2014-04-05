@@ -236,6 +236,7 @@ int main(int argc, char *argv[])
     QObject::connect(showKeyInput,SIGNAL(clicked()),test,SLOT(show()));
     QObject::connect(showRover,SIGNAL(clicked()),rWindow,SLOT(showRover()));
     QObject::connect(Reset,SIGNAL(clicked()),All,SLOT(reset()));
+    QObject::connect(showDiagnostics,SIGNAL(clicked()),diag,SLOT(showDiagnostics()));
     //BUTTONS--------------------------------------------------------------------------------------//
 
 

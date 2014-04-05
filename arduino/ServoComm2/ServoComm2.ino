@@ -22,7 +22,7 @@ int checkError;
 
 
 void setup (){
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   //Assigns Servo to pIns
   

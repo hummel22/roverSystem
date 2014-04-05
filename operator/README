@@ -50,6 +50,8 @@ TODO
 		
 
 VERSIONS
+V4.7
+	Add Diagnostics Window and Tables
 V4.6
 	Converted workers from Angles to Microseconds
 	Add Upper and Lower limits for microseconds

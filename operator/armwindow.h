@@ -11,6 +11,7 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsRectItem>
 #include <qmath.h>
+#include <QPushButton>
 
 class armWindow : public QObject
 {

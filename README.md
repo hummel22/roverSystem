@@ -78,9 +78,10 @@ It also receives data from sensors and passes it to the onboard computer.
 [Documentation](pintable.md)
 
 
-
 ####ChangeLog
 
+V1.1.5
+* Moved Tables to Seperate Files
 V1.1.4
 * Added Command Table
 V1.1.3

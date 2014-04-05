@@ -96,6 +96,7 @@ void roverWindow::axisSteer(int x0, int x1, int x2, int x3, int x4, int x5)
 
 }
 
+//Open/Close Window on button Press
 void roverWindow::buttonControl(int but)
 {
     if(but == 7)
