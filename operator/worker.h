@@ -5,38 +5,38 @@
 #include <QString>
 #include <QSlider>
 
-class Worker : public QObject
+class Servo : public QObject
 {
     Q_OBJECT
 private:
     int servoNumber;
-    QString send;
+    QString sendString;
 
 
 
 public:
-    int slideValue;
-    QSlider *slidePointer;
-    explicit Worker(QObject *parent = 0);
+    int sliderValue;
+    QSlider *SLIDER;
+    explicit Servo(QObject *parent = 0);
     void Initialize(QSlider *one,int servo);
-    int upperValue;         //Max Value in Angles - for slider
-    int lowerValue;         //Min Value in Angles - for slider
+    int upperAngle;         //Max Value in Angles - for slider
+    int lowerAngle;         //Min Value in Angles - for slider
     int centerValue;        //Value to center
-    int endPointLow;        //Min Value Microseconds
-    int endPointHigh;       //MaxValue MicroSeconds
+    int lowerBound;        //Min Value Microseconds
+    int upperBound;       //MaxValue MicroSeconds
     int startPoint;
     bool echo;
     int map();
     void sendForce(int microValue);
 
 signals:
-    void WorkerToTerminalInternal(QString out);
-    void WorkerToSend(QString out);
+    void ToTerminalInternal(QString out);
+    void Send(QString out);
 
 public slots:
-    void keyInput(QString data);
-    void SliderRecieved(int value);
-    void joyInput(int x0,int x1,int x2,int x3,int x4,int x5);
+    void KeyboardInput(QString data);
+    void SliderChanged(int value);
+    void JoystickInput(int x0,int x1,int x2,int x3,int x4,int x5);
 
 };
 

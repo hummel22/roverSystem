@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class WorkerRover : public QObject
+class RoverController : public QObject
 {
     Q_OBJECT
 private:
@@ -13,7 +13,7 @@ private:
 
 
 public:
-    explicit WorkerRover(QObject *parent = 0);
+    explicit RoverController(QObject *parent = 0);
     void initialize();
 
 signals:

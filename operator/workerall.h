@@ -14,15 +14,15 @@
 #include <QGraphicsRectItem>
 #include <qmath.h>
 
-class WorkerAll : public QObject
+class ArmController : public QObject
 {
     Q_OBJECT
 private:
-    QList<Worker*> workerList;
+    QList<Servo*> workerList;
    
 public:
-    explicit WorkerAll(QObject *parent = 0);
-    void addWorker(Worker *temp);
+    explicit ArmController(QObject *parent = 0);
+    void addWorker(Servo *temp);
     
 
 signals:

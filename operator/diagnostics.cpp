@@ -331,7 +331,6 @@ Diagnostics::Diagnostics(QObject *parent) :
             itemText.at(i)->setAlignment(Qt::AlignRight);
             itemText.at(i)->setWordWrapMode(QTextOption::NoWrap);
             itemText.at(i)->setObjectName(QString::number(buttonName));
-            itemText.at(i)->setReadOnly(true);
             mainLayout->addWidget(itemText.at(i),row+4+i,13,1,1);
 
             //Item Status Labels
@@ -378,13 +377,12 @@ void Diagnostics::updateButton()
     QString id = QObject::sender()->objectName();
     int currentSet = id.toInt();
 
-    if(currentSet<Filters.size())
+    if(currentSet<Filters.size())                   //Check if Servo button was pressed
     {
-        //Check if first Connection
-        if(Filters.at(id.toInt())->isReadOnly())
+        if(Filters.at(id.toInt())->isReadOnly())    //Check if Connected Yet
         {
             statusLabels.at(currentSet)->setText("Waiting");
-            emit Send("33/"+QString::number(currentSet+1)+"/");
+            emit Send("33/"+QString::number(currentSet+1)+"/"); //Send Servo Request
             emit toInternalTerminal("DIAG: Reqest Servo: " + servoNames.at(currentSet));
         }
 
@@ -392,12 +390,6 @@ void Diagnostics::updateButton()
     } else
     {
         currentSet = currentSet - Filters.size();
-        //Check if first Connection
-        if(itemText.at(currentSet)->isReadOnly())
-        {
-            itemStatus.at(currentSet)->setText("Waiting");
-            emit Send("33/"+QString::number(currentSet+1)+"/");
-        }
         emit toInternalTerminal("Item: " + itemStrings.at(currentSet));
         emit toInternalTerminal("Value: " + itemText.at(currentSet)->toPlainText());
     }

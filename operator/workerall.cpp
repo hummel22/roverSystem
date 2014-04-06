@@ -1,24 +1,25 @@
 #include "workerall.h"
 
-WorkerAll::WorkerAll(QObject *parent) :
+ArmController::ArmController(QObject *parent) :
     QObject(parent)
 {
 }
 
-void WorkerAll::addWorker(Worker *temp)
+void ArmController::addWorker(Servo *temp)
 {
     //Build list of servos to control
     workerList.append(temp);
 }
 
-void WorkerAll::keyInput(QString data)
+void ArmController::keyInput(QString data)
 {
-    //Apply math here to convert xyz to desired servo angle
+    //Convert xyz to desired servo angle
 }
 
 
-void WorkerAll::axisR(int x0, int x1, int x2, int x3, int x4, int x5)
+void ArmController::axisR(int x0, int x1, int x2, int x3, int x4, int x5)
 {
+    //AdditionalValues
     int Xadd = -x0*3/32175;
     int Shoulder = -x1*3/32175;
     int Zadd = -(x2-x5)*10/32175;
@@ -39,15 +40,15 @@ void WorkerAll::axisR(int x0, int x1, int x2, int x3, int x4, int x5)
     //int NumberOfClawServos = 6    - hard coded at current moment
     for(int i = 0;i < 6; i++)
     {
-        if(workerList.at(i)->slideValue + x[i] > workerList.at(i)->endPointHigh)
+        if(workerList.at(i)->sliderValue + x[i] > workerList.at(i)->upperBound)
         {
             x[i] = 0;
-        }else if(workerList.at(i)->slideValue + x[i] <  workerList.at(i)->endPointLow)
+        }else if(workerList.at(i)->sliderValue + x[i] <  workerList.at(i)->lowerBound)
         {
             x[i] = 0;
         }else if(x[i] != 0)
         {
-            workerList.at(i)->sendForce(workerList.at(i)->slideValue + x[i]);
+            workerList.at(i)->sendForce(workerList.at(i)->sliderValue + x[i]);
         }
 
         //Send Pack Here
@@ -55,12 +56,13 @@ void WorkerAll::axisR(int x0, int x1, int x2, int x3, int x4, int x5)
 
     }
 }
-void WorkerAll::updateMinMax(int workerNumber, int Upper, int Lower)
+void ArmController::updateMinMax(int workerNumber, int Upper, int Lower)
 {
 
 }
 
-void WorkerAll::reset()
+//Resets to 1500 - Used in Beta Testing on reset
+void ArmController::reset()
 {
     workerList.at(0)->sendForce(1500);
     workerList.at(1)->sendForce(1500);

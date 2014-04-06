@@ -50,6 +50,14 @@ TODO
 		
 
 VERSIONS
+V4.8
+	Renamed majority of classes variables to better clarification
+	Removed excess testing functions
+	Increase and clarified commenting
+	Fixed item button update in Diagnostics Window
+	
+V4.7.5
+	Renamed worker class to Servo class
 V4.7.4
 	Added to interpreter - Receive Servo Attributes[command 1]
 		Passed Servo Attributes to Diagnostics

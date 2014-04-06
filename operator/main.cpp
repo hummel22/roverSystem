@@ -70,30 +70,28 @@ int main(int argc, char *argv[])
     //Show Window
     //TERMINAL WINDOW-----------------------------------------------------------------------//
 
-
-
-
-    //WORKERS / SLIDERS / RADIOBUTTONS--------------------------------------------------------------------//
-    //Testing
-    int NumberOfServors = 12;
-    //Create Window containing sliders
-    QWidget *windowSlider = new QWidget;
-    windowSlider->setWindowTitle("slider");//Contains Sliders
-    //Create Socket and Initialize
-    UDPwork *mysock = new UDPwork;
+    //SOCKET--------------------------------------------------------------------------------//
+    UDPwork *MySocket = new UDPwork;
     //Thread
     QThread cThread;
     myThread cObject;
     //UDP to Terminals
-    QObject::connect(mysock,SIGNAL(UDPtoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(mysock,SIGNAL(UDPtoTerminalSend(QString)),TerminalSent,SLOT(appendPlainText(QString)));
-    QObject::connect(mysock,SIGNAL(Received(QString)),TerminalReceived,SLOT(appendPlainText(QString)));
-    //Workerall
-    WorkerAll *All = new WorkerAll;
-    //Rover Driver
-    WorkerRover *rWorker = new WorkerRover;
+    QObject::connect(MySocket,SIGNAL(UDPtoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+    QObject::connect(MySocket,SIGNAL(UDPtoTerminalSend(QString)),TerminalSent,SLOT(appendPlainText(QString)));
+    QObject::connect(MySocket,SIGNAL(Received(QString)),TerminalReceived,SLOT(appendPlainText(QString)));
+    //SOCKET--------------------------------------------------------------------------------//
+
+
+    //WORKERS / SLIDERS / RADIOBUTTONS--------------------------------------------------------------------//
+    int NumberOfServors = 12;               //Set Number of Servos to Control
+    //QWidget *windowSlider = new QWidget;    //Create Container for Sliders
+    //windowSlider->setWindowTitle("Sliders"); //Contains Sliders
+
+
+    ArmController *Arm = new ArmController;         //Arm Control Object
+    RoverController *Drive = new RoverController;   //Drive Control Object
     //Build Workers and Sliders Lists
-    QList<Worker*> servoList;
+    QList<Servo*> servoList;
     QList<QSlider*> sliderList;
     QList<HRadioButton*> radioButtonList;
 
@@ -104,48 +102,48 @@ int main(int argc, char *argv[])
     test->setMaximumWidth(200);
 
     //Radio Controller
-    RadioList *myList = new RadioList(test);
+    RadioList *ModeHandler = new RadioList(test);
     //Connect RadioList to socket
-    QObject::connect(myList,SIGNAL(toSend(QString)),mysock,SLOT(Send(QString)));
+    QObject::connect(ModeHandler,SIGNAL(toSend(QString)),MySocket,SLOT(Send(QString)));
 
     //For Loop to build dynamically
     for(int i = 0;i <NumberOfServors;i++)
     {
         //Create each Worker and Slider
-        servoList.append(new Worker);
+        servoList.append(new Servo);
         sliderList.append(new QSlider);
         radioButtonList.append(new HRadioButton);
         radioButtonList.at(i)->initialize(i);
         servoList.at(i)->Initialize(sliderList.at(i),i);
 
         //Connect to Terminal And Socket - Connect radio buttons to RadioList
-        QObject::connect(servoList.at(i),SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-        QObject::connect(servoList.at(i),SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
+        QObject::connect(servoList.at(i),SIGNAL(ToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+        QObject::connect(servoList.at(i),SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
         QObject::connect(radioButtonList.at(i),SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-        QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
+        QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),ModeHandler,SLOT(RadioReceive(int)));
 
-        //Add Workers to Main Controller [workerALL Class]
-        All->addWorker(servoList.at(i));
-        myList->addslide(servoList.at(i));
-        myList->addButton(radioButtonList.at(i));
+        //Add Workers to Main Controllers [workerALL Class]
+        Arm->addWorker(servoList.at(i));
+        ModeHandler->addslide(servoList.at(i));
+        ModeHandler->addButton(radioButtonList.at(i));
 
     }
 
     //Create Drive and Arm Objects
-    HRadioButton *radioButtonAll = new HRadioButton();
+    HRadioButton *radioButtonArm = new HRadioButton();
     HRadioButton *radioButtonRover = new HRadioButton();
-    radioButtonAll->initialize(NumberOfServors);
+    radioButtonArm->initialize(NumberOfServors);
     radioButtonRover->initialize(NumberOfServors+1);
-    radioButtonAll->setText("All Servos");
+    radioButtonArm->setText("All Servos");
     radioButtonRover->setText("Drive Control");
-    QObject::connect(radioButtonAll,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+    QObject::connect(radioButtonArm,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(radioButtonRover,SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    myList->wAll = All;
-    myList->wRover = rWorker;
-    myList->addButton(radioButtonAll);
-    myList->addButton(radioButtonRover);
-    QObject::connect(radioButtonAll,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
-    QObject::connect(radioButtonRover,SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
+    ModeHandler->Arm = Arm;
+    ModeHandler->Drive = Drive;
+    ModeHandler->addButton(radioButtonArm);
+    ModeHandler->addButton(radioButtonRover);
+    QObject::connect(radioButtonArm,SIGNAL(clicked(int)),ModeHandler,SLOT(RadioReceive(int)));
+    QObject::connect(radioButtonRover,SIGNAL(clicked(int)),ModeHandler,SLOT(RadioReceive(int)));
     //WORKERS / SLIDERS / RADIOBUTTONS---------------------------------------------------------------------------//
 
 
@@ -160,20 +158,17 @@ int main(int argc, char *argv[])
     //Joystick Window
     joystickWindow *jWindow = new joystickWindow;
     jWindow->initialize();
-    //Input
-    joystickInput *jInput = new joystickInput;
-    //Pass Input to Radio List
-    myList->joys = jInput;
-    //Connections
+    joystickInput *jInput = new joystickInput;      //Connect to Joystick
+    ModeHandler->jInput = jInput;                   //Allow ModeHandler to control joystick connections
+    //Initial Connections
     QObject::connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),jWindow,SLOT(axisSet(int,int,int,int,int,int)));
     QObject::connect(jInput,SIGNAL(buttons(int)),jWindow,SLOT(buttonPress(int)));
-    QObject::connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),myList,SLOT(axisSet(int,int,int,int,int,int)));
-    QObject::connect(jInput,SIGNAL(buttons(int)),myList,SLOT(buttons(int)));
+    QObject::connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),ModeHandler,SLOT(axisSet(int,int,int,int,int,int)));
+    QObject::connect(jInput,SIGNAL(buttons(int)),ModeHandler,SLOT(buttons(int)));
     QObject::connect(jInput,SIGNAL(toInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     //Thread
     QThread jThread;
     joyThread jObject;
-    //Connect thread to Terminal
     //Initate Thread
     jObject.jInputs = jInput;
     jObject.DoSetup(jThread);
@@ -183,20 +178,20 @@ int main(int argc, char *argv[])
 
 
 
-    //ROVER VIEW
+    //ROVER GRAPHICAL VIEW
     roverWindow *rWindow = new roverWindow;
     rWindow->intialize();
-    myList->rWindow = rWindow;
+    ModeHandler->rWindow = rWindow;
     QObject::connect(jInput,SIGNAL(buttons(int)),rWindow,SLOT(buttonControl(int)));
     //ROVER VIEW
 
 
-    //ARM VIEW
-    armWindow *arm = new armWindow;
-    QObject::connect(sliderList.at(0),SIGNAL(valueChanged(int)),arm,SLOT(Angle1(int)));
-    QObject::connect(sliderList.at(1),SIGNAL(valueChanged(int)),arm,SLOT(Angle2(int)));
-    QObject::connect(sliderList.at(3),SIGNAL(valueChanged(int)),arm,SLOT(ClawAngle(int)));
-    QObject::connect(jInput,SIGNAL(buttons(int)),arm,SLOT(Buttons(int)));
+    //ARM GRAPHICAL VIEW
+    armWindow *aWindow = new armWindow;
+    QObject::connect(sliderList.at(0),SIGNAL(valueChanged(int)),aWindow,SLOT(Angle1(int)));
+    QObject::connect(sliderList.at(1),SIGNAL(valueChanged(int)),aWindow,SLOT(Angle2(int)));
+    QObject::connect(sliderList.at(3),SIGNAL(valueChanged(int)),aWindow,SLOT(ClawAngle(int)));
+    QObject::connect(jInput,SIGNAL(buttons(int)),aWindow,SLOT(Buttons(int)));
     //ARM VIEW
 
 
@@ -204,13 +199,12 @@ int main(int argc, char *argv[])
     //DIAGNOSTICS
     Diagnostics *diag = new Diagnostics;
     QObject::connect(diag,SIGNAL(toInternalTerminal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(diag,SIGNAL(Send(QString)),mysock,SLOT(Send(QString)));
+    QObject::connect(diag,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
     //DIAGNOSTICS
 
 
 
     //BUTTONS--------------------------------------------------------------------------------------//
-    QPushButton *syncButton = new QPushButton;
     QPushButton *showTerminals = new QPushButton;
     QPushButton *showJoystick = new QPushButton;
     QPushButton *showKeyInput = new QPushButton;
@@ -220,17 +214,15 @@ int main(int argc, char *argv[])
     showDiagnostics->setText("Diagnostics");
     showRover->setText("Rover View");
     showKeyInput->setText("Key Input");
-    syncButton->setText("Sync Servos");
     showTerminals->setText("Terminals");
     showJoystick->setText("Joystick");
     Reset->setText("Reset");
 
     QObject::connect(showTerminals,SIGNAL(clicked()),windowAll,SLOT(show()));
-    QObject::connect(syncButton,SIGNAL(clicked()),myList,SLOT(forcesync()));
     QObject::connect(showJoystick,SIGNAL(clicked()),jWindow,SLOT(showBox()));
     QObject::connect(showKeyInput,SIGNAL(clicked()),test,SLOT(show()));
     QObject::connect(showRover,SIGNAL(clicked()),rWindow,SLOT(showRover()));
-    QObject::connect(Reset,SIGNAL(clicked()),All,SLOT(reset()));
+    QObject::connect(Reset,SIGNAL(clicked()),Arm,SLOT(reset()));
     QObject::connect(showDiagnostics,SIGNAL(clicked()),diag,SLOT(showDiagnostics()));
     //BUTTONS--------------------------------------------------------------------------------------//
 
@@ -255,7 +247,6 @@ int main(int argc, char *argv[])
     mainLayout->setRowMinimumHeight(3,rowHeight);
     //LeftPanel
     leftPanelLayout->addWidget(showTerminals);
-    leftPanelLayout->addWidget(syncButton);
     leftPanelLayout->addWidget(showJoystick);
     leftPanelLayout->addWidget(showKeyInput);
     leftPanelLayout->addWidget(showRover);
@@ -270,7 +261,7 @@ int main(int argc, char *argv[])
         layerslid->addWidget(radioButtonList.at(k),1,k);
     }
     QGridLayout *sidebar = new QGridLayout;
-    sidebar->addWidget(radioButtonAll,0,0);
+    sidebar->addWidget(radioButtonArm,0,0);
     sidebar->addWidget(radioButtonRover,1,0);
     layerslid->addLayout(sidebar,0,NumberOfServors,2,1);
     //Slider Window --------------------------
@@ -288,10 +279,10 @@ int main(int argc, char *argv[])
 
     //SWITCH-------------------------------------------------------------------------//
     receiveSwitch *interpret = new receiveSwitch;
-    QObject::connect(interpret,SIGNAL(resetHeader()),mysock,SLOT(resetHeader()));
+    QObject::connect(interpret,SIGNAL(resetHeader()),MySocket,SLOT(resetHeader()));
     QObject::connect(interpret,SIGNAL(toInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    QObject::connect(mysock,SIGNAL(Received(QString)),interpret,SLOT(interpret(QString)));
-    QObject::connect(interpret,SIGNAL(toSend(QString)),mysock,SLOT(Send(QString)));
+    QObject::connect(MySocket,SIGNAL(Received(QString)),interpret,SLOT(interpret(QString)));
+    QObject::connect(interpret,SIGNAL(toSend(QString)),MySocket,SLOT(Send(QString)));
     QObject::connect(interpret,SIGNAL(servoAttributes(int[])),diag,SLOT(receiveAttributes(int[])));
     //SWITCH
 
@@ -299,8 +290,8 @@ int main(int argc, char *argv[])
 
     //CREATE THREAD---------------------------------------------------------------------------------//
     //Pass socket to Thread
-    mysock->InitializeConnection();
-    cObject.sock = mysock;
+    MySocket->InitializeConnection();
+    cObject.sock = MySocket;
     //Initate Thread
     cObject.DoSetup(cThread);
     cObject.moveToThread(&cThread);

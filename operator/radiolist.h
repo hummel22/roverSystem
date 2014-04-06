@@ -16,19 +16,19 @@ class RadioList : public QObject
 {
     Q_OBJECT
 private:
-    QList<Worker*> switches;
-    QList<HRadioButton*> rButtons;
+    QList<Servo*> Servos;
+    QList<HRadioButton*> RadioButtons;
     keyWindoe *keys;
     void setConfiguration(int A);
     int CurrentValue;
 
 public:
     explicit RadioList(keyWindoe *key,QObject *parent = 0);
-    void addslide(Worker *switcher);
+    void addslide(Servo *switcher);
     void addButton(HRadioButton *rbutton);
-    joystickInput *joys;
-    WorkerAll *wAll;
-    WorkerRover *wRover;
+    joystickInput *jInput;
+    ArmController *Arm;
+    RoverController *Drive;
     roverWindow *rWindow;
 
 
@@ -37,8 +37,6 @@ signals:
 
 public slots:
     void RadioReceive(int on);
-    void forcesync();
-    void axisSet(int x0,int x1,int x2,int x3,int x4,int x5);
     void buttons(int x);
 
 

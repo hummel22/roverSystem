@@ -1,63 +1,63 @@
 #include "worker.h"
 
-Worker::Worker(QObject *parent) :
+Servo::Servo(QObject *parent) :
     QObject(parent)
 {
 }
 
-void Worker::Initialize(QSlider *one,int servo)
+void Servo::Initialize(QSlider *one,int servo)
 {
     //Assign values for class - slider and starting values
-    slidePointer = one;
+    SLIDER = one;
     //Default Limits
-    upperValue = 175;
-    lowerValue = 5;
-    endPointHigh = 2000;
-    endPointLow = 1000;
+    upperAngle = 180;
+    lowerAngle = 0;
+    upperBound = 2000;
+    lowerBound = 1000;
     startPoint = 1500;
     //QSlider settings
-    slidePointer->setRange(lowerValue,upperValue);          //set range of slider
-    slidePointer->setTracking(true);        //user moves slider manually - fluid
+    SLIDER->setRange(lowerAngle,upperAngle);          //set range of slider
+    SLIDER->setTracking(true);        //user moves slider manually - fluid
     //Set slide value to current slider value
-    slideValue = startPoint;
-    QObject::connect(slidePointer,SIGNAL(valueChanged(int)),this,SLOT(SliderRecieved(int)));
+    sliderValue = startPoint;
+    QObject::connect(SLIDER,SIGNAL(valueChanged(int)),this,SLOT(SliderChanged(int)));
     servoNumber = servo;
     QString send = "WORKER INIT: Servo "+QString::number(servoNumber)+" Created";
-    emit WorkerToTerminalInternal(send);
+    emit ToTerminalInternal(send);
     echo = false;
 
 
 }
 
-void Worker::keyInput(QString data)
+void Servo::KeyboardInput(QString data)
 {
     //Detemine key pressed - iterate up and down
     switch (*data.toStdString().c_str())
     {
         case 'w':
-            slideValue++;
-            if(slideValue > endPointHigh+1)
+            sliderValue++;
+            if(sliderValue > upperBound+1)
             {
-                slideValue = endPointHigh;
+                sliderValue = upperBound;
             }
             echo = true;
-            slidePointer->setValue(map());     //move slider with key presses
-            send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
-            emit WorkerToSend(send);
+            SLIDER->setValue(map());     //move slider with key presses
+            sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+            emit Send(sendString);
 
             break;
         case 's':
-            slideValue = slideValue--;
+            sliderValue = sliderValue--;
 
-            if(slideValue < endPointLow)
+            if(sliderValue < lowerBound)
             {
-                slideValue = endPointLow
+                sliderValue = lowerBound
                         ;
             }
             echo = true;
-            slidePointer->setValue(map());
-            send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
-            emit WorkerToSend(send);
+            SLIDER->setValue(map());
+            sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+            emit Send(sendString);
 
             break;
     }
@@ -66,57 +66,63 @@ void Worker::keyInput(QString data)
 
 }
 
-void Worker::joyInput(int x0, int x1, int x2, int x3, int x4, int x5)
+void Servo::JoystickInput(int x0, int x1, int x2, int x3, int x4, int x5)
 {
     int add =-x1*3/32175;
-    if((add != 0) && (((add >0) && (slideValue < endPointHigh)) || ((add <0) && (slideValue > endPointLow))))
+    if((add != 0) && (((add >0) && (sliderValue < upperBound)) || ((add <0) && (sliderValue > lowerBound))))
         {
-        slideValue += add;
-        if(slideValue>endPointHigh+1)
+        sliderValue += add;
+        if(sliderValue>upperBound+1)
         {
-            slideValue = endPointHigh;
+            sliderValue = upperBound;
 
         }
-        if(slideValue<endPointLow)
+        if(sliderValue<lowerBound)
         {
-            slideValue = endPointLow;
+            sliderValue = lowerBound;
         }
         echo = true;
-        slidePointer->setValue(map());
-        send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
+        SLIDER->setValue(map());
+        sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
 
         //Possible source for double sending-- slider is changed which then initaes extra send
         //Test deleting
-        emit WorkerToSend(send);
+        emit Send(sendString);
 
     }
 }
 
-void Worker::SliderRecieved(int value)
+//Receive Values from Slider being changed
+void Servo::SliderChanged(int value)
 {
-    //
-    if(echo == false)
+    //check to see if Slider changed caused by user or program
+    //Program sets echo to true before changing - this nullifies this SLOT
+
+    if(echo == false)   //User moved slider
     {
         //Inverse Degree to Micorseconds
-        slideValue = (int)(endPointLow + (((double)value-lowerValue)/(upperValue-lowerValue))*(endPointHigh-endPointLow));
-        send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
-        emit WorkerToSend(send);
+        sliderValue = (int)(lowerBound + (((double)value-lowerAngle)/(upperAngle-lowerAngle))*(upperBound-lowerBound));
+        sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+        emit Send(sendString);
     }
-    echo = false;
+    echo = false; // return to false
 
 }
 
-//Returns Current Angle in Degrees
-int Worker::map()
+//Convert current Microseconds to Degrees
+int Servo::map()
 {
-    return (int)(lowerValue + (slideValue-endPointLow) * (upperValue-lowerValue) / (endPointHigh-endPointLow));
+    return (int)(lowerAngle + (sliderValue-lowerBound) * (upperAngle-lowerAngle) / (upperBound-lowerBound));
 }
 
-void Worker::sendForce(int microValue)
+
+//change slider to microValue
+void Servo::sendForce(int microValue)
 {
-    slideValue = microValue;
+
+    sliderValue = microValue;
     echo = true;
-    slidePointer->setValue(map());
-    send = QString::number(servoNumber+1)+"/"+QString::number(slideValue)+"/";
-    emit WorkerToSend(send);
+    SLIDER->setValue(map());
+    sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+    emit Send(sendString);
 }
