@@ -36,6 +36,7 @@
 
 
 ####Rover --> Operator
+|ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
 |0     |      |      |Ping Operator|
 |1     |      |      |Send Servo Attributes|
@@ -49,6 +50,3 @@
 |40    |      |      |Arduino Info|
 |50    |      |      |GPS Sensor Info|
 |99    |      |      |Misc Messages|
-
-
-
