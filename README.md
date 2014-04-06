@@ -80,6 +80,8 @@ It also receives data from sensors and passes it to the onboard computer.
 
 ####ChangeLog
 
+V1.1.6
+* Added Rover to Operator Comands in commands.md
 V1.1.5
 * Moved Tables to Seperate Files
 V1.1.4
@@ -87,10 +89,4 @@ V1.1.4
 V1.1.3
 * Added Pin Table
 
-V1.1.2
-* Changes Angles to microseconds to GUI
-
-V1.1.1
-* Changed from angles to micro second in arduino
-* * Need to do same to GUI
 

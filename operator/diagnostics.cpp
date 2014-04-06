@@ -404,49 +404,40 @@ void Diagnostics::updateButton()
 }
 
 
-void Diagnostics::receiveAttributes(QString list)
+void Diagnostics::receiveAttributes(int x[])
 {
-    //Itesm received as ID/U/L/F/C/
-    //Parse List
-    QStringList parsed = list.split("/");   //split using "/"
-    int x[4];
-    for(int i = 0;i<5;i++)
-    {
-        x[i] = parsed.at(i).toInt();        //Convert to interger and add to Array
-    }
-
+    //Recieved as [header,ID,U,L,F,C]
     //Check if items has been succesfully updated yet - if not requests data from rover
     if(Filters.at(x[0])->isReadOnly())
     {
         //Update TextBoxes
-        Uppers.at(x[0])->setText(QString::number(x[1]));
-        Lowers.at(x[0])->setText(QString::number(x[1]));
-        Filters.at(x[0])->setText(QString::number(x[1]));
-        Centers.at(x[0])->setText(QString::number(x[1]));
-        //Update Status
-        itemStatus.at(x[0])->setText("Good");
+        Uppers.at(x[1])->setText(QString::number(x[2]));
+        Lowers.at(x[1])->setText(QString::number(x[3]));
+        Filters.at(x[1])->setText(QString::number(x[4]));
+        Centers.at(x[1])->setText(QString::number(x[5]));
+        itemStatus.at(x[1])->setText("Good");               //Update Status
         //Change Read Only Status
-        Uppers.at(x[0])->setReadOnly(false);
-        Lowers.at(x[0])->setReadOnly(false);
-        Filters.at(x[0])->setReadOnly(false);
-        Centers.at(x[0])->setReadOnly(false);
+        Uppers.at(x[1])->setReadOnly(false);
+        Lowers.at(x[1])->setReadOnly(false);
+        Filters.at(x[1])->setReadOnly(false);
+        Centers.at(x[1])->setReadOnly(false);
         //Set other GUI variables
 
     }else
     {
         //bool check if incoming match what is currently in boxes
-        bool one = x[1] == Uppers.at(x[0])->toPlainText().toInt();
-        bool two = x[2] == Lowers.at(x[0])->toPlainText().toInt();
-        bool three = x[3] == Filters.at(x[0])->toPlainText().toInt();
-        bool four = x[4] == Centers.at(x[0])->toPlainText().toInt();
+        bool one = x[2] == Uppers.at(x[1])->toPlainText().toInt();
+        bool two = x[3] == Lowers.at(x[1])->toPlainText().toInt();
+        bool three = x[4] == Filters.at(x[1])->toPlainText().toInt();
+        bool four = x[5] == Centers.at(x[1])->toPlainText().toInt();
 
         if(one && two && three && four)
         {
-            statusLabels.at(x[0])->setText("Good");
+            statusLabels.at(x[1])->setText("Good");
             //set other GUI variables to Upper/lower/Center
         } else
         {
-            statusLabels.at(x[0])->setText("Failed");
+            statusLabels.at(x[1])->setText("Failed");
         }
     }
 

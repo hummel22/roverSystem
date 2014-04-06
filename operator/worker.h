@@ -19,10 +19,11 @@ public:
     QSlider *slidePointer;
     explicit Worker(QObject *parent = 0);
     void Initialize(QSlider *one,int servo);
-    int upperValue;
-    int lowerValue;
-    int endPointLow;
-    int endPointHigh;
+    int upperValue;         //Max Value in Angles - for slider
+    int lowerValue;         //Min Value in Angles - for slider
+    int centerValue;        //Value to center
+    int endPointLow;        //Min Value Microseconds
+    int endPointHigh;       //MaxValue MicroSeconds
     int startPoint;
     bool echo;
     int map();

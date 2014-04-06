@@ -50,6 +50,11 @@ TODO
 		
 
 VERSIONS
+V4.7.4
+	Added to interpreter - Receive Servo Attributes[command 1]
+		Passed Servo Attributes to Diagnostics
+		Diagnostics sets Textboxes to values
+	Renamed workList to ServoList
 V4.7.3
 	Created start Algorithm
 	Added Send Command (33/ID#) for Servos

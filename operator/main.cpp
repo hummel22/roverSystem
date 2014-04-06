@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
     //WORKERS / SLIDERS / RADIOBUTTONS--------------------------------------------------------------------//
     //Testing
-    int NumberOfServors = 9;
+    int NumberOfServors = 12;
     //Create Window containing sliders
     QWidget *windowSlider = new QWidget;
     windowSlider->setWindowTitle("slider");//Contains Sliders
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     //Rover Driver
     WorkerRover *rWorker = new WorkerRover;
     //Build Workers and Sliders Lists
-    QList<Worker*> workerList;
+    QList<Worker*> servoList;
     QList<QSlider*> sliderList;
     QList<HRadioButton*> radioButtonList;
 
@@ -112,21 +112,21 @@ int main(int argc, char *argv[])
     for(int i = 0;i <NumberOfServors;i++)
     {
         //Create each Worker and Slider
-        workerList.append(new Worker);
+        servoList.append(new Worker);
         sliderList.append(new QSlider);
         radioButtonList.append(new HRadioButton);
         radioButtonList.at(i)->initialize(i);
-        workerList.at(i)->Initialize(sliderList.at(i),i);
+        servoList.at(i)->Initialize(sliderList.at(i),i);
 
-        //Connect to Terminal And Socket
-        QObject::connect(workerList.at(i),SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-        QObject::connect(workerList.at(i),SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
+        //Connect to Terminal And Socket - Connect radio buttons to RadioList
+        QObject::connect(servoList.at(i),SIGNAL(WorkerToTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
+        QObject::connect(servoList.at(i),SIGNAL(WorkerToSend(QString)),mysock,SLOT(Send(QString)));
         QObject::connect(radioButtonList.at(i),SIGNAL(RadioButtontoTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
         QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),myList,SLOT(RadioReceive(int)));
 
         //Add Workers to Main Controller [workerALL Class]
-        All->addWorker(workerList.at(i));
-        myList->addslide(workerList.at(i));
+        All->addWorker(servoList.at(i));
+        myList->addslide(servoList.at(i));
         myList->addButton(radioButtonList.at(i));
 
     }
@@ -292,6 +292,7 @@ int main(int argc, char *argv[])
     QObject::connect(interpret,SIGNAL(toInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(mysock,SIGNAL(Received(QString)),interpret,SLOT(interpret(QString)));
     QObject::connect(interpret,SIGNAL(toSend(QString)),mysock,SLOT(Send(QString)));
+    QObject::connect(interpret,SIGNAL(servoAttributes(int[])),diag,SLOT(receiveAttributes(int[])));
     //SWITCH
 
 

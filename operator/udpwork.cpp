@@ -65,17 +65,18 @@ QString UDPwork::WaitForData()
 //SLOT - Send UDP Message
 void UDPwork::Send(QString send)
 {
+    send = QString::number(header) +"/"+ send;      //Attach header
+    header=header+1;                                //Increase Header Size
+    const char* test =send.toStdString().c_str();   //Convert to const char*
     //Check to see if sock has been created
     if (Open)
-    {
-        send = QString::number(header) +"/"+ send;
-        header=header+1;
-        const char* test =send.toStdString().c_str();
-        sendto(fd,test,strlen(test),0,(struct sockaddr *)&remaddr,sizeof(remaddr));
+    {  
+        sendto(fd,test,strlen(test),0,(struct sockaddr *)&remaddr,sizeof(remaddr));     //Send
         emit UDPtoTerminalSend(send);
 
 
     } else {
+        emit UDPtoTerminalSend("UDP SEND: " + send);
         emit UDPtoTerminalSend((QString)"UDP SEND: No Client To Send Data To");
     }
 

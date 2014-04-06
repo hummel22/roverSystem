@@ -1,4 +1,5 @@
 ##List of Commands
+####Operator --> Rover
 |ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
 |1-20  |      |      |Servo Number|
@@ -34,18 +35,20 @@
 
 
 
-
-
-Designed Info
-
-GUI
-####Seperate Buttons
-Check Arduino
-Set Header Count BOX1 - Interger[
-
-
-###Radio Buttons
-Switch UDP
+####Rover --> Operator
+|:----:|:----:|:----:|:------------------------------:|
+|0     |      |      |Ping Operator|
+|1     |      |      |Send Servo Attributes|
+|---   |ID#   |      |Servo Number|
+|---   |---   |ULFC  |Upper/Lower/Filter/Center|
+|2     |      |      |Motor Attributes|
+|---   |/1/2/3|      |FR-FL-MR-ML-BR-ML|
+|3     |      |      |Current Servo Values|
+|---   |1/2/x |      |Values order by Servo ID|
+|33    |      |      |Reset Header|
+|40    |      |      |Arduino Info|
+|50    |      |      |GPS Sensor Info|
+|99    |      |      |Misc Messages|
 
 
 

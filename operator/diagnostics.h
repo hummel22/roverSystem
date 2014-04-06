@@ -41,11 +41,14 @@ public:
 signals:
     void toInternalTerminal(QString send);
     void Send(QString send);
+    void updateWorker(int upp,int low,int filter,int center);
+    void updateRover(int,int,int,int,int,int);
+
 
 public slots:
     void showDiagnostics();
     void updateButton();
-    void receiveAttributes(QString list);
+    void receiveAttributes(int x[]);
 
 
 
