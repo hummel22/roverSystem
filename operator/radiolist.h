@@ -11,6 +11,7 @@
 #include <workerall.h>
 #include <workerrover.h>
 #include <roverwindow.h>
+#include <udpwork.h>
 
 class RadioList : public QObject
 {
@@ -24,20 +25,22 @@ private:
 
 public:
     explicit RadioList(keyWindoe *key,QObject *parent = 0);
-    void addslide(Servo *switcher);
+    void addSlide(Servo *switcher);
     void addButton(HRadioButton *rbutton);
     joystickInput *jInput;
     ArmController *Arm;
     RoverController *Drive;
-    roverWindow *rWindow;
+    UDPwork *mySocket;
+
+    roverWindow *rWindow; //Testing purposes
 
 
 signals:
-    void toSend(QString send);
+    void Send(QString send);
 
 public slots:
-    void RadioReceive(int on);
-    void buttons(int x);
+    void radioReceived(int on);
+    void buttonPressed(int x);
 
 
 };

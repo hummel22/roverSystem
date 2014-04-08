@@ -17,7 +17,7 @@ void HRadioButton::toggledOn(bool onOff)
     if(this->isChecked())
     {
         emit clicked(ButtonIdentifier);
-        emit RadioButtontoTerminalInternal((QString)"RADIO: RadioButton "+QString::number(ButtonIdentifier)+(QString)" is on");
+        emit toTerminalInternal((QString)"RADIO: RadioButton "+QString::number(ButtonIdentifier)+(QString)" is on");
     }
 }
 

@@ -24,20 +24,27 @@ public:
     QGraphicsScene *scene;
     QGraphicsLineItem *leftView;
     QGraphicsLineItem *rightView;
-    QGraphicsRectItem *FL;
-    QGraphicsRectItem *ML;
-    QGraphicsRectItem *BL;
-    QGraphicsRectItem *FR;
-    QGraphicsRectItem *MR;
-    QGraphicsRectItem *BR;
-    QGraphicsRectItem *Power;
+    QGraphicsRectItem *FowardLeftWheel;
+    QGraphicsRectItem *MiddleLeftWheel;
+    QGraphicsRectItem *BackLeftWheel;
+    QGraphicsRectItem *FrontRightWheel;
+    QGraphicsRectItem *MiddleRightWheel;
+    QGraphicsRectItem *BackRightWheel;
+    QGraphicsRectItem *PowerBar;
 
 signals:
 
 public slots:
-    void showRover();
-    void axisSteer(int x0,int x1,int x2,int x3,int x4,int x5);
-    void buttonControl(int but);
+    void showWindowClick();
+    void showWindowButton(int but);
+    void repaint(int Power);
+    void frontleftSLOT(int Angle);
+    void frontrightSLOT(int Angle);
+    void backleftSLOT(int Angle);
+    void backrightSLOT(int Angle);
+    void panSLOT(int Angle);
+    void tiltSLOT(int Angle);
+
 
 };
 

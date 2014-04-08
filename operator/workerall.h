@@ -18,7 +18,7 @@ class ArmController : public QObject
 {
     Q_OBJECT
 private:
-    QList<Servo*> workerList;
+    QList<Servo*> servoList;
    
 public:
     explicit ArmController(QObject *parent = 0);
@@ -26,13 +26,12 @@ public:
     
 
 signals:
-    void WorkerAllToTerminalInternal(QString out);
-    void WorkerAllToSend(QString out);
+    void toTerminalInternal(QString out);
+    void Send(QString out);
 
 public slots:
     void keyInput(QString data);
-    void axisR(int x0,int x1,int x2,int x3,int x4,int x5);
-    void updateMinMax(int workerNumber,int Upper,int Lower);
+    void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
     void reset();
 };
 

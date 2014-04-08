@@ -17,30 +17,39 @@ class armWindow : public QObject
 {
     Q_OBJECT
 private:
-    int arm1Length;
-    int arm2Length;
+    int Link1Length;
+    int Link2Length;
+    int Link3Length;
     int x0;
     int y0;
     void repaint(); //Called after any variables are updated - reapints window
-    int Dangle1;    //Base Angle
-    int Dangle2;    //Elbow Angle
+    int Angle1Degrees;    //Base Angle
+    int Angle2Degrees;    //shoulder Angle
+    int Angle3Degrees;    //Elbow angle
+    int Angle4Degrees;    //Wrist - Bend
+    int Angle5Degrees;    //Wrist - Rotate
 
 public:
     explicit armWindow(QObject *parent = 0);
     QGraphicsView m;
     QGraphicsScene *scene;
-    QGraphicsLineItem *Arm1;
-    QGraphicsLineItem *Arm2;
+    QGraphicsLineItem *Link1;
+    QGraphicsLineItem *Link2;
+    QGraphicsLineItem *Link3;
     QGraphicsRectItem *leftClaw;
     QGraphicsRectItem *rightClaw;
 
 signals:
 
 public slots:
-    void Angle1(int A);  //Set base angle - From Slider
-    void Angle2(int A); //Set elbow Angle - From slider
-    void Buttons(int A);    //Open and close window
-    void ClawAngle(int A);  //Open and close Claw
+    void Base(int Angle);       //Set base angle    (Degrees)
+    void Shoulder(int Angle);   //Set shoulder Angle(Degrees)
+    void Elbow(int Angle);      //Set elbow Angle   (Degrees)
+    void WristBend(int Angle);  //Set Wrist Bend    (Degrees)
+    void WristRotate(int Angle);//Set Wrist Rotate  (Degrees)
+    void showWindowButton(int Angle);    //Open and close window
+    void ClawAngle(int Angle);  //Open/Close Claw
+    void ShowWindowClick();
 
 };
 

@@ -14,7 +14,13 @@ class joystickWindow : public QObject
 {
     Q_OBJECT
 private:
-    void redrawPoints(int x, int x1, int x2);
+    void redrawPoints(int Joystick, int X, int Y);
+    QGraphicsLineItem *X1Line;
+    QGraphicsLineItem *Y1Line;
+    QGraphicsLineItem *X2Line;
+    QGraphicsLineItem *Y2Line;
+    QGraphicsLineItem *L1Bar;
+    QGraphicsLineItem *R1Bar;
 
 
 public:
@@ -23,19 +29,14 @@ public:
     QGraphicsView m;
     QPlainTextEdit *ButtonTerminal;
     QGraphicsScene *scene;
-    QGraphicsLineItem *X1;
-    QGraphicsLineItem *Y1;
-    QGraphicsLineItem *X2;
-    QGraphicsLineItem *Y2;
-    QGraphicsLineItem *L1;
-    QGraphicsLineItem *R1;
+
 
 signals:
 
 public slots:
-    void axisSet(int x0,int x1,int x2,int x3,int x4,int x5);
-    void buttonPress(int b);
-    void showBox();
+    void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
+    void buttonPressed(int b);
+    void showWindow();
 
 };
 

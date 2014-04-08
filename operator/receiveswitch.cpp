@@ -13,8 +13,8 @@ void receiveSwitch::interpret(QString receive)
     {
         case 0:
             // Respond to Ping from Rover
-            emit toSend("22/");     //Command send to Rover
-            emit toInternal("SWITCH: Ping Checked");
+            emit Send("22/");     //Command send to Rover
+            emit toTerminalInternal("SWITCH: Ping Checked");
         case 1:
         if(data.size() == 6)
         {
@@ -25,13 +25,13 @@ void receiveSwitch::interpret(QString receive)
             emit servoAttributes(dataInterger);
         } else
         {
-            emit toInternal("SWITCH: ServoAttr - Incomplete");
+            emit toTerminalInternal("SWITCH: ServoAttr - Incomplete");
         }
             break;
         case 34:
             emit resetHeader();
             break;
         default:
-            emit toInternal((QString)"SWITCH: Default");
+            emit toTerminalInternal((QString)"SWITCH: Default");
     }
 }

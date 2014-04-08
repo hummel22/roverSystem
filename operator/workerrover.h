@@ -2,29 +2,49 @@
 #define WORKERROVER_H
 
 #include <QObject>
-
+#include <motor.h>
+#include <QList>
+#include <worker.h>
 class RoverController : public QObject
 {
     Q_OBJECT
 private:
-    //Upper and lower limits. * no need to hold value alwasy taken from controller
-    int motorLimits[3][4];
-    int servoLimits[2][4];
+    int turnWheel(Servo *servo, int joystickValue); //return Microseconds / set Slider Angle
+    int motorSpeed(Motor, int joystickValue); //return 0-255
+    int map(int Value,int upper1,int lower1,int upper2, int lower2); //Convert value to number between 2
+
+    Servo *frontleftSERVO;
+    Servo *frontrightSERVO;
+    Servo *backleftSERVO;
+    Servo *backrightSERVO;
+    Servo *panServo;
+    Servo *tiltServo;
+
+    Motor *frontleftMOTOR;
+    Motor *frontrightMOTOR;
+    Motor *middleleftMOTOR;
+    Motor *middlerightMOTOR;
+    Motor *backleftMOTOR;
+    Motor *backrightMOTOR;
+
+
 
 
 public:
     explicit RoverController(QObject *parent = 0);
-    void initialize();
+    void initialize(QList<Motor*>mot,QList<Servo*> serv);
+
 
 signals:
-    void WorkerRoverToTerminalInternal(QString out);
-    void WorkerRoverToSend(QString out);
-    void UpdateGUI(int x0,int x1,int x2,int x3,int x4,int x5);
+    void toTerminalInternal(QString out);
+    void Send(QString out);
+    void powerUpdate(int Power);
 
 public slots:
     void keyInput(QString data);
-    void updateMotor(int limits[3][4]);
-    void axisSteer(int x0,int x1,int x2,int x3,int x4,int x5);
+    void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
+
+
 };
 
 #endif // WORKERROVER_H

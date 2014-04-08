@@ -9,27 +9,37 @@ armWindow::armWindow(QObject *parent) :
     m.setWindowTitle("Arm");
     m.setMinimumHeight(500);
     m.setMinimumWidth(300);
-    scene->addLine(0,120,300,120);
-    scene->addRect(20,300,250,50);
-    Arm1 = new QGraphicsLineItem;
-    Arm2 = new QGraphicsLineItem;
-    arm1Length = 100;
-    arm2Length = 80;
+
+
+    scene->addLine(0,120,300,120);      //Base Line
+    scene->addRect(20,300,250,50);      //Claw Base
+
+
+
+    //Origin X-Y of arm
     x0 = 15;
     y0 = 120;
-    Dangle1 = 5;
-    Dangle2 = 5;
-    double angle1 = Dangle1*3.1415926535/180;
-    double angle2 = Dangle2*3.14159265353/180;
-    int P1x = x0 + arm1Length*qCos(angle1);
-    int P1y = y0 - arm1Length*qSin(angle1);
-    int P2x = P1x + arm2Length*qCos(3.1415926535-angle1-angle2);
-    int P2y = P1y + arm2Length*qSin(3.1415926535-angle1-angle2);
 
-    Arm1->setLine(x0,y0,P1x,P1y);
-    Arm2->setLine(P1x,P1y,P2x,P2y);
-    scene->addItem(Arm1);
-    scene->addItem(Arm2);
+    //Initial Angles
+    Angle2Degrees = 5;  //Shoulder Angle
+    Angle3Degrees = 5;  //Elbow Angle
+    Angle4Degrees = 5;  //Wrist - Bend
+
+    //Geometry Calculations
+    Link1Length = 100;
+    Link2Length = 80;
+    Link3Length = 40;
+
+    Link1 = new QGraphicsLineItem;
+    Link2 = new QGraphicsLineItem;
+    Link3 = new QGraphicsLineItem;
+    //Intial Draw - Arm
+    repaint();
+    scene->addItem(Link1);
+    scene->addItem(Link2);
+    scene->addItem(Link3);
+
+    //Intial Draw - Claw
     leftClaw = new QGraphicsRectItem;
     rightClaw = new QGraphicsRectItem;
     leftClaw->setRect(20,250,20,50);
@@ -38,42 +48,68 @@ armWindow::armWindow(QObject *parent) :
     scene->addItem(rightClaw);
 }
 
-//Repaints windows - Calculates arom lines
+//Redraw
 void armWindow::repaint()
 {
     //Convert Degrees to Radians
-    double angle1 = Dangle1*3.1415926535/180;
-    double angle2 = Dangle2*3.14159265353/180;
+    double Angle2Radians = Angle2Degrees*3.1415926535/180;
+    double Angle3Radians = Angle3Degrees*3.14159265353/180;
+    double Angle4Radians = Angle4Degrees*3.14159265353/180;
 
     //X and Y location of first Joint
-    int P1x = x0 + arm1Length*qCos(angle1);
-    int P1y = y0 - arm1Length*qSin(angle1);
+    int P1x = x0 + Link1Length*qCos(Angle2Radians);
+    int P1y = y0 - Link1Length*qSin(Angle2Radians);
 
     //X and Y location of second joint
-    int P2x = P1x + arm2Length*qCos(3.1415926535-angle1-angle2);
-    int P2y = P1y + arm2Length*qSin(3.1415926535-angle1-angle2);
+    int P2x = P1x + Link2Length*qCos(3.1415926535-Angle2Radians-Angle3Radians);
+    int P2y = P1y + Link2Length*qSin(3.1415926535-Angle2Radians-Angle3Radians);
+
+    //X and Y of Claw Location
+    int P3x = P2x - Link3Length*qCos(3.1415926535-Angle2Radians-Angle3Radians-Angle4Radians);
+    int P3y = P2y - Link3Length*qSin(3.1415926535-Angle2Radians-Angle3Radians-Angle4Radians);
+
 
     //Redraw Lines
-    Arm1->setLine(x0,y0,P1x,P1y);
-    Arm2->setLine(P1x,P1y,P2x,P2y);
+    Link1->setLine(x0,y0,P1x,P1y);
+    Link2->setLine(P1x,P1y,P2x,P2y);
+    Link3->setLine(P2x,P2y,P3x,P3y);
 }
 
-//Change Base Angle
-void armWindow::Angle1(int A)
+//Change Base angle
+void armWindow::Base(int Angle)
 {
-    Dangle1 = A;
+
+}
+
+//Change Shoulder Angle
+void armWindow::Shoulder(int Angle)
+{
+    Angle2Degrees = Angle;
     repaint();
 }
 
 //Change Elbow Angle
-void armWindow::Angle2(int A)
+void armWindow::Elbow(int Angle)
 {
-    Dangle2 = A;
+    Angle3Degrees = Angle;
     repaint();
 }
 
+//Change Wrist Bend
+void armWindow::WristBend(int Angle)
+{
+    Angle4Degrees = Angle;
+    repaint();
+}
+
+//Change Wrist Rotate
+void armWindow::WristRotate(int Angle)
+{
+
+}
+
 //Open and close window with Controller
-void armWindow::Buttons(int A)
+void armWindow::showWindowButton(int A)
 {
     if(A == 6)
     {
@@ -86,8 +122,18 @@ void armWindow::Buttons(int A)
         }
     }
 }
+void armWindow::ShowWindowClick()
+{
+    if(m.isHidden())
+    {
+        m.show();
+    } else
+    {
+        m.hide();
+    }
+}
 
-//Redraw locations of arm bars
+//Redraw Claw
 void armWindow::ClawAngle(int A)
 {
     //Moves claw between 0-105 pixels ratioed from 0 to 180

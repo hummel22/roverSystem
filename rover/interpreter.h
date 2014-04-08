@@ -16,6 +16,7 @@ private:
     int WristRotate;
     bool headercheck(int num);
     void servoSet(int servo,int angle);
+    void pass(int x[8]);
 
 
     Arduino serial;
@@ -53,11 +54,9 @@ void Interpreter::initialize(Arduino temp,UDP temp2){
 void Interpreter::interpret(const char* data){
 
     //split command in interger array
-    char* c = (char*)data;      //Change from constant Char*
-    char*ch = strtok(c,"/");    //Split data by '/' "
-    int x[8];
-
-    //Convert data int integers
+    char* c = (char*)data;  //typecaset const to  variable
+    char*ch = strtok(c,"/");    //delimninate bt "/"
+    int x[20];
     int i = 0;
     while(ch != NULL)
     {
@@ -66,10 +65,8 @@ void Interpreter::interpret(const char* data){
         ch =  strtok(NULL,"/");
     }
 
-    //TIMEOUT
-    //x[0] is the Header - if failed to recieve anything should be -10
-    //Will continously count number of recieve failures ina row
-    //if exceeds MAX sends ping until data is recieved and resets counter
+
+    //falied to receive is below 0. creates counter for number of fails in a ro
     if (x[0] < 0)
     {
         shutdownCounter++;
@@ -81,7 +78,7 @@ void Interpreter::interpret(const char* data){
         }
     } else
     {
-        shutdownCounter = 0;    //reset counter
+        shutdownCounter = 0;
     }
 
 
@@ -112,34 +109,86 @@ void Interpreter::interpret(const char* data){
             case 17:
             case 18:
             case 19:
+            case 20:
                 cout << "Switch Set Servo" << endl;
                 servoSet(x[1],x[2]);
                 break;
-            case 20:
-                //Computer System [Timeout Count /  Header Count / Check Arduino Link]
+            case 21:
+                //Check Arduino Connection
+                // This should be done using arduino.h functions that return strings
+
+                //Check if connection is open
+                //bool check = serial.check();
+
+
+                //Loop to try and reconnect(attempt 5 times
+                //int count = 0;
+                //while(!check && count < 5)
+                //{ check = serial.reconnect(); count++;}
+
+                //If connection is good send serial values
+                //if(check)
+                //{
+                //Retrn values of connection
+                //string SerialValues = serial.Info()
+                //socket.send(string);
+                //} else { socket.send("There is no Connection"}
+                //break;
+
             case 22:
                 //checked for commands from operator
                 cout << "Ping Answered Succesfully" << endl;
                 break;
             case 23:
-                //set Pin refresh Rate
+                //Switch Protocols
+                //socket.protocol(x[2]_;
+            case 25:
+                //Reset Arduino
+                //serial.reconnect();
+                //break;
+            case 26:
+                //Force Header Synce
+                //currentHeader = x[1];
+                //break;
+            case 27:
+                //Set New Shutdoen limit
+                //shutdonw = x[1];
+                //break;
             case 30:
-                //Arduino System [Check Values - ?]
+                //Force Servo Sync
+                //pass(x);
+                //break;
+            case 31:
+                //Set Upper/lower Boundary Limits
+                ////pass(x);
+                //break;
+            case 32:
+                //Set Filter
+                //pass(x);
+                //break;
+            case 33:
+                //Requeste Servo Limits:
+                //pass(x):
+                //break;
+
+                //shoudl return Upper/loower limits/ current value/ / filter valued
+            case 34:
+                //Set Loop Delay
+                //pass(x);
+                //break;
+
             case 35:
-                //force servo sync
-                cout << "Force Servo Sync" << endl;
-                break;
+                //Set motor max value
+                //pass(x);
+                //break;
             case 40:
-                //Servo Settings [Limits / Filters]
-            case 50:
-                //motor Details
-            case 60:
-                //Sensor Details
-            case 70:
-                //Video Details [Change Video - BitRate ]
-
-
-
+                //Total Arm Control
+                //pass(x);
+                //break;
+            case 41:
+                //Steering Control
+                //pass(x[8]);
+                //break(x);
             default:
                 break;
 
@@ -186,14 +235,28 @@ void Interpreter::servoSet(int servo,int angle)
 //    command.append((char)(angle));
 //    command.append("/");
 
-    //Build String to send to Arduino
     std::ostringstream oss;
     oss << servo << "/" << angle << "/";
     cout<<"Made command "<< oss.str() << endl;
-
-    //Send Built String
     serial.send(oss.str());
 
+}
+
+void Interpreter::pass(int x[20])
+{
+    //get data length
+    int len = sizeof(x);
+    std::ostringstream oss;
+    for (int i = 1;i<=len;i++)
+    {
+        oss<< x[i] << "/" ;
+    }
+    cout << "Passing to Arduino: " << oss.str();
+    serial.send(oss.str());
+
+    //Build string
+
+    //send string to arduino
 }
 
 

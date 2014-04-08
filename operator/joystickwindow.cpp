@@ -21,31 +21,31 @@ void joystickWindow::initialize()
     scene->addRect(775,50,35,200);
     scene->addRect(845,50,35,200);
     scene->addWidget(ButtonTerminal);
-    X1 = new QGraphicsLineItem;
-    Y1 = new QGraphicsLineItem;
-    X2 = new QGraphicsLineItem;
-    Y2 = new QGraphicsLineItem;
-    X1->setLine(400,150,420,150);
-    X2->setLine(640,150,660,150);
-    Y1->setLine(410,140,410,160);
-    Y2->setLine(650,140,650,160);
-    X1->setPen(QPen(Qt::yellow));
-    Y1->setPen(QPen(Qt::yellow));
-    X2->setPen(QPen(Qt::yellow));
-    Y2->setPen(QPen(Qt::yellow));
+    X1Line = new QGraphicsLineItem;
+    Y1Line = new QGraphicsLineItem;
+    X2Line = new QGraphicsLineItem;
+    Y2Line = new QGraphicsLineItem;
+    X1Line->setLine(400,150,420,150);
+    X2Line->setLine(640,150,660,150);
+    Y1Line->setLine(410,140,410,160);
+    Y2Line->setLine(650,140,650,160);
+    X1Line->setPen(QPen(Qt::yellow));
+    Y1Line->setPen(QPen(Qt::yellow));
+    X2Line->setPen(QPen(Qt::yellow));
+    Y2Line->setPen(QPen(Qt::yellow));
 
-    L1 = new QGraphicsLineItem;
-    R1 = new QGraphicsLineItem;
-    L1->setLine(775,250,810,250);
-    R1->setLine(845,250,880,250);
-    L1->setPen(QPen(Qt::red));
-    R1->setPen(QPen(Qt::red));
-    scene->addItem(X1);
-    scene->addItem(X2);
-    scene->addItem(Y1);
-    scene->addItem(Y2);
-    scene->addItem(R1);
-    scene->addItem(L1);
+    L1Bar = new QGraphicsLineItem;
+    R1Bar = new QGraphicsLineItem;
+    L1Bar->setLine(775,250,810,250);
+    R1Bar->setLine(845,250,880,250);
+    L1Bar->setPen(QPen(Qt::red));
+    R1Bar->setPen(QPen(Qt::red));
+    scene->addItem(X1Line);
+    scene->addItem(X2Line);
+    scene->addItem(Y1Line);
+    scene->addItem(Y2Line);
+    scene->addItem(R1Bar);
+    scene->addItem(L1Bar);
     m.setMinimumWidth(1000);
     m.setWindowTitle("Joystick");
 
@@ -56,17 +56,19 @@ void joystickWindow::initialize()
     //m.show();
 }
 
-void joystickWindow::axisSet(int x0,int x1,int x2,int x3,int x4,int x5)
+void joystickWindow::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 {
-    redrawPoints(2,x3,x4);
-    redrawPoints(1,x0,x1);
-    int Radd = (x5+32767)*200/(32767*2);
-    int Ladd = (x2+32767)*200/(32767*2);
-    L1->setLine(775,250-Ladd,810,250-Ladd);
-    R1->setLine(845,250-Radd,880,250-Radd);
+    redrawPoints(2,X2,Y2);  //Right joystick
+    redrawPoints(1,X1,Y1);  //Left Joystick
+
+    //Triggers
+    int Radd = (RT+32767)*200/(32767*2);
+    int Ladd = (LT+32767)*200/(32767*2);
+    L1Bar->setLine(775,250-Ladd,810,250-Ladd);      //Redraw LT Bar
+    R1Bar->setLine(845,250-Radd,880,250-Radd);      //Redraw RT Bar
 }
 
-void joystickWindow::buttonPress(int b)
+void joystickWindow::buttonPressed(int b)
 {
     QString BUT;
     switch(b)
@@ -105,7 +107,8 @@ void joystickWindow::buttonPress(int b)
 
 }
 
-void joystickWindow::showBox()
+//Show/Hide Window
+void joystickWindow::showWindow()
 {
     if(m.isHidden())
     {
@@ -116,19 +119,20 @@ void joystickWindow::showBox()
     }
 }
 
-void joystickWindow::redrawPoints(int x, int x1, int x2)
+//Redraw Pointers for joysticks
+void joystickWindow::redrawPoints(int Joystick, int X, int Y)
 {
-    int Xadd = x1*100/32767;
-    int Yadd = x2*100/32767;
+    int Xadd = X*100/32767;         //Scale to -100/100
+    int Yadd = Y*100/32767;
 
-    if(x == 1)
+    if(Joystick == 1)  //Left joystick
     {
-        X1->setLine(400+Xadd,150+Yadd,420+Xadd,150+Yadd);
-        Y1->setLine(410+Xadd,140+Yadd,410+Xadd,160+Yadd);
-    }else if (x = 2)
+        X1Line->setLine(400+Xadd,150+Yadd,420+Xadd,150+Yadd);
+        Y1Line->setLine(410+Xadd,140+Yadd,410+Xadd,160+Yadd);
+    }else if (Joystick = 2)    //Right joystick
     {
-        X2->setLine(640+Xadd,150+Yadd,660+Xadd,150+Yadd);
-        Y2->setLine(650+Xadd,140+Yadd,650+Xadd,160+Yadd);
+        X2Line->setLine(640+Xadd,150+Yadd,660+Xadd,150+Yadd);
+        Y2Line->setLine(650+Xadd,140+Yadd,650+Xadd,160+Yadd);
     }
 }
 

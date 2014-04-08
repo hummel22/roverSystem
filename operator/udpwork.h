@@ -33,20 +33,20 @@ public:
 
     //VARIABLES
     bool Open; //Bool to show open
+    QString WaitForData(); //Return String Received
 
     //FUNCTIONS
     void InitializeConnection();   
-    QString WaitForData(); //Return String Received
+
 
 signals:
-    void UDPtoTerminalInternal(QString in);
-    void UDPtoTerminalSend(QString dat);
-    void Received(QString send);
+    void toTerminalInternal(QString in);
+    void toTerminalSend(QString dat);
+    void Received(QString send);                //received string from client
 
 public slots:
-    void Send(QString send);  //Send UDP - Pass Qstring
-    void SendTest();
-    void resetHeader();
+    void Send(QString send);    //Send UDP - Pass Qstring
+    void resetHeader();         //Set header to 0
 
 
 

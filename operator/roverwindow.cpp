@@ -15,48 +15,48 @@ void roverWindow::intialize()
     m.setMinimumWidth(300);
     scene->addRect(100,90,90,145,QColor(51,102,153),QColor(51,102,153));
 
-    FL = new QGraphicsRectItem;
-    ML = new QGraphicsRectItem;
-    BL = new QGraphicsRectItem;
-    FR = new QGraphicsRectItem;
-    MR = new QGraphicsRectItem;
-    BR = new QGraphicsRectItem;
+    FowardLeftWheel = new QGraphicsRectItem;
+    MiddleLeftWheel = new QGraphicsRectItem;
+    BackLeftWheel = new QGraphicsRectItem;
+    FrontRightWheel = new QGraphicsRectItem;
+    MiddleRightWheel = new QGraphicsRectItem;
+    BackRightWheel = new QGraphicsRectItem;
     leftView = new QGraphicsLineItem;
     rightView = new QGraphicsLineItem;
-    FL->setRect(60,75,20,35);
-    FL->setBrush(QColor(34,227,9));
-    FR->setRect(210,75,20,35);
-    FR->setBrush(QColor(34,227,9));
-    ML->setRect(60,145,20,35);
-    ML->setBrush(QColor(34,227,9));
-    MR->setRect(210,145,20,35);
-    MR->setBrush(QColor(34,227,9));
-    BL->setRect(60,215,20,35);
-    BL->setBrush(QColor(34,227,9));
-    BR->setRect(210,215,20,35);
-    BR->setBrush(QColor(34,227,9));
+    FowardLeftWheel->setRect(60,75,20,35);
+    FowardLeftWheel->setBrush(QColor(34,227,9));
+    FrontRightWheel->setRect(210,75,20,35);
+    FrontRightWheel->setBrush(QColor(34,227,9));
+    MiddleLeftWheel->setRect(60,145,20,35);
+    MiddleLeftWheel->setBrush(QColor(34,227,9));
+    MiddleRightWheel->setRect(210,145,20,35);
+    MiddleRightWheel->setBrush(QColor(34,227,9));
+    BackLeftWheel->setRect(60,215,20,35);
+    BackLeftWheel->setBrush(QColor(34,227,9));
+    BackRightWheel->setRect(210,215,20,35);
+    BackRightWheel->setBrush(QColor(34,227,9));
     leftView->setLine(145,162,75,92);
     rightView->setLine(145,162,215,92);
     leftView->setPen(QPen(Qt::yellow));
     rightView->setPen(QPen(Qt::yellow));
 
-    scene->addItem(FL);
-    scene->addItem(FR);
-    scene->addItem(ML);
-    scene->addItem(MR);
-    scene->addItem(BL);
-    scene->addItem(BR);
+    scene->addItem(FowardLeftWheel);
+    scene->addItem(FrontRightWheel);
+    scene->addItem(MiddleLeftWheel);
+    scene->addItem(MiddleRightWheel);
+    scene->addItem(BackLeftWheel);
+    scene->addItem(BackRightWheel);
     scene->addItem(leftView);
     scene->addItem(rightView);
     scene->addRect(265,90,10,140);
-    Power = new QGraphicsRectItem;
-    Power->setBrush(QBrush(Qt::green));
-    Power->setRect(266,162,8,0);
-    scene->addItem(Power);
+    PowerBar = new QGraphicsRectItem;
+    PowerBar->setBrush(QBrush(Qt::green));
+    PowerBar->setRect(266,162,8,0);
+    scene->addItem(PowerBar);
 }
 
 
-void roverWindow::showRover()
+void roverWindow::showWindowClick()
 {
     if(m.isHidden())
     {
@@ -68,36 +68,25 @@ void roverWindow::showRover()
 }
 
 
-void roverWindow::axisSteer(int x0, int x1, int x2, int x3, int x4, int x5)
+void roverWindow::repaint(int Power)
 {
-    int rot = x0*45/32767;
-    int rot2 = x3*90/32767;
-    double multiplier1 = (((double)x5)+32767)/(32767*2)+1; //1 to 2
-    double multiplier2 = 1-((((double)x2)+32767)*0.5/(32767*2));//From 0.5 to 1
-    int pow = -x1*36/32767 * multiplier1*multiplier2;
 
-    if (pow>0)
+    //Rotations are in degrees
+    if (Power>0)
     {
-        Power->setBrush(QBrush(Qt::green));
-        Power->setRect(265,162-pow,10,pow);
+        PowerBar->setBrush(QBrush(Qt::green));
+        PowerBar->setRect(265,162-Power,10,Power);
     } else
     {
-        Power->setBrush(QBrush(Qt::red));
-        Power->setRect(265,162,10,-pow);
+        PowerBar->setBrush(QBrush(Qt::red));
+        PowerBar->setRect(265,162,10,-Power);
     }
-
-    FL->setTransform(QTransform().translate(70, 92).rotate(rot).translate(-70, -92));
-    FR->setTransform(QTransform().translate(220, 92).rotate(rot).translate(-220, -92));
-    BL->setTransform(QTransform().translate(70, 232).rotate(-rot).translate(-70, -232));
-    BR->setTransform(QTransform().translate(220, 232).rotate(-rot).translate(-220, -232));
-    leftView->setTransform(QTransform().translate(142, 162).rotate(rot2).translate(-142, -162));
-    rightView->setTransform(QTransform().translate(142, 162).rotate(rot2).translate(-142, -162));
 
 
 }
 
 //Open/Close Window on button Press
-void roverWindow::buttonControl(int but)
+void roverWindow::showWindowButton(int but)
 {
     if(but == 7)
     {
@@ -109,4 +98,35 @@ void roverWindow::buttonControl(int but)
             m.hide();
         }
     }
+}
+
+void roverWindow::frontleftSLOT(int Angle)
+{
+    FowardLeftWheel->setTransform(QTransform().translate(70, 92).rotate(Angle).translate(-70, -92));
+}
+
+void roverWindow::frontrightSLOT(int Angle)
+{
+    FrontRightWheel->setTransform(QTransform().translate(220, 92).rotate(Angle).translate(-220, -92));
+}
+
+void roverWindow::backleftSLOT(int Angle)
+{
+    BackLeftWheel->setTransform(QTransform().translate(70, 232).rotate(Angle).translate(-70, -232));
+}
+
+void roverWindow::backrightSLOT(int Angle)
+{
+    BackRightWheel->setTransform(QTransform().translate(220, 232).rotate(Angle).translate(-220, -232));
+}
+
+void roverWindow::panSLOT(int Angle)
+{
+    leftView->setTransform(QTransform().translate(142, 162).rotate(Angle).translate(-142, -162));
+    rightView->setTransform(QTransform().translate(142, 162).rotate(Angle).translate(-142, -162));
+}
+
+void roverWindow::tiltSLOT(int Angle)
+{
+
 }

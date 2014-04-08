@@ -15,28 +15,28 @@ private:
 
 
 public:
-    int sliderValue;
-    QSlider *SLIDER;
+    int microSeconds;            //Current Slider Value (MicroSeconds)
+    QSlider *SLIDER;            //Pointer of Slider
     explicit Servo(QObject *parent = 0);
     void Initialize(QSlider *one,int servo);
-    int upperAngle;         //Max Value in Angles - for slider
+    int upperAngle;         //Max Value in Angles - for slider and Graphical Calculations
     int lowerAngle;         //Min Value in Angles - for slider
-    int centerValue;        //Value to center
+    int centerValue;        //Value to Center/Start
     int lowerBound;        //Min Value Microseconds
     int upperBound;       //MaxValue MicroSeconds
-    int startPoint;
     bool echo;
     int map();
-    void sendForce(int microValue);
+    void setServoValue(int microValue);
+    void angleRange(int upAngle,int downangle);
 
 signals:
-    void ToTerminalInternal(QString out);
+    void toTerminalInternal(QString out);
     void Send(QString out);
 
 public slots:
-    void KeyboardInput(QString data);
-    void SliderChanged(int value);
-    void JoystickInput(int x0,int x1,int x2,int x3,int x4,int x5);
+    void keyboardInput(QString data);
+    void sliderChanged(int value);
+    void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
 
 };
 

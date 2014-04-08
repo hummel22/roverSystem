@@ -39,9 +39,9 @@ public:
     void getInput();
 
 signals:
-    void axisSet(int x0,int x1,int x2,int x3,int x4,int x5);
-    void buttons(int b);
-    void toInternal(QString send);
+    void joyStickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
+    void buttonPressed(int b);
+    void toTerminalInternal(QString send);
 
 public slots:
 

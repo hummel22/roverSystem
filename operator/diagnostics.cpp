@@ -1,9 +1,10 @@
+
 #include "diagnostics.h"
 
 Diagnostics::Diagnostics(QObject *parent) :
     QObject(parent)
 {
-        //Variables
+        //Layout Dimensions
         int columns = 16;
         int rows = 20;
         int width = 75;
@@ -72,6 +73,7 @@ Diagnostics::Diagnostics(QObject *parent) :
         syncAll->setMaximumHeight(height);
         syncAll->setMaximumWidth(2*width);
         mainLayout->addWidget(syncAll,2,3,1,2);
+        connect(syncAll,SIGNAL(clicked()),this,SLOT(syncAll()));
 
 
 
@@ -358,8 +360,8 @@ Diagnostics::Diagnostics(QObject *parent) :
         m.setLayout(mainLayout);
 }
 
-
-void Diagnostics::showDiagnostics()
+//Show/Hide Window
+void Diagnostics::showWindow()
 {
 
     if(m.isHidden())
@@ -372,6 +374,7 @@ void Diagnostics::showDiagnostics()
 
 }
 
+//Update Buttons pressed
 void Diagnostics::updateButton()
 {
     QString id = QObject::sender()->objectName();
@@ -379,11 +382,22 @@ void Diagnostics::updateButton()
 
     if(currentSet<Filters.size())                   //Check if Servo button was pressed
     {
-        if(Filters.at(id.toInt())->isReadOnly())    //Check if Connected Yet
-        {
+        if(Filters.at(currentSet)->isReadOnly())    //Check if Connected Yet
+        {   emit toInternalTerminal("DIAG: First Sync");
             statusLabels.at(currentSet)->setText("Waiting");
             emit Send("33/"+QString::number(currentSet+1)+"/"); //Send Servo Request
             emit toInternalTerminal("DIAG: Reqest Servo: " + servoNames.at(currentSet));
+        } else
+        {
+            //Send Data to Rover
+            QString send = "hello"; // << -----Chenge
+            emit toInternalTerminal("Diag: Sending Data");
+
+
+            //Do a check
+            statusLabels.at(currentSet)->setText("Waiting");
+            emit Send("33/"+QString::number(currentSet+1)+"/"); //Send Servo Request
+            emit toInternalTerminal("DIAG: Check Read: " + servoNames.at(currentSet));
         }
 
 
@@ -396,9 +410,10 @@ void Diagnostics::updateButton()
 }
 
 
+//Recieve Servo Attributes from Rover
 void Diagnostics::receiveAttributes(int x[])
 {
-    //Recieved as [header,ID,U,L,F,C]
+    //Recieved as [CommandHeader,ID,U,L,F,C]
     //Check if items has been succesfully updated yet - if not requests data from rover
     if(Filters.at(x[0])->isReadOnly())
     {
@@ -434,4 +449,12 @@ void Diagnostics::receiveAttributes(int x[])
     }
 
 
+}
+
+void Diagnostics::syncAll()
+{
+    for(int i  = 0;i < Filters.size();i++)
+    {
+        updateButtons.at(i)->clicked();
+    }
 }

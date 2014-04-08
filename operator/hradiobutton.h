@@ -15,7 +15,7 @@ public:
 
 signals:
     void clicked(int num);
-    void RadioButtontoTerminalInternal(QString message);
+    void toTerminalInternal(QString message);
 
 
 public slots:

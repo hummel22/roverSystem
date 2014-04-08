@@ -13,6 +13,7 @@
 #include <QGridLayout>
 #include <QComboBox>
 #include <QGraphicsGridLayout>
+#include <worker.h>
 
 
 class Diagnostics : public QObject
@@ -33,6 +34,7 @@ private:
     QList<QLabel*> itemStatus;
     QList<QTextEdit*> itemText;
     QList<QPushButton*> itemButton;
+    QList<Servo*> servoList;
 public:
     explicit Diagnostics(QObject *parent = 0);
     QGraphicsView m;
@@ -41,14 +43,13 @@ public:
 signals:
     void toInternalTerminal(QString send);
     void Send(QString send);
-    void updateWorker(int upp,int low,int filter,int center);
-    void updateRover(int,int,int,int,int,int);
 
 
 public slots:
-    void showDiagnostics();
-    void updateButton();
-    void receiveAttributes(int x[]);
+    void showWindow();                      //Open/hide Diagnostics Windows
+    void updateButton();                    //Slot for Buttons
+    void receiveAttributes(int x[]);        //Receive Attributes from interpreter
+    void syncAll();
 
 
 

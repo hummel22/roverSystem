@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     joystickwindow.cpp \
     roverwindow.cpp \
     armwindow.cpp \
-    diagnostics.cpp
+    diagnostics.cpp \
+    motor.cpp
 
 HEADERS  += mainwindow.h \
     keywindoe.h \
@@ -45,6 +46,7 @@ HEADERS  += mainwindow.h \
     joystickwindow.h \
     roverwindow.h \
     armwindow.h \
-    diagnostics.h
+    diagnostics.h \
+    motor.h
 
 FORMS    += mainwindow.ui

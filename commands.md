@@ -31,7 +31,7 @@
 |---   |---   |x/x/x/|All Angles - Arm|
 |41    |      |      |Motor Control|
 |---   |15    |      |Check - Bug|
-|---   |---   |x/x/x/|Speed/Turn/Pan/Tilt|
+|---   |---   |x/x/x/|Turn/Pan/Tilt/Power/|
 
 
 
@@ -50,3 +50,25 @@
 |40    |      |      |Arduino Info|
 |50    |      |      |GPS Sensor Info|
 |99    |      |      |Misc Messages|
+
+
+
+####Software ID #'s
+Arduino is 1 Based Arrays
+Servo Lists are 0 Based Arrays in GUI
+Listing is for Arduino - All commands sent should you this list(Arduino 1 Based)
+
+|ID # | Servo Name |
+|:---:|:----------:|
+|1    |Base        |
+|2    |Shoulder    |
+|3    |Elbow       |
+|4    |Wrist Bend  |
+|5    |Wrist Rotate|
+|6    |Claw        |
+|7    |Pan         |
+|8    |Tilt        |
+|9    |FL          |
+|10   |FR          |
+|11   |BL          |
+|12   |BR          |

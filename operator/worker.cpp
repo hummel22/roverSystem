@@ -14,49 +14,48 @@ void Servo::Initialize(QSlider *one,int servo)
     lowerAngle = 0;
     upperBound = 2000;
     lowerBound = 1000;
-    startPoint = 1500;
     //QSlider settings
     SLIDER->setRange(lowerAngle,upperAngle);          //set range of slider
     SLIDER->setTracking(true);        //user moves slider manually - fluid
     //Set slide value to current slider value
-    sliderValue = startPoint;
-    QObject::connect(SLIDER,SIGNAL(valueChanged(int)),this,SLOT(SliderChanged(int)));
+    microSeconds = centerValue;
+    QObject::connect(SLIDER,SIGNAL(valueChanged(int)),this,SLOT(sliderChanged(int)));
     servoNumber = servo;
     QString send = "WORKER INIT: Servo "+QString::number(servoNumber)+" Created";
-    emit ToTerminalInternal(send);
+    emit toTerminalInternal(send);
     echo = false;
 
 
 }
 
-void Servo::KeyboardInput(QString data)
+void Servo::keyboardInput(QString data)
 {
     //Detemine key pressed - iterate up and down
     switch (*data.toStdString().c_str())
     {
         case 'w':
-            sliderValue++;
-            if(sliderValue > upperBound+1)
+            microSeconds++;
+            if(microSeconds > upperBound+1)
             {
-                sliderValue = upperBound;
+                microSeconds = upperBound;
             }
             echo = true;
             SLIDER->setValue(map());     //move slider with key presses
-            sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+            sendString = QString::number(servoNumber+1)+"/"+QString::number(microSeconds)+"/";
             emit Send(sendString);
 
             break;
         case 's':
-            sliderValue = sliderValue--;
+            microSeconds = microSeconds--;
 
-            if(sliderValue < lowerBound)
+            if(microSeconds < lowerBound)
             {
-                sliderValue = lowerBound
+                microSeconds = lowerBound
                         ;
             }
             echo = true;
             SLIDER->setValue(map());
-            sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+            sendString = QString::number(servoNumber+1)+"/"+QString::number(microSeconds)+"/";
             emit Send(sendString);
 
             break;
@@ -66,43 +65,39 @@ void Servo::KeyboardInput(QString data)
 
 }
 
-void Servo::JoystickInput(int x0, int x1, int x2, int x3, int x4, int x5)
+//User changes slider with Controller
+void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
 {
     int add =-x1*3/32175;
-    if((add != 0) && (((add >0) && (sliderValue < upperBound)) || ((add <0) && (sliderValue > lowerBound))))
+    if((add != 0) && (((add >0) && (microSeconds < upperBound)) || ((add <0) && (microSeconds > lowerBound))))
         {
-        sliderValue += add;
-        if(sliderValue>upperBound+1)
+        microSeconds += add;
+        if(microSeconds>upperBound+1)
         {
-            sliderValue = upperBound;
+            microSeconds = upperBound;
 
         }
-        if(sliderValue<lowerBound)
+        if(microSeconds<lowerBound)
         {
-            sliderValue = lowerBound;
+            microSeconds = lowerBound;
         }
-        echo = true;
-        SLIDER->setValue(map());
-        sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
 
-        //Possible source for double sending-- slider is changed which then initaes extra send
-        //Test deleting
-        emit Send(sendString);
+        setServoValue(microSeconds);
 
     }
 }
 
-//Receive Values from Slider being changed
-void Servo::SliderChanged(int value)
+//Receive Values from Slider  - Convert Angles to Microsconds
+void Servo::sliderChanged(int value)
 {
-    //check to see if Slider changed caused by user or program
+    //This function checks to see if was changed by user OR program
     //Program sets echo to true before changing - this nullifies this SLOT
 
     if(echo == false)   //User moved slider
     {
         //Inverse Degree to Micorseconds
-        sliderValue = (int)(lowerBound + (((double)value-lowerAngle)/(upperAngle-lowerAngle))*(upperBound-lowerBound));
-        sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
+        microSeconds = (int)(lowerBound + (((double)value-lowerAngle)/(upperAngle-lowerAngle))*(upperBound-lowerBound));
+        sendString = QString::number(servoNumber+1)+"/"+QString::number(microSeconds)+"/";
         emit Send(sendString);
     }
     echo = false; // return to false
@@ -112,17 +107,22 @@ void Servo::SliderChanged(int value)
 //Convert current Microseconds to Degrees
 int Servo::map()
 {
-    return (int)(lowerAngle + (sliderValue-lowerBound) * (upperAngle-lowerAngle) / (upperBound-lowerBound));
+    return (int)(lowerAngle + (microSeconds-lowerBound) * (upperAngle-lowerAngle) / (upperBound-lowerBound));
 }
 
 
 //change slider to microValue
-void Servo::sendForce(int microValue)
+void Servo::setServoValue(int microValue)
 {
 
-    sliderValue = microValue;
+    microSeconds = microValue;
     echo = true;
-    SLIDER->setValue(map());
-    sendString = QString::number(servoNumber+1)+"/"+QString::number(sliderValue)+"/";
-    emit Send(sendString);
+    SLIDER->setValue(map());    //Map MicroSeconds Value to DegreeAngle and set Slider
+    sendString = QString::number(servoNumber+1)+"/"+QString::number(microSeconds)+"/";
+    //emit Send(sendString);   //<---- Replace this wil Drive and Arm doing sending
+}
+
+void Servo::angleRange(int lower, int upper)
+{
+    SLIDER->setRange(lower,upper);
 }

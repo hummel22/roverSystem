@@ -16,9 +16,9 @@ public:
     explicit receiveSwitch(QObject *parent = 0);
 
 signals:
-    void toInternal(QString display);
+    void toTerminalInternal(QString display);
     void resetHeader();
-    void toSend(QString send);
+    void Send(QString send);
     void servoAttributes(int x[]);
 
 public slots:

@@ -6,12 +6,12 @@ RadioList::RadioList(keyWindoe *key, QObject *parent) :
     keys = key;
 }
 
-void RadioList::RadioReceive(int on)
+void RadioList::radioReceived(int on)
 {
     setConfiguration(on);
 }
 
-void RadioList::addslide(Servo *servo)
+void RadioList::addSlide(Servo *servo)
 {
     Servos.append(servo);
 }
@@ -23,11 +23,11 @@ void RadioList::addButton(HRadioButton *radiobutton)
 
 
 //Change Radio Selection With Joystick
-void RadioList::buttons(int x)
+void RadioList::buttonPressed(int x)
 {
     switch(x)       //Check what button was pressed
     {
-        case 1:     //If button was A move foward
+        case 1:     //If button was A move foward - A Ranges from 0 to (# of Servos)
         if (CurrentValue < RadioButtons.count())
             {
                 CurrentValue++;
@@ -59,12 +59,13 @@ void RadioList::setConfiguration(int A)
     for(int i = 0;i < Servos.count();i++)
     {
         Servos.at(i)->SLIDER->setEnabled(false);
-        disconnect(keys,SIGNAL(sendKey(QString)),Servos.at(i),SLOT(KeyboardInput(QString)));
-        disconnect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),Servos.at(i),SLOT(JoystickInput(int,int,int,int,int,int)));
+        disconnect(keys,SIGNAL(sendKey(QString)),Servos.at(i),SLOT(keyboardInput(QString)));
+        disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Servos.at(i),SLOT(joystickData(int,int,int,int,int,int)));
+        disconnect(Servos.at(i),SIGNAL(Send(QString)),mySocket,SLOT(Send(QString)));
     }
     //Disconnect Arm and Driver
-    disconnect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),Arm,SLOT(axisR(int,int,int,int,int,int)));
-    disconnect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
+    disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
+    disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
 
 
 
@@ -72,16 +73,17 @@ void RadioList::setConfiguration(int A)
     if(A < Servos.count())        //Single Servo Connection
     {
         Servos.at(A)->SLIDER->setEnabled(true);
-        connect(keys,SIGNAL(sendKey(QString)),Servos.at(A),SLOT(KeyboardInput(QString)));
-        connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),Servos.at(A),SLOT(JoystickInput(int,int,int,int,int,int)));
+        connect(keys,SIGNAL(sendKey(QString)),Servos.at(A),SLOT(keyboardInput(QString)));
+        connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Servos.at(A),SLOT(joystickData(int,int,int,int,int,int)));
+        connect(Servos.at(A),SIGNAL(Send(QString)),mySocket,SLOT(Send(QString)));
 
     } else if(A == Servos.count())    //Arm Control
     {
-        connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),Arm,SLOT(axisR(int,int,int,int,int,int)));
+        connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
 
     } else if(A == Servos.count() + 1)    //Rover Control
     {
-        connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),rWindow,SLOT(axisSteer(int,int,int,int,int,int)));
+        connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
     }
 
     CurrentValue = A + 1;
