@@ -133,7 +133,7 @@ void Interpreter::interpret(const char* data){
                 //string SerialValues = serial.Info()
                 //socket.send(string);
                 //} else { socket.send("There is no Connection"}
-                //break;
+                break;
 
             case 22:
                 //checked for commands from operator
@@ -182,9 +182,9 @@ void Interpreter::interpret(const char* data){
                 //pass(x);
                 //break;
             case 40:
-                //Total Arm Control
-                //pass(x);
-                //break;
+                //Pass Arm Control to Rover
+                pass(x);
+                break;
             case 41:
                 //Steering Control
                 //pass(x[8]);
@@ -247,7 +247,7 @@ void Interpreter::pass(int x[20])
     //get data length
     int len = sizeof(x);
     std::ostringstream oss;
-    for (int i = 1;i<=len;i++)
+    for (int i = 1;i<=len-1;i++)
     {
         oss<< x[i] << "/" ;
     }

@@ -79,6 +79,7 @@ void RadioList::setConfiguration(int A)
 
     } else if(A == Servos.count())    //Arm Control
     {
+        qDebug()<<"Arm Radio On: conectin joystick";
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
 
     } else if(A == Servos.count() + 1)    //Rover Control

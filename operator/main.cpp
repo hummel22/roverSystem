@@ -144,6 +144,7 @@ int main(int argc, char *argv[])
     ModeHandler->addButton(radioButtonRover);
     QObject::connect(radioButtonArm,SIGNAL(clicked(int)),ModeHandler,SLOT(radioReceived(int)));
     QObject::connect(radioButtonRover,SIGNAL(clicked(int)),ModeHandler,SLOT(radioReceived(int)));
+    QObject::connect(Arm,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
 
     //Create Six Motors
     QList<Motor*> motorList;

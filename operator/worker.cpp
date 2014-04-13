@@ -14,6 +14,7 @@ void Servo::Initialize(QSlider *one,int servo)
     lowerAngle = 0;
     upperBound = 2000;
     lowerBound = 1000;
+    centerValue = 1500;
     //QSlider settings
     SLIDER->setRange(lowerAngle,upperAngle);          //set range of slider
     SLIDER->setTracking(true);        //user moves slider manually - fluid
@@ -83,6 +84,7 @@ void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
         }
 
         setServoValue(microSeconds);
+
 
     }
 }

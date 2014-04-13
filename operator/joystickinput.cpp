@@ -59,7 +59,7 @@ void joystickInput::getInput()
         if(event.number < 7)
         {
             x[event.number] = event.value;
-            if(spacer == 18)
+            if(spacer == 36)
             {
                 emit joyStickData(x[0],x[1],x[2],x[3],x[4],x[5]);
                 spacer =1;

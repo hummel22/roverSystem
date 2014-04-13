@@ -19,6 +19,7 @@ class ArmController : public QObject
     Q_OBJECT
 private:
     QList<Servo*> servoList;
+    QString dataSent;
    
 public:
     explicit ArmController(QObject *parent = 0);

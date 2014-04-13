@@ -55,7 +55,7 @@ main(){
 
 
     //Wait for arduino to power on//
-    usleep(3000000);
+    usleep(1000000);
     cout << "Start" <<endl;
     //Initiate Second Test After Arduino Load
     const char* test= "test";
@@ -68,7 +68,8 @@ main(){
         usleep(refreshRate);
 
         //ARDUINO IN
-        sendOperator = serial.receive();
+        //sendOperator = serial.receive();
+        sendOperator = "";
         // Check if command was received
         if (sendOperator.length() > 0)
         {
@@ -88,6 +89,7 @@ main(){
         }
         //Pass to interpreter
         inter.interpret(toInterpreter.c_str());
+        //usleep(20000);
     }
 
 
