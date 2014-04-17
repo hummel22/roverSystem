@@ -5,6 +5,7 @@
 #include <motor.h>
 #include <QList>
 #include <worker.h>
+#include <qdebug.h>
 class RoverController : public QObject
 {
     Q_OBJECT

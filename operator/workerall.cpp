@@ -27,7 +27,7 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     ;
     //Single Joint Control
     //Joystick 1
-    int WristR = X1*3/32157;        //X Axis
+    int WristR = X1*45/32157;        //X Axis
     int Elbow = Y1*3/32175;          //Y Axis
 
     //Joystick 2

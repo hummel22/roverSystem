@@ -68,8 +68,8 @@ main(){
         usleep(refreshRate);
 
         //ARDUINO IN
-        //sendOperator = serial.receive();
-        sendOperator = "";
+        sendOperator = serial.receive();
+        //sendOperator = "";                //Debugging
         // Check if command was received
         if (sendOperator.length() > 0)
         {

@@ -102,26 +102,36 @@ void roverWindow::showWindowButton(int but)
 
 void roverWindow::frontleftSLOT(int Angle)
 {
+    //Adjust Angle
+    Angle = Angle-30;
     FowardLeftWheel->setTransform(QTransform().translate(70, 92).rotate(Angle).translate(-70, -92));
 }
 
 void roverWindow::frontrightSLOT(int Angle)
 {
+    //Adjust Angle
+    Angle = Angle-30;
     FrontRightWheel->setTransform(QTransform().translate(220, 92).rotate(Angle).translate(-220, -92));
 }
 
 void roverWindow::backleftSLOT(int Angle)
 {
+    //Adjust Angle
+    Angle = Angle-30;
     BackLeftWheel->setTransform(QTransform().translate(70, 232).rotate(Angle).translate(-70, -232));
 }
 
 void roverWindow::backrightSLOT(int Angle)
 {
+    //Adjust Angle
+    Angle = Angle-30;
     BackRightWheel->setTransform(QTransform().translate(220, 232).rotate(Angle).translate(-220, -232));
 }
 
 void roverWindow::panSLOT(int Angle)
 {
+    //Adjust Angle
+    Angle = Angle-90;
     leftView->setTransform(QTransform().translate(142, 162).rotate(Angle).translate(-142, -162));
     rightView->setTransform(QTransform().translate(142, 162).rotate(Angle).translate(-142, -162));
 }

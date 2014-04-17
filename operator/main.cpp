@@ -156,12 +156,16 @@ int main(int argc, char *argv[])
     QObject::connect(Drive,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
 
     //Individual Servo Valus
-    servoList.at(6)->angleRange(-90,90);    //Pan
+    //servoList.at(6)->angleRange(-90,90);    //Pan
     servoList.at(7)->angleRange(-30,30);    //Tilt
-    servoList.at(8)->angleRange(-30,30);    //FL
-    servoList.at(9)->angleRange(-30,30);
-    servoList.at(10)->angleRange(-30,30);
-    servoList.at(11)->angleRange(-30,30);
+    servoList.at(8)->angleRange(0,60);    //FL
+    servoList.at(9)->angleRange(0,60);
+    servoList.at(10)->angleRange(0,60);
+    servoList.at(11)->angleRange(0,60);
+    servoList.at(8)->setServoValue(1500);
+    servoList.at(9)->setServoValue(1500);
+    servoList.at(10)->setServoValue(1500);
+    servoList.at(11)->setServoValue(1500);
     //WORKERS / SLIDERS / RADIOBUTTONS---------------------------------------------------------------------------//
 
 

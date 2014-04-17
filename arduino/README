@@ -23,6 +23,14 @@ TODO
 	Add MIN/MAX 
 
 VERSIONS
+V3.2.0
+	Added Command Starter
+	Added Total Arm Control
+		Command 40/Angles/....
+	Fixed ReadData with memset
+	Added All Arm Servo Objects
+
+
 V3.1.2
 	Created servoRun.cpp
 	Succesfully compiled and tested new Library with Servos

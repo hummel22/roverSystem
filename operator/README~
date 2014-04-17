@@ -50,6 +50,15 @@ TODO
 		
 
 VERSIONS
+V5.1
+	Fixed Arm Sending
+	
+V5.0
+	Extreme class/variables makeover
+	Drive Control Sends Values
+	Arm Control Sends Values
+	Diagnostics SYnc All buttons syncs all servos
+
 V4.8
 	Renamed majority of classes variables to better clarification
 	Removed excess testing functions

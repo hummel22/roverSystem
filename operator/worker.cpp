@@ -19,12 +19,12 @@ void Servo::Initialize(QSlider *one,int servo)
     SLIDER->setRange(lowerAngle,upperAngle);          //set range of slider
     SLIDER->setTracking(true);        //user moves slider manually - fluid
     //Set slide value to current slider value
-    microSeconds = centerValue;
     QObject::connect(SLIDER,SIGNAL(valueChanged(int)),this,SLOT(sliderChanged(int)));
     servoNumber = servo;
     QString send = "WORKER INIT: Servo "+QString::number(servoNumber)+" Created";
     emit toTerminalInternal(send);
     echo = false;
+    setServoValue(centerValue);
 
 
 }
@@ -66,7 +66,7 @@ void Servo::keyboardInput(QString data)
 
 }
 
-//User changes slider with Controller
+//User changes slider with Controller - Worker Selected
 void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
 {
     int add =-x1*3/32175;
@@ -83,7 +83,10 @@ void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
             microSeconds = lowerBound;
         }
 
-        setServoValue(microSeconds);
+        echo = true;
+        SLIDER->setValue(map());    //Map MicroSeconds Value to DegreeAngle and set Slider
+        sendString = QString::number(servoNumber+1)+"/"+QString::number(microSeconds)+"/";
+        emit Send(sendString);
 
 
     }
@@ -113,7 +116,7 @@ int Servo::map()
 }
 
 
-//change slider to microValue
+//change slider to microValue Program Initiaed
 void Servo::setServoValue(int microValue)
 {
 
@@ -126,5 +129,7 @@ void Servo::setServoValue(int microValue)
 
 void Servo::angleRange(int lower, int upper)
 {
+    lowerAngle = lower;
+    upperAngle = upper;
     SLIDER->setRange(lower,upper);
 }

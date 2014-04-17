@@ -38,7 +38,7 @@
 ####Rover --> Operator
 |ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
-|0     |      |      |Ping Operator|
+|4     |      |      |Ping Operator|
 |1     |      |      |Send Servo Attributes|
 |---   |ID#   |      |Servo Number|
 |---   |---   |ULFC  |Upper/Lower/Filter/Center|

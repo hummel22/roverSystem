@@ -61,7 +61,7 @@ string Arduino::receive(){
 
 void Arduino::send(string command)
 {
-    command = command;
+    command = "-"+command;
     //send command
     int check = write(serialPort, command.c_str(),command.length());
 

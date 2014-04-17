@@ -73,6 +73,7 @@ void Interpreter::interpret(const char* data){
         if(shutdownCounter > shutdownMax)
         {
             cout << "Shutdown Reached"<<endl;
+            socks.send("4/");
             socks.send("Ping");
             cout << "Ping sent"<<endl;
         }
@@ -187,8 +188,8 @@ void Interpreter::interpret(const char* data){
                 break;
             case 41:
                 //Steering Control
-                //pass(x[8]);
-                //break(x);
+                pass(x);
+                break;
             default:
                 break;
 
@@ -251,7 +252,7 @@ void Interpreter::pass(int x[20])
     {
         oss<< x[i] << "/" ;
     }
-    cout << "Passing to Arduino: " << oss.str();
+    cout << "Passing: " << oss.str() << endl;
     serial.send(oss.str());
 
     //Build string

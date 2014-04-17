@@ -84,7 +84,9 @@ void RadioList::setConfiguration(int A)
 
     } else if(A == Servos.count() + 1)    //Rover Control
     {
+        qDebug()<<"Drive On";
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
+        qDebug()<<"Drive Connected to joystick:";
     }
 
     CurrentValue = A + 1;

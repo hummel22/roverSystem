@@ -12,6 +12,8 @@ void receiveSwitch::interpret(QString receive)
     switch(data[0].toInt())
     {
         case 0:
+            break;
+        case 4:
             // Respond to Ping from Rover
             emit Send("22/");     //Command send to Rover
             emit toTerminalInternal("SWITCH: Ping Checked");
