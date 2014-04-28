@@ -23,6 +23,8 @@ TODO
 	Add MIN/MAX 
 
 VERSIONS
+V3.2.3
+	Added Bounds for Servos
 V3.2.2
 	Added Single Servo control for commands 0-14
 V3.2.1

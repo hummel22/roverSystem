@@ -20,10 +20,10 @@ int Camera1Pin;
 int MastPin;
 
 //Steering Servos
-int FLServoPin   = 10;
-int BLServoPin   = 12;
-int FRServoPin   = 11;
-int BRServoPin   = 13;
+int FLServoPin   = 44;
+int BLServoPin   = 45;
+int FRServoPin   = 46;
+int BRServoPin   = 47;
 
 //Motor Speed Pins
 int FLMotorPin = 2;
@@ -98,15 +98,15 @@ void setup (){
   Base.buildServo(BasePin,1500);
   Base.setBounds(largeServoLower,largeServoUpper);
   Shoulder.buildServo(ShoulderPin,1500);
-  Shoulder.setBounds(largeServoLower,largeServoUpper);
+  Shoulder.setBounds(largeServoLower,1884);
   Elbow.buildServo(ElbowPin,1500);
   Elbow.setBounds(largeServoLower,largeServoUpper);
   Wrist.buildServo(WristPin,1500);
   Wrist.setBounds(largeServoLower,largeServoUpper);
-  WristRotate.buildServo(WristRotatePin,1500);
+  WristRotate.buildServo(WristRotatePin,1522);
   WristRotate.setBounds(largeServoLower,largeServoUpper);
   Claw.buildServo(ClawPin,1500);
-  Claw.setBounds(largeServoLower,largeServoUpper);
+  Claw.setBounds(1025,1733);
   
   FLServo.buildServo(FLServoPin,1500);
   FLServo.setBounds(largeServoLower,largeServoUpper);
@@ -153,30 +153,62 @@ void loop(){
     Serial.println(switchvalue);
     switch(switchvalue){
       case 1:
-        //checks if new angle is within 8 degrees -- memory erros causes random numbers
         newAngle = readData();
         Base.setTarget(newAngle);
         break;
       case 2:
-        //checks if new angle is within 8 degrees -- memory erros causes random numbers
         newAngle = readData();
-        //if ( (newAngle>=maxBaseAngle-8) && (newAngle<=maxBaseAngle+8))
-        if(true)
-        {
-          //if it is within -+8 degrees sets new target angle
-          Shoulder.setTarget(newAngle);
-        }
+        Shoulder.setTarget(newAngle);
         break;  
      case 3:
-        //checks if new angle is within 8 degrees -- memory erros causes random numbers
         newAngle = readData();
-        //if ( (newAngle>=maxBaseAngle-8) && (newAngle<=maxBaseAngle+8))
-        if(true)
-        {
-          //if it is within -+8 degrees sets new target angle
-          Elbow.setTarget(newAngle);
-        }
+        Elbow.setTarget(newAngle);
         break;
+     case 4:
+        newAngle = readData();
+        Wrist.setTarget(newAngle);
+        break;
+     case 5:
+        newAngle = readData();
+        WristRotate.setTarget(newAngle);
+        break;
+     case 6:
+        newAngle = readData();
+        Claw.setTarget(newAngle);
+        break;
+     case 7:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 8:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 9:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 10:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 11:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 12:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 13:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+     case 14:
+        newAngle = readData();
+        Elbow.setTarget(newAngle);
+        break;
+    
      case 40:
      case 4000:   
      case 4044:
@@ -198,7 +230,8 @@ void loop(){
        Claw.setTarget(claw);
        break;
        
-     case 41:
+     case 41: //Drive Control
+       //Read In values
        fl = readData();
        bl = readData();
        fr = readData();
@@ -207,28 +240,28 @@ void loop(){
        tilt = readData();
        power = readData();
 
-       
+       //Set Servo Values
        FLServo.setTarget(fl);
        BLServo.setTarget(bl);
        FRServo.setTarget(fr);
        BRServo.setTarget(br);
        
-       
+       //Reverse wheel Direction if signs of power change
        if(power * prevPower <= 1);
        {
          if(power > 0)
             {
+              //Foward Wheel Direction
               digitalWrite(FLMotorDirectionPin,HIGH);
               digitalWrite(MLMotorDirectionPin,HIGH);
               digitalWrite(BLMotorDirectionPin,HIGH);
               digitalWrite(FRMotorDirectionPin,LOW);
               digitalWrite(MRMotorDirectionPin,LOW);
               digitalWrite(BRMotorDirectionPin,LOW);
-              
-              
               prevPower = power;
             }  else
             {
+              //Reverse Wheel 
               digitalWrite(FLMotorDirectionPin,LOW);
               digitalWrite(MLMotorDirectionPin,LOW);
               digitalWrite(BLMotorDirectionPin,LOW);
@@ -238,17 +271,17 @@ void loop(){
               prevPower = power;
               
             }
+            //Use only magnitude of Power
             if(power<0){power=power*-1;}
+            
+            //Set power of motors
             analogWrite(FLMotorPin,power);
             analogWrite(MLMotorPin,power);
             analogWrite(BLMotorPin,power);
             analogWrite(FRMotorPin,power);
             analogWrite(MRMotorPin,power);
-            analogWrite(BRMotorPin,power);
-                      
-       }
-       
-       
+            analogWrite(BRMotorPin,power);                 
+       }    
      default:
        break;
     }
