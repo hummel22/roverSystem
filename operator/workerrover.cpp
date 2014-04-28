@@ -14,6 +14,7 @@ void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)
     backrightSERVO = serv.at(11);
     panServo = serv.at(6);
     tiltServo = serv.at(7);
+    DeadZone = 10000;
 
 }
 
@@ -27,6 +28,21 @@ void RoverController::keyInput(QString data)
 void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 {
 
+    if((X2<DeadZone) && (X2>-DeadZone) )
+    {
+        X2 = 0;
+    }else{
+    if(X2>DeadZone){X2 = X2-DeadZone;}
+    if(X2<-DeadZone){X2 = X2+DeadZone;}
+    }
+
+    if((Y1<DeadZone) && (Y1>-DeadZone) )
+    {
+        Y1 = 0;
+    }else{
+    if(Y1>DeadZone){Y1 = Y1-DeadZone;}
+    if(Y1<-DeadZone){Y1 = Y1+DeadZone;}
+    }
 
 
     int valueFront = X2*500/32762+1500;
@@ -37,11 +53,19 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     backrightSERVO->setServoValue(valueBack);
 
 //    qDebug()<<"calculated Turn";
-//    double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
-//    double multiplier2 = 1-((((double)LT)+32767)*0.5/(32767*2));//From 0.5 to 1
-//    int pow = -Y1*36/32767 * multiplier1*multiplier2;
-    
-    
+    double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
+    double multiplier2 = 1-((((double)LT)+32767)*0.5/(32767*2));//From 0.5 to 1
+    int pow = -Y1*175/32767 * multiplier1*multiplier2;
+    qDebug()<<pow;
+    QString frontValue = QString::number(valueFront);
+    QString backValue = QString::number(valueBack);
+    QString Power = QString::number(pow);
+    QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+Power+"/";
+    if(send != dataSent)
+    {
+        emit Send(send);
+        dataSent = send;
+    }
 //    emit powerUpdate(pow);
 //    emit Send("41/"+FLWSeconds+"/"+FRWSeconds+"/"+BLWSeconds+"/"+BRWSeconds+"/"+PanSeconds+"/"+TiltSeconds+"/"+QString::number(pow)+"/");
 

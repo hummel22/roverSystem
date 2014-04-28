@@ -16,7 +16,8 @@ private:
     int WristRotate;
     bool headercheck(int num);
     void servoSet(int servo,int angle);
-    void pass(int x[8]);
+    void pass(int x[12]);
+    void pass(int x[12],bool);
 
 
     Arduino serial;
@@ -56,13 +57,16 @@ void Interpreter::interpret(const char* data){
     //split command in interger array
     char* c = (char*)data;  //typecaset const to  variable
     char*ch = strtok(c,"/");    //delimninate bt "/"
-    int x[20];
+    int x[12];
+    //memset(x,NULL,12);
     int i = 0;
+
     while(ch != NULL)
     {
         x[i] = atoi(ch);
         i++;
         ch =  strtok(NULL,"/");
+
     }
 
 
@@ -188,7 +192,7 @@ void Interpreter::interpret(const char* data){
                 break;
             case 41:
                 //Steering Control
-                pass(x);
+                pass(x,true);
                 break;
             default:
                 break;
@@ -243,13 +247,33 @@ void Interpreter::servoSet(int servo,int angle)
 
 }
 
-void Interpreter::pass(int x[20])
+void Interpreter::pass(int x[12])
 {
     //get data length
     int len = sizeof(x);
     std::ostringstream oss;
     for (int i = 1;i<=len-1;i++)
     {
+        cout<<i<<": "<<x[i]<<endl;
+        oss<< x[i] << "/" ;
+    }
+    cout << "Passing: " << oss.str() << endl;
+    serial.send(oss.str());
+
+    //Build string
+
+    //send string to arduino
+}
+
+
+void Interpreter::pass(int x[12],bool)
+{
+    //get data length
+    int len = sizeof(x);
+    std::ostringstream oss;
+    for (int i = 1;i<=len;i++)
+    {
+        cout<<i<<": "<<x[i]<<endl;
         oss<< x[i] << "/" ;
     }
     cout << "Passing: " << oss.str() << endl;

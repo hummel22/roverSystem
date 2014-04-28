@@ -28,6 +28,9 @@ private:
     Motor *backleftMOTOR;
     Motor *backrightMOTOR;
 
+    QString dataSent;
+    int DeadZone;
+
 
 
 

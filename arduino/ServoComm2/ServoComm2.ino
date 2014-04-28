@@ -4,17 +4,50 @@
 #include <Servo.h>
 
 
-//Set Servo locations
-int BasePin = 2;
-int ShoulderPin = 3;
-int ElbowPin = 4;
-int WristPin = 5;
-int WristRotatePin = 6;
-int ClawPin = 7;
+//Pin Setup
+//Arm
+int BasePin        = 22;
+int ShoulderPin    = 23;
+int ElbowPin       = 24;
+int WristPin       = 25;
+int WristRotatePin = 26;
+int ClawPin        = 27;
+
+//Extra Items
+int PanPin;
+int TiltPin;
+int Camera1Pin;
+int MastPin;
+
+//Steering Servos
+int FLServoPin   = 10;
+int BLServoPin   = 12;
+int FRServoPin   = 11;
+int BRServoPin   = 13;
+
+//Motor Speed Pins
+int FLMotorPin = 2;
+int MLMotorPin = 4;
+int BLMotorPin = 6;
+int FRMotorPin = 3;
+int MRMotorPin = 5;
+int BRMotorPin = 7;
+
+//Motor Direction
+int FLMotorDirectionPin = 28;
+int MLMotorDirectionPin = 30;
+int BLMotorDirectionPin = 32;
+int FRMotorDirectionPin = 29;
+int MRMotorDirectionPin = 31;
+int BRMotorDirectionPin = 33;
+int isFoward;
+
 int Angle;
 
 int largeServoUpper = 2000;
 int largeServoLower = 1000;
+
+//Servos
 servoRun Base;
 servoRun Shoulder;
 servoRun Elbow;
@@ -22,8 +55,15 @@ servoRun Wrist;
 servoRun WristRotate;
 servoRun Claw;
 
-int checkError;
+servoRun FLServo;
+servoRun BLServo;
+servoRun FRServo;
+servoRun BRServo;
+servoRun list[20];
 
+int newAngle;
+
+//Arm Angle place holders
 int base;
 int shoulder;
 int elbow;
@@ -31,13 +71,29 @@ int wrist;
 int wristrotate;
 int claw;
 
+//Drive andle place holders
+int fl;
+int bl;
+int fr;
+int br;
+int pan;
+int tilt;
+int power;
+
 int switchvalue;
 bool start;
 bool looper;
 
+int prevPower;
+
 void setup (){
   Serial.begin(115200);
   
+  //Build Pin List
+  
+  //Build StartList
+  
+  //Build Motor Pin List  
   //Assigns Servo to pIns
   Base.buildServo(BasePin,1500);
   Base.setBounds(largeServoLower,largeServoUpper);
@@ -51,6 +107,37 @@ void setup (){
   WristRotate.setBounds(largeServoLower,largeServoUpper);
   Claw.buildServo(ClawPin,1500);
   Claw.setBounds(largeServoLower,largeServoUpper);
+  
+  FLServo.buildServo(FLServoPin,1500);
+  FLServo.setBounds(largeServoLower,largeServoUpper);
+  BLServo.buildServo(BLServoPin,1500);
+  BLServo.setBounds(largeServoLower,largeServoUpper);
+  FRServo.buildServo(FRServoPin,1500);
+  FRServo.setBounds(largeServoLower,largeServoUpper);
+  BRServo.buildServo(BRServoPin,1500);
+  BRServo.setBounds(largeServoLower,largeServoUpper);
+  
+  pinMode(FLMotorDirectionPin,OUTPUT);
+  pinMode(MLMotorDirectionPin,OUTPUT);
+  pinMode(BLMotorDirectionPin,OUTPUT);
+  pinMode(FRMotorDirectionPin,OUTPUT);
+  pinMode(MRMotorDirectionPin,OUTPUT);
+  pinMode(BRMotorDirectionPin,OUTPUT);
+  digitalWrite(FLMotorDirectionPin,HIGH);
+  digitalWrite(MLMotorDirectionPin,HIGH);
+  digitalWrite(BLMotorDirectionPin,HIGH);
+  digitalWrite(FRMotorDirectionPin,LOW);
+  digitalWrite(MRMotorDirectionPin,LOW);
+  digitalWrite(BRMotorDirectionPin,LOW);
+  isFoward = 1;
+  
+  analogWrite(FLMotorPin,0);
+  analogWrite(MLMotorPin,0);
+  analogWrite(BLMotorPin,0);
+  analogWrite(FRMotorPin,0);
+  analogWrite(MRMotorPin,0);
+  analogWrite(BRMotorPin,0);
+  
 }
 
 void loop(){
@@ -67,32 +154,27 @@ void loop(){
     switch(switchvalue){
       case 1:
         //checks if new angle is within 8 degrees -- memory erros causes random numbers
-        checkError = readData();
-        //if ( (checkError>=maxShoulderAngle-8) && (checkError<=maxShoulderAngle+8))
-        if(true)
-        {
-          //if it is within -+8 degrees sets new target angle
-          Base.setTarget(checkError);
-        }
+        newAngle = readData();
+        Base.setTarget(newAngle);
         break;
       case 2:
         //checks if new angle is within 8 degrees -- memory erros causes random numbers
-        checkError = readData();
-        //if ( (checkError>=maxBaseAngle-8) && (checkError<=maxBaseAngle+8))
+        newAngle = readData();
+        //if ( (newAngle>=maxBaseAngle-8) && (newAngle<=maxBaseAngle+8))
         if(true)
         {
           //if it is within -+8 degrees sets new target angle
-          Shoulder.setTarget(checkError);
+          Shoulder.setTarget(newAngle);
         }
         break;  
      case 3:
         //checks if new angle is within 8 degrees -- memory erros causes random numbers
-        checkError = readData();
-        //if ( (checkError>=maxBaseAngle-8) && (checkError<=maxBaseAngle+8))
+        newAngle = readData();
+        //if ( (newAngle>=maxBaseAngle-8) && (newAngle<=maxBaseAngle+8))
         if(true)
         {
           //if it is within -+8 degrees sets new target angle
-          Elbow.setTarget(checkError);
+          Elbow.setTarget(newAngle);
         }
         break;
      case 40:
@@ -104,13 +186,69 @@ void loop(){
        wrist = readData();
        wristrotate = readData();
        claw = readData();
+       
+       
        Base.setTarget(base);
+       Serial.print("Base: ");
+       Serial.println(base);
        Shoulder.setTarget(shoulder);
        Elbow.setTarget(elbow);
        Wrist.setTarget(wrist);
        WristRotate.setTarget(wristrotate);
        Claw.setTarget(claw);
        break;
+       
+     case 41:
+       fl = readData();
+       bl = readData();
+       fr = readData();
+       br = readData();
+       pan = readData();
+       tilt = readData();
+       power = readData();
+
+       
+       FLServo.setTarget(fl);
+       BLServo.setTarget(bl);
+       FRServo.setTarget(fr);
+       BRServo.setTarget(br);
+       
+       
+       if(power * prevPower <= 1);
+       {
+         if(power > 0)
+            {
+              digitalWrite(FLMotorDirectionPin,HIGH);
+              digitalWrite(MLMotorDirectionPin,HIGH);
+              digitalWrite(BLMotorDirectionPin,HIGH);
+              digitalWrite(FRMotorDirectionPin,LOW);
+              digitalWrite(MRMotorDirectionPin,LOW);
+              digitalWrite(BRMotorDirectionPin,LOW);
+              
+              
+              prevPower = power;
+            }  else
+            {
+              digitalWrite(FLMotorDirectionPin,LOW);
+              digitalWrite(MLMotorDirectionPin,LOW);
+              digitalWrite(BLMotorDirectionPin,LOW);
+              digitalWrite(FRMotorDirectionPin,HIGH);
+              digitalWrite(MRMotorDirectionPin,HIGH);
+              digitalWrite(BRMotorDirectionPin,HIGH);;
+              prevPower = power;
+              
+            }
+            if(power<0){power=power*-1;}
+            analogWrite(FLMotorPin,power);
+            analogWrite(MLMotorPin,power);
+            analogWrite(BLMotorPin,power);
+            analogWrite(FRMotorPin,power);
+            analogWrite(MRMotorPin,power);
+            analogWrite(BRMotorPin,power);
+                      
+       }
+       
+       
      default:
        break;
     }
@@ -124,6 +262,11 @@ void loop(){
   Wrist.updateServo();
   WristRotate.updateServo();
   Claw.updateServo();
+  
+  FLServo.updateServo();
+  BLServo.updateServo();
+  FRServo.updateServo();
+  BRServo.updateServo();
   
   delay(17);
   
@@ -162,7 +305,7 @@ int readData(){
       readIn = Serial.read();
       if(readIn == '/'){        // '/' is end line for numbers
         END = 1;  
-      }else if(readIn == '-')    //Begining of command
+      }else if(readIn == '*')    //Begining of command
       {
         returnValue = -111;
         return returnValue;

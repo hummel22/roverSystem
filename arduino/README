@@ -23,6 +23,8 @@ TODO
 	Add MIN/MAX 
 
 VERSIONS
+V3.2.1
+	Added PinMode - allows Direction Control straight from arduino
 V3.2.0
 	Added Command Starter
 	Added Total Arm Control
