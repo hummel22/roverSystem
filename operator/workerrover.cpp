@@ -28,6 +28,7 @@ void RoverController::keyInput(QString data)
 void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 {
 
+    //Remove DeadZone int Right Joystick
     if((X2<DeadZone) && (X2>-DeadZone) )
     {
         X2 = 0;
@@ -44,38 +45,36 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     if(Y1<-DeadZone){Y1 = Y1+DeadZone;}
     }
 
-
+    //Wheel Turn angle
     int valueFront = X2*500/32762+1500;
-    int valueBack = -X2*500/32762+1500;
+    int valueBack = -valueFront;
     frontleftSERVO->setServoValue(valueFront);
     frontrightSERVO->setServoValue(valueFront);
     backleftSERVO->setServoValue(valueBack);
     backrightSERVO->setServoValue(valueBack);
 
-//    qDebug()<<"calculated Turn";
+    //Power calcautions
     double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
     double multiplier2 = 1-((((double)LT)+32767)*0.5/(32767*2));//From 0.5 to 1
     int pow = -Y1*175/32767 * multiplier1*multiplier2;
-    qDebug()<<pow;
+
+    //Build Send String
     QString frontValue = QString::number(valueFront);
     QString backValue = QString::number(valueBack);
     QString Power = QString::number(pow);
     QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+Power+"/";
-    if(send != dataSent)
+    if(send != dataSent)    //Dont send if value same as last send
     {
         emit Send(send);
         dataSent = send;
     }
-//    emit powerUpdate(pow);
-//    emit Send("41/"+FLWSeconds+"/"+FRWSeconds+"/"+BLWSeconds+"/"+BRWSeconds+"/"+PanSeconds+"/"+TiltSeconds+"/"+QString::number(pow)+"/");
 
 }
 
-//Calculate  and return Microseconds for each Servo
+//Calculate and return Microseconds for each Servo - Depreciated Note Used
 int RoverController::turnWheel(Servo *servo, int joystickValue)
 {
     int add;
-    qDebug()<<"joystick Value: "+joystickValue;
     if(joystickValue > 0)            //UpperRange Positive
     {
         add = map(joystickValue,0,32767,servo->centerValue,servo->upperBound);
@@ -87,7 +86,6 @@ int RoverController::turnWheel(Servo *servo, int joystickValue)
         add = 0;
     }else{} //Nothing
 
-    qDebug()<<"add Value: "+add;
     servo->setServoValue(servo->centerValue + add);
     return servo->centerValue + add;
 }

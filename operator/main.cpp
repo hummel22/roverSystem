@@ -158,14 +158,28 @@ int main(int argc, char *argv[])
     //Individual Servo Valus
     //servoList.at(6)->angleRange(-90,90);    //Pan
     servoList.at(7)->angleRange(-30,30);    //Tilt
-    servoList.at(8)->angleRange(0,60);    //FL
-    servoList.at(9)->angleRange(0,60);
-    servoList.at(10)->angleRange(0,60);
-    servoList.at(11)->angleRange(0,60);
-    servoList.at(8)->setServoValue(1500);
-    servoList.at(9)->setServoValue(1500);
-    servoList.at(10)->setServoValue(1500);
-    servoList.at(11)->setServoValue(1500);
+    servoList.at(8)->angleRange(0,60);      //FL
+    servoList.at(9)->angleRange(0,60);      //FR
+    servoList.at(10)->angleRange(0,60);     //BL
+    servoList.at(11)->angleRange(0,60);     //BR
+
+    //Starting Postions - Match Arduino
+    //Wheels
+    servoList.at(8)->setServoValue(1500);   //FL
+    servoList.at(9)->setServoValue(1500);   //FR
+    servoList.at(10)->setServoValue(1500);  //BL
+    servoList.at(11)->setServoValue(1500);  //BR
+    //Arm
+    servoList.at(0)->setServoValue(1523);   //Base
+    servoList.at(1)->setServoValue(1477);   //Shoulder
+    servoList.at(2)->setServoValue(1343);   //Elbow
+    servoList.at(4)->setServoValue(1343);   //Wrist R
+    servoList.at(5)->setServoValue(1733);   //Claw -Open
+
+
+    //Set Bounds
+    servoList.at(1)->upperBound=1884;       //Shoulder Upper Bound - Hits Frame
+
     //WORKERS / SLIDERS / RADIOBUTTONS---------------------------------------------------------------------------//
 
 

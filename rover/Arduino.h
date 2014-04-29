@@ -26,20 +26,38 @@ Arduino::~Arduino(){}
 
 void Arduino::initialize(){
     //###Cycle Though to search ports for (In case arduin Switches ports) #####
-	portName= "/dev/ttyACM0"; //adjust for specific port
-	cout << "Port set to:  "<< portName<< endl;
 
-    //Open port and set to READ/WRTITE and NONBLOCKING
-	serialPort = open(portName, O_RDWR | O_NOCTTY | O_NDELAY );
-	cout << "Port Name: " << serialPort << endl;   // resets arduino
+    int portNumber = 0;
+    bool loop = true;
+	char* portId = "/dev/ttyACM";  //adjust for specific port
 
-	//check if serila port open
-	if (serialPort < 0){
-		perror ("Error Opening Port");
-	}
-	else{
-        cout <<"Port Successfully Opened; Returned Value: "<< serialPort<<endl;
-	}
+	while(loop){
+	    string str;
+	    stringstream ss;
+        ss << portId << portNumber;
+        str = ss.str();
+
+        portName = new char[str.size() + 1];
+        std::copy(str.begin(), str.end(), portName);
+        portName[str.size()] = '\0'; // don't forget the terminating 0
+
+        cout << "Port set to:  "<< portName<< endl;
+
+        //Open port and set to READ/WRTITE and NONBLOCKING
+        serialPort = open(portName, O_RDWR | O_NOCTTY | O_NDELAY );
+        cout << "Port Value: " << serialPort << endl;   // resets arduino
+
+        //check if serila port open
+        if (serialPort < 0){
+            perror ("Error Opening Port");
+            if(portNumber<25){loop =true;}else{loop = false;}     //Loop 25 times until found
+        }
+        else{
+            cout <<"Port Successfully Opened; Returned Value: "<< serialPort<<endl;
+            loop = false;
+        }
+        portNumber++;
+    }
 }
 
 

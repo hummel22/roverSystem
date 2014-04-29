@@ -14,27 +14,45 @@ void joystickInput::Initialize()
     x[4] = 0;       //Right Joystick X
     x[5] = 0;       //Right Trigger
     on = false;     //True if connection has been made
-    char name[] ="unknown";
+    char name[80];
     buttonReleased = true;
-    spacer = 1;     //only record every 1 out of every 3 joystick events (1joystick = 6 events)
+    spacer = 1;     //Counter for recording one x out of y events joystick events (1joystick = 6 events)
 
 
-
-    char device[] = "/dev/input/js1";
-    if( (fd = open(device, O_RDONLY | O_NONBLOCK)) > 0 )
+    int attempts = 0;
+    QString devicePath = "/dev/input/js";
+    char* device ;
+    while(attempts<15)
     {
-        on = true;
-        emit toTerminalInternal("JOY: Open Sucessful");
-        //ioctl(fd,JSIOCGNAME(256),name);
-        //emit toInternal("JOY: Device: "+(QString)name);
-        //qDebug()<<(QString)name;
-    }
-    else
-    {
-        emit toTerminalInternal("JOY: Failed to Open");
+        //Device loactions
+        QByteArray ba = (devicePath+QString::number(attempts)).toLocal8Bit();
+        device = ba.data();
+        //Try to Open Device
+        if( (fd = open(device, O_RDONLY | O_NONBLOCK)) > 0 )
+        {
+            ioctl(fd,JSIOCGNAME(80),&name);
+            qDebug()<<(QString)name;
+
+            if((QString)name == "Microsoft X-Box 360 pad" )
+            {
+                on = true;
+                attempts = 15;
+
+            }else
+            {
+                attempts++;
+            }
+            emit toTerminalInternal("JOY: Device: "+(QString)name);
+
+        }
+        else
+        {
+            emit toTerminalInternal("JOY: Failed to Open");
+            attempts++;
+        }
     }
     getInput();
-    qDebug()<<"End Initialize";
+    qDebug()<<"End JOYSTICK Initialize";
 }
 
 void joystickInput::getInput()

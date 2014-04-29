@@ -3,6 +3,7 @@
 ArmController::ArmController(QObject *parent) :
     QObject(parent)
 {
+    DeadZone =5000;
 }
 
 void ArmController::addWorker(Servo *temp)
@@ -19,12 +20,16 @@ void ArmController::keyInput(QString data)
 
 void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 {
-    //AdditionalValues
-    int Xadd = -X1*3/32175;
 
-    int Zadd = -(LT-RT)*10/32175;
+    //Dead Zone in joystick
+    if((X1<DeadZone) && (X1>-DeadZone) )
+    {
+        X1 = 0;
+    }else{
+    if(X1>DeadZone){X1 = X1-DeadZone;}
+    if(X1<-DeadZone){X1 = X1+DeadZone;}
+    }
 
-    ;
     //Single Joint Control
     //Joystick 1
     int WristR = X1*45/32157;        //X Axis
@@ -35,13 +40,14 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     int Shoulder = -Y2*3/32175;     //Y Axis
 
     //Trigers
-    int Claw =-(LT-RT)*10/32175;
+    int Claw =-(LT-RT)*10/32175;    //Triggers
     int Wrist = 0;
 
 
     //Angle Caluculations
-    //fill x[5] with number
-    //x is number to add!
+    //TODO
+
+    //TODO Replace Names above with Interger array for for loop
     int x[5];
     x[0] = Base;
     x[1] = Shoulder;
@@ -50,9 +56,9 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     x[4] = WristR;
     x[5] = Claw;
 
-    QString dataPart = "";
-    //int NumberOfClawServos = 6    - hard coded at current moment
-    //Make sure additins dont make value go outside of bounds - set to zero if it does
+    QString dataPart = "";      //Intialist string to build command
+
+    //Make sure adding values dont make value go outside of bounds - set to zero if it does
     for(int i = 0;i < 6; i++)
     {
 
@@ -68,13 +74,13 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
         }
         dataPart += QString::number(servoList.at(i)->microSeconds) + "/";
     }
-    //Send Pack Here
+    //Send DataPack Here
     if (dataSent != dataPart)
     {
-        emit Send("40/"+dataPart);
+        emit Send("40/"+dataPart);      //Arm Control has command Identifer 40
         dataSent = dataPart;
     }
-    // Command = 40/Base/Shoulder/Elbow/WirstBend/WristRotate/Claw
+
 }
 
 

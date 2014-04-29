@@ -9,6 +9,8 @@
 class joyThread : public QObject
 {
     Q_OBJECT
+private:
+
 public:
     explicit joyThread(QObject *parent = 0);
     void DoSetup(QThread &cThread);
