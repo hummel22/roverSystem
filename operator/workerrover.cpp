@@ -47,7 +47,7 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 
     //Wheel Turn angle
     int valueFront = X2*500/32762+1500;
-    int valueBack = -valueFront;
+    int valueBack = -X2*500/32762+1500;
     frontleftSERVO->setServoValue(valueFront);
     frontrightSERVO->setServoValue(valueFront);
     backleftSERVO->setServoValue(valueBack);

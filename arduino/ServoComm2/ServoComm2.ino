@@ -384,8 +384,9 @@ bool dataStart()
   int value;
   while(true)
  {
-   
-   if(readData() == -111)  //check to see if charter is '-'
+   int front = readData();
+   //Serial.println(front);
+   if(front == -111)  //check to see if charter is '-'
    {
      return true;
    }
