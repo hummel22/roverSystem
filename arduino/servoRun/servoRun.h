@@ -19,7 +19,8 @@ public:
     void setBounds(int lower,int upper);
     void buildServo(int pin, int startAngle);
     void setTarget(int angle);
-    void updateServo();
+    int updateServo();
+    bool checkclose(int angle);
 };
 
 

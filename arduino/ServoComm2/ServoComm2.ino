@@ -123,6 +123,7 @@ void setup (){
   pinMode(FRMotorDirectionPin,OUTPUT);
   pinMode(MRMotorDirectionPin,OUTPUT);
   pinMode(BRMotorDirectionPin,OUTPUT);
+  delay(3);
   digitalWrite(FLMotorDirectionPin,HIGH);
   digitalWrite(MLMotorDirectionPin,HIGH);
   digitalWrite(BLMotorDirectionPin,HIGH);
@@ -148,9 +149,8 @@ void loop(){
   
   if(dataStart())    //check to see if at start of data packet
   {
-    Serial.print("data Front");
+    Serial.print(1);
     switchvalue = readData();
-    Serial.println(switchvalue);
     switch(switchvalue){
       case 1:
         newAngle = readData();
@@ -221,8 +221,6 @@ void loop(){
        
        
        Base.setTarget(base);
-       Serial.print("Base: ");
-       Serial.println(base);
        Shoulder.setTarget(shoulder);
        Elbow.setTarget(elbow);
        Wrist.setTarget(wrist);
@@ -247,43 +245,12 @@ void loop(){
        BRServo.setTarget(br);
        
        //Reverse wheel Direction if signs of power change
-       if(power * prevPower <= 1);
-       {
-         if(power > 0)
-            {
-              //Foward Wheel Direction
-              digitalWrite(FLMotorDirectionPin,HIGH);
-              digitalWrite(MLMotorDirectionPin,HIGH);
-              digitalWrite(BLMotorDirectionPin,HIGH);
-              digitalWrite(FRMotorDirectionPin,LOW);
-              digitalWrite(MRMotorDirectionPin,LOW);
-              digitalWrite(BRMotorDirectionPin,LOW);
-              prevPower = power;
-            }  else
-            {
-              //Reverse Wheel 
-              digitalWrite(FLMotorDirectionPin,LOW);
-              digitalWrite(MLMotorDirectionPin,LOW);
-              digitalWrite(BLMotorDirectionPin,LOW);
-              digitalWrite(FRMotorDirectionPin,HIGH);
-              digitalWrite(MRMotorDirectionPin,HIGH);
-              digitalWrite(BRMotorDirectionPin,HIGH);;
-              prevPower = power;
-              
-            }
-            //Use only magnitude of Power
-            if(power<0){power=power*-1;}
-            
-            //Set power of motors
-            analogWrite(FLMotorPin,power);
-            analogWrite(MLMotorPin,power);
-            analogWrite(BLMotorPin,power);
-            analogWrite(FRMotorPin,power);
-            analogWrite(MRMotorPin,power);
-            analogWrite(BRMotorPin,power);                 
-       }    
+       setDirection();
+       delay(5);
+       break;
      default:
        break;
+       
     }
   }
   
@@ -301,7 +268,7 @@ void loop(){
   FRServo.updateServo();
   BRServo.updateServo();
   
-  delay(17);
+  delay(18);
   
   
   
@@ -399,4 +366,43 @@ bool dataStart()
    
    
  } 
+}
+
+void setDirection()
+{
+  if(power * prevPower <= 1);
+       {
+         if(power > 0)
+            {
+              //Foward Wheel Direction
+              digitalWrite(FLMotorDirectionPin,HIGH);
+              digitalWrite(MLMotorDirectionPin,HIGH);
+              digitalWrite(BLMotorDirectionPin,HIGH);
+              digitalWrite(FRMotorDirectionPin,LOW);
+              digitalWrite(MRMotorDirectionPin,LOW);
+              digitalWrite(BRMotorDirectionPin,LOW);
+              prevPower = power;
+            }  else
+            {
+              //Reverse Wheel 
+              digitalWrite(FLMotorDirectionPin,LOW);
+              digitalWrite(MLMotorDirectionPin,LOW);
+              digitalWrite(BLMotorDirectionPin,LOW);
+              digitalWrite(FRMotorDirectionPin,HIGH);
+              digitalWrite(MRMotorDirectionPin,HIGH);
+              digitalWrite(BRMotorDirectionPin,HIGH);;
+              prevPower = power;
+              
+            }
+            //Use only magnitude of Power
+            if(power<0){power=power*-1;}
+            
+            //Set power of motors
+            analogWrite(FLMotorPin,power);
+            analogWrite(MLMotorPin,power);
+            analogWrite(BLMotorPin,power);
+            analogWrite(FRMotorPin,power);
+            analogWrite(MRMotorPin,power);
+            analogWrite(BRMotorPin,power);                 
+       }    
 }

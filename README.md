@@ -80,6 +80,8 @@ It also receives data from sensors and passes it to the onboard computer.
 
 ####ChangeLog
 
+V1.2
+* Deleted Extra arduino files
 V1.1.7
 * Updated Pin Table
 V1.1.6
