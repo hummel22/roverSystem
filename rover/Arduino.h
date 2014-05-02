@@ -30,6 +30,7 @@ void Arduino::initialize(){
     int portNumber = 0;
     bool loop = true;
 	char* portId = "/dev/ttyACM";  //adjust for specific port
+	struct termios options;
 
 	while(loop){
 	    string str;
@@ -55,6 +56,16 @@ void Arduino::initialize(){
         else{
             cout <<"Port Successfully Opened; Returned Value: "<< serialPort<<endl;
             loop = false;
+            tcgetattr(serialPort, &options);        //get current port options
+            cfsetispeed(&options, B115200);
+            cfsetospeed(&options, B115200);
+            options.c_cflag &= ~PARENB;
+            options.c_cflag &= ~CSTOPB;
+            options.c_cflag &= ~CSIZE;
+            options.c_cflag |= CS8;
+            options.c_lflag |= ICANON;
+            tcsetattr(serialPort,TCSANOW, &options);
+
         }
         portNumber++;
     }

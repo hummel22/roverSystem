@@ -32,6 +32,9 @@ OVERVIEW
 
 
 VERSIONS
+V4.8
+	Fixed Starting arduino connection
+	Added serial port options
 V4.7
 	Created pass function - pass commands from operator to rover
 	Add "-" to front of commands sent to arduino

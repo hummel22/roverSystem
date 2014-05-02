@@ -32,6 +32,10 @@ OVERVIEW
 
 
 VERSIONS
+V4.7
+	Created pass function - pass commands from operator to rover
+	Add "-" to front of commands sent to arduino
+	Added 4/ to send ping
 V4.6.2
 	Added Outline for Commands
 	0-20 Servos
