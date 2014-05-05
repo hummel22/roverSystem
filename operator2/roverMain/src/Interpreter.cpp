@@ -1,59 +1,30 @@
-#ifndef INTERPRETER_H
-#define INTERPRETER_H
+#include "Interpreter.h"
+
+Interpreter::Interpreter()
+{
+    //ctor
+}
+
+Interpreter::~Interpreter()
+{
+    //dtor
+}
 
 
 
-class Interpreter {
+void Interpreter::initialize(Arduino serialObject,UDP socketObject){
+    serial = serialObject;
+    socks = socketObject;
+    POWER_ON = 400;
+    POWER_OFF = 1200;
 
-private:
-    //Current Servo Values
-    int Arm;
-    int Shoulder;
-    int Elbow;
-    int Wrist;
-    int Claw;
-    int ShoulderRotate;
-    int WristRotate;
-    bool headercheck(int num);
-    void servoSet(int servo,int angle);
-    void pass(int x[12]);
-    void pass(int x[12],bool);
-    long double lastTime;
-    long double thisTime;
-    struct timespec getTime;
-    int timeInterval;
-
-
-    Arduino serial;
-    UDP socks;
-
-    //Counters
-    int shutdownCounter; //counter for messages not received
-    int shutdownMax;  //Timeout for not receiveing commands
-    int currentHeader;
-    bool check;
-
-
-
-
-public:
-    void interpret(const char* data);
-    void initialize(Arduino temp,UDP temp2 );
-
-
-
-};
-
-
-void Interpreter::initialize(Arduino temp,UDP temp2){
-    serial = temp;
-    socks = temp2;
-    shutdownMax =1000;
-    shutdownCounter=0;
     currentHeader = 0;
-    timeInterval = 1200;
+    timeInterval = POWER_OFF;
+    pingInterval = 8000;
     clock_gettime(CLOCK_REALTIME,&getTime);
-    lastTime = getTime.tv_nsec;
+    lastTime = (getTime.tv_nsec/1000000)+getTime.tv_sec*1000;
+    shutdown =new int[12]{0,41,1500,1500,1500,1500,1500,1500,0};
+    shutdownSent = false;
 
 
 }
@@ -61,6 +32,9 @@ void Interpreter::initialize(Arduino temp,UDP temp2){
 //Switch Statement for sorting commands
 void Interpreter::interpret(const char* data){
 
+    //get time of data
+    clock_gettime(CLOCK_REALTIME,&getTime);
+    thisTime = (getTime.tv_nsec/1000000)+getTime.tv_sec*1000;
 
     //split command in interger array
     char* c = (char*)data;  //typecaset const to  variable
@@ -80,18 +54,30 @@ void Interpreter::interpret(const char* data){
     //falied to receive is below 0. creates counter for number of fails in a ro
     if (x[0] < 0)
     {
-        shutdownCounter++;
-        if(shutdownCounter > shutdownMax)
+        if(thisTime-lastTime > pingInterval)
         {
             cout << "Shutdown Reached"<<endl;
             socks.send("4/Ping");
             cout << "Ping sent"<<endl;
         }
+        if ((thisTime-lastTime > timeInterval)  && (!shutdownSent))
+        {
+
+            pass(shutdown,true);
+            shutdownSent = true;
+            timeInterval = POWER_OFF;
+            usleep(8000);
+            pass(shutdown,true);
+
+
+        }
     } else      //data was found reset counter
     {
-        shutdownCounter = 0;
-        lastTime = time(0)*1000;
+        lastTime = thisTime;
+        shutdownSent = false;
     }
+
+
 
 
 
@@ -204,6 +190,10 @@ void Interpreter::interpret(const char* data){
                 break;
             case 41:
                 //Steering Control
+                if(x[7]!=0)
+                {
+                    timeInterval = POWER_ON;
+                } else{timeInterval = POWER_OFF;}
                 pass(x,true);
                 break;
             default:
@@ -238,20 +228,19 @@ void Interpreter::pass(int x[12])
 {
     //get data length
     int len = sizeof(x);
+    //Build string
     std::ostringstream oss;
     for (int i = 1;i<=len-1;i++)
     {
         oss<< x[i] << "/" ;
     }
+    //send string to arduino
     cout << "Passing: " << oss.str() << endl;
     serial.send(oss.str());
-
-    //Build string
-
-    //send string to arduino
 }
 
 
+//IDK
 void Interpreter::pass(int x[12],bool)
 {
     //get data length
@@ -259,7 +248,6 @@ void Interpreter::pass(int x[12],bool)
     std::ostringstream oss;
     for (int i = 1;i<=len;i++)
     {
-        cout<<i<<": "<<x[i]<<endl;
         oss<< x[i] << "/" ;
     }
     cout << "Passing: " << oss.str() << endl;
@@ -269,6 +257,3 @@ void Interpreter::pass(int x[12],bool)
 
     //send string to arduino
 }
-
-
-#endif

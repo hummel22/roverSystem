@@ -4,6 +4,8 @@ ArmController::ArmController(QObject *parent) :
     QObject(parent)
 {
     DeadZone =5000;
+    count = 0;
+    dataSent = "40/1501/1501/1501/1501/1501/1501/";
 }
 
 void ArmController::addWorker(Servo *temp)
@@ -74,12 +76,14 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
         }
         dataPart += QString::number(servoList.at(i)->microSeconds) + "/";
     }
+
     //Send DataPack Here
     if (dataSent != dataPart)
     {
         emit Send("40/"+dataPart);      //Arm Control has command Identifer 40
         dataSent = dataPart;
-    }
+    }else{count++;}
+
 
 }
 
@@ -93,4 +97,10 @@ void ArmController::reset()
     servoList.at(3)->setServoValue(1500);
     servoList.at(4)->setServoValue(1500);
     servoList.at(5)->setServoValue(1500);
+}
+
+void ArmController::timeCheck()
+{
+    qDebug()<<"received emit";
+    emit Send("40/"+dataSent);
 }

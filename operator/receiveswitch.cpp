@@ -3,7 +3,9 @@
 receiveSwitch::receiveSwitch(QObject *parent) :
     QObject(parent)
 {
+
 }
+
 
 void receiveSwitch::interpret(QString receive)
 {

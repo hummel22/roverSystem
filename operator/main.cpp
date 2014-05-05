@@ -26,6 +26,8 @@
 #include <roverwindow.h>
 #include <armwindow.h>
 #include <diagnostics.h>
+#include "timekeeper.h"
+
 
 
 int main(int argc, char *argv[])
@@ -102,9 +104,16 @@ int main(int argc, char *argv[])
     test->setMaximumHeight(200);
     test->setMaximumWidth(200);
 
-    //Radio Controller
-    RadioList *ModeHandler = new RadioList(test);
-    ModeHandler->mySocket = MySocket;
+
+    //Create timer and thread for sending values every N seconds
+
+
+    //Mode Manager
+    linkManager *myManager = new linkManager(test);
+
+
+
+    myManager->mySocket = MySocket;
 
     //For Loop to build dynamically
     for(int i = 0;i <NumberOfServors;i++)
@@ -120,12 +129,12 @@ int main(int argc, char *argv[])
         QObject::connect(servoList.at(i),SIGNAL(toTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
         QObject::connect(servoList.at(i),SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
         QObject::connect(radioButtonList.at(i),SIGNAL(toTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-        QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),ModeHandler,SLOT(radioReceived(int)));
+        QObject::connect(radioButtonList.at(i),SIGNAL(clicked(int)),myManager,SLOT(radioReceived(int)));
 
         //Add Workers to Main Controllers [workerALL Class]
         Arm->addWorker(servoList.at(i));
-        ModeHandler->addSlide(servoList.at(i));
-        ModeHandler->addButton(radioButtonList.at(i));
+        myManager->addSlide(servoList.at(i));
+        myManager->addButton(radioButtonList.at(i));
 
     }
 
@@ -138,12 +147,12 @@ int main(int argc, char *argv[])
     radioButtonRover->setText("Drive Control");
     QObject::connect(radioButtonArm,SIGNAL(toTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(radioButtonRover,SIGNAL(toTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
-    ModeHandler->Arm = Arm;
-    ModeHandler->Drive = Drive;
-    ModeHandler->addButton(radioButtonArm);
-    ModeHandler->addButton(radioButtonRover);
-    QObject::connect(radioButtonArm,SIGNAL(clicked(int)),ModeHandler,SLOT(radioReceived(int)));
-    QObject::connect(radioButtonRover,SIGNAL(clicked(int)),ModeHandler,SLOT(radioReceived(int)));
+    myManager->Arm = Arm;
+    myManager->Drive = Drive;
+    myManager->addButton(radioButtonArm);
+    myManager->addButton(radioButtonRover);
+    QObject::connect(radioButtonArm,SIGNAL(clicked(int)),myManager,SLOT(radioReceived(int)));
+    QObject::connect(radioButtonRover,SIGNAL(clicked(int)),myManager,SLOT(radioReceived(int)));
     QObject::connect(Arm,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
 
     //Create Six Motors
@@ -195,12 +204,12 @@ int main(int argc, char *argv[])
     joystickWindow *jWindow = new joystickWindow;
     jWindow->initialize();
     joystickInput *jInput = new joystickInput;      //Connect to Joystick
-    ModeHandler->jInput = jInput;                   //Allow ModeHandler to control joystick connections
+    myManager->jInput = jInput;                   //Allow myManager to control joystick connections
     //Initial Connections
     QObject::connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),jWindow,SLOT(joystickData(int,int,int,int,int,int)));
     QObject::connect(jInput,SIGNAL(buttonPressed(int)),jWindow,SLOT(buttonPressed(int)));
-    //QObject::connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),ModeHandler,SLOT(axisSet(int,int,int,int,int,int)));
-    QObject::connect(jInput,SIGNAL(buttonPressed(int)),ModeHandler,SLOT(buttonPressed(int)));
+    //QObject::connect(jInput,SIGNAL(axisSet(int,int,int,int,int,int)),myManager,SLOT(axisSet(int,int,int,int,int,int)));
+    QObject::connect(jInput,SIGNAL(buttonPressed(int)),myManager,SLOT(buttonPressed(int)));
     QObject::connect(jInput,SIGNAL(toTerminalInternal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     //Thread
     QThread jThread;
@@ -217,7 +226,7 @@ int main(int argc, char *argv[])
     //ROVER GRAPHICAL VIEW
     roverWindow *rWindow = new roverWindow;
     rWindow->intialize();
-    ModeHandler->rWindow = rWindow;
+    myManager->rWindow = rWindow;
     QObject::connect(jInput,SIGNAL(buttonPressed(int)),rWindow,SLOT(showWindowButton(int)));
     QObject::connect(sliderList.at(6),SIGNAL(valueChanged(int)),rWindow,SLOT(panSLOT(int)));
     QObject::connect(sliderList.at(7),SIGNAL(valueChanged(int)),rWindow,SLOT(tiltSLOT(int)));

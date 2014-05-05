@@ -15,6 +15,7 @@ private:
 public:
     explicit receiveSwitch(QObject *parent = 0);
 
+
 signals:
     void toTerminalInternal(QString display);
     void resetHeader();

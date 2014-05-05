@@ -8,17 +8,8 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include "unistd.h"
 #include "fcntl.h"
 #include "termios.h"
-#include "sstream"
-#include "iostream"
-#include "string.h"
-#include "unistd.h"
-#include "fcntl.h"
-#include "termios.h"
-#include "stdio.h"
-#include "sstream"
 #include <sstream>
 #include <sys/time.h>
 
@@ -26,13 +17,13 @@
 
 using namespace std;
 
-#include "UDP.h"
+#include <UDP.h>
 #include "Arduino.h"
-#include "interpreter.h"
+#include "Interpreter.h"
 
 
 
-main(){
+int main(){
     string sendArduino;
     string sendOperator;
     string toInterpreter;
@@ -93,5 +84,5 @@ main(){
         //usleep(20000);
     }
 
-
+    return 0;
 }

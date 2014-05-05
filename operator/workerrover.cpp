@@ -3,6 +3,7 @@
 RoverController::RoverController(QObject *parent) :
     QObject(parent)
 {
+    dataSent = "40/1501/1501/1501/1501/1501/1501/0";
 }
 
 void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)
@@ -63,11 +64,13 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     QString backValue = QString::number(valueBack);
     QString Power = QString::number(pow);
     QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+Power+"/";
+
     if(send != dataSent)    //Dont send if value same as last send
     {
         emit Send(send);
         dataSent = send;
     }
+
 
 }
 
@@ -97,4 +100,10 @@ int RoverController::map(int Value, int upper1, int lower1, int upper2, int lowe
     int mapValue = lower2 + (Value/upper1)*(upper2-lower2);
     return mapValue;
 
+}
+
+void RoverController::timeCheck()
+{
+    qDebug()<<"received emit";
+    emit Send("40/"+dataSent);
 }

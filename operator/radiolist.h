@@ -12,8 +12,9 @@
 #include <workerrover.h>
 #include <roverwindow.h>
 #include <udpwork.h>
+#include <QTimer>
 
-class RadioList : public QObject
+class linkManager : public QObject
 {
     Q_OBJECT
 private:
@@ -22,9 +23,10 @@ private:
     keyWindoe *keys;
     void setConfiguration(int A);
     int CurrentValue;
+    QTimer * timer;
 
 public:
-    explicit RadioList(keyWindoe *key,QObject *parent = 0);
+    explicit linkManager(keyWindoe *key,QObject *parent = 0);
     void addSlide(Servo *switcher);
     void addButton(HRadioButton *rbutton);
     joystickInput *jInput;

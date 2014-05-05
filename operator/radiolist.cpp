@@ -1,29 +1,30 @@
 #include "radiolist.h"
 
-RadioList::RadioList(keyWindoe *key, QObject *parent) :
+linkManager::linkManager(keyWindoe *key, QObject *parent) :
     QObject(parent)
 {
     keys = key;
+    timer = new QTimer(this);
 }
 
-void RadioList::radioReceived(int on)
+void linkManager::radioReceived(int on)
 {
     setConfiguration(on);
 }
 
-void RadioList::addSlide(Servo *servo)
+void linkManager::addSlide(Servo *servo)
 {
     Servos.append(servo);
 }
 
-void RadioList::addButton(HRadioButton *radiobutton)
+void linkManager::addButton(HRadioButton *radiobutton)
 {
     RadioButtons.append(radiobutton);
 }
 
 
 //Change Radio Selection With Joystick
-void RadioList::buttonPressed(int x)
+void linkManager::buttonPressed(int x)
 {
     switch(x)       //Check what button was pressed
     {
@@ -52,7 +53,7 @@ void RadioList::buttonPressed(int x)
     }
 }
 
-void RadioList::setConfiguration(int A)
+void linkManager::setConfiguration(int A)
 {
     //Disconnet Input Connections to Servos,Arm,Drive
     //Disconnect Servos
@@ -66,6 +67,7 @@ void RadioList::setConfiguration(int A)
     //Disconnect Arm and Driver
     disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
     disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
+    timer->stop();
 
 
 
@@ -81,12 +83,20 @@ void RadioList::setConfiguration(int A)
     {
         qDebug()<<"Arm Radio On: conectin joystick";
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
+        //connect clock to timer Off
+        QObject::connect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));
+        //set timout
+        timer->start(1000);
 
     } else if(A == Servos.count() + 1)    //Rover Control
     {
-        qDebug()<<"Drive On";
+//        qDebug()<<"Drive On";
+
+//        qDebug()<<"Drive Connected to joystick:";
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
-        qDebug()<<"Drive Connected to joystick:";
+        QObject::connect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
+        //set timout
+        timer->start(300);
     }
 
     CurrentValue = A + 1;

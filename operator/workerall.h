@@ -21,6 +21,7 @@ private:
     QList<Servo*> servoList;
     QString dataSent;
     int DeadZone;
+    int count;
    
 public:
     explicit ArmController(QObject *parent = 0);
@@ -31,10 +32,13 @@ signals:
     void toTerminalInternal(QString out);
     void Send(QString out);
 
+
 public slots:
     void keyInput(QString data);
     void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
     void reset();
+    void timeCheck();
+
 };
 
 #endif // WORKERALL_H
