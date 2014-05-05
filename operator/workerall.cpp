@@ -102,5 +102,5 @@ void ArmController::reset()
 void ArmController::timeCheck()
 {
     qDebug()<<"received emit";
-    emit Send("40/"+dataSent);
+    emit Send(dataSent);
 }

@@ -39,6 +39,14 @@ int main(){
     //INITIALIZE
     //Create Connection with arduino
     serial.initialize();
+    cout<<"3"<<endl;
+    usleep(1000000);
+    cout<<"2"<<endl;
+    usleep(1000000);
+    cout<<"1"<<endl;
+    usleep(1000000);
+    cout<<"0"<<endl;
+
     //Create Connection with operator//
     socks.initialize("127.0.0.1","1153");
     //Add sending and receieving to Interpreter
@@ -47,7 +55,7 @@ int main(){
 
 
     //Wait for arduino to power on//
-    usleep(1000000);
+
     cout << "Start" <<endl;
     //Initiate Second Test After Arduino Load
     const char* test= "test";

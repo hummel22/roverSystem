@@ -105,5 +105,5 @@ int RoverController::map(int Value, int upper1, int lower1, int upper2, int lowe
 void RoverController::timeCheck()
 {
     qDebug()<<"received emit";
-    emit Send("40/"+dataSent);
+    emit Send(dataSent);
 }

@@ -15,17 +15,18 @@ Interpreter::~Interpreter()
 void Interpreter::initialize(Arduino serialObject,UDP socketObject){
     serial = serialObject;
     socks = socketObject;
-    POWER_ON = 400;
-    POWER_OFF = 1200;
+    POWER_ON = 500;
+    POWER_OFF = 1000;
 
     currentHeader = 0;
     timeInterval = POWER_OFF;
-    pingInterval = 8000;
+    pingInterval = 1000;
     clock_gettime(CLOCK_REALTIME,&getTime);
     lastTime = (getTime.tv_nsec/1000000)+getTime.tv_sec*1000;
     shutdown =new int[12]{0,41,1500,1500,1500,1500,1500,1500,0};
+    last[0] = 0;
     shutdownSent = false;
-
+    repeatCounter = 0;
 
 }
 
@@ -50,7 +51,7 @@ void Interpreter::interpret(const char* data){
 
     }
 
-
+     bool go = true;
     //falied to receive is below 0. creates counter for number of fails in a ro
     if (x[0] < 0)
     {
@@ -62,7 +63,7 @@ void Interpreter::interpret(const char* data){
         }
         if ((thisTime-lastTime > timeInterval)  && (!shutdownSent))
         {
-
+            shutdown[8]=0;
             pass(shutdown,true);
             shutdownSent = true;
             timeInterval = POWER_OFF;
@@ -75,7 +76,29 @@ void Interpreter::interpret(const char* data){
     {
         lastTime = thisTime;
         shutdownSent = false;
+
+        if(x == last)
+        {
+            repeatCounter++;
+            if(repeatCounter > 3)
+            {
+                go = false;
+            }
+
+        }else
+        {
+            memset(last,0,12);
+            for(int i = 0;i<sizeof(x);i++)
+            {
+                last[i]=x[i];
+            }
+            repeatCounter = 0;
+        }
     }
+
+
+
+
 
 
 
@@ -88,7 +111,7 @@ void Interpreter::interpret(const char* data){
     //Commands 1-8 are single servo operation
     //Case 22 is when nothing is received from operator (Probably change to negative interger and before loop
     //if(headercheck(x[0]))   //make sure commands are in order
-    if(true)
+    if(go)
     {
         //cout << "ID: " << x[1] <<endl;
         switch(x[1]){
@@ -195,6 +218,7 @@ void Interpreter::interpret(const char* data){
                     timeInterval = POWER_ON;
                 } else{timeInterval = POWER_OFF;}
                 pass(x,true);
+                shutdown = x;
                 break;
             default:
                 break;

@@ -86,7 +86,7 @@ void linkManager::setConfiguration(int A)
         //connect clock to timer Off
         QObject::connect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));
         //set timout
-        timer->start(1000);
+        timer->start(900);
 
     } else if(A == Servos.count() + 1)    //Rover Control
     {
@@ -96,7 +96,7 @@ void linkManager::setConfiguration(int A)
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
         QObject::connect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
         //set timout
-        timer->start(300);
+        timer->start(700);
     }
 
     CurrentValue = A + 1;
