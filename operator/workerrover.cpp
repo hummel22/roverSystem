@@ -62,7 +62,7 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     //Build Send String
     QString frontValue = QString::number(valueFront);
     QString backValue = QString::number(valueBack);
-    QString Power = QString::number(pow);
+    QString Power = QString::number(-1*pow);
     QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+Power+"/";
 
     if(send != dataSent)    //Dont send if value same as last send

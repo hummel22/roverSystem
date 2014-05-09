@@ -27,6 +27,7 @@
 #include <armwindow.h>
 #include <diagnostics.h>
 #include "timekeeper.h"
+#include <videoplayer.h>
 
 
 
@@ -72,6 +73,15 @@ int main(int argc, char *argv[])
     windowAll->setWindowTitle("Terminals");
     //Show Window
     //TERMINAL WINDOW-----------------------------------------------------------------------//
+
+    //VideoPlayer---------------------------------------------------------------------------//
+
+
+
+    VideoPlayer video;
+    video.show();
+
+    //VideoPlayer---------------------------------------------------------------------------//
 
     //SOCKET--------------------------------------------------------------------------------//
     UDPwork *MySocket = new UDPwork;

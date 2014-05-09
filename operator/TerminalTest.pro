@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     roverwindow.cpp \
     armwindow.cpp \
     diagnostics.cpp \
-    motor.cpp
+    motor.cpp \
+    videoplayer.cpp
 
 HEADERS  += mainwindow.h \
     keywindoe.h \
@@ -47,6 +48,12 @@ HEADERS  += mainwindow.h \
     roverwindow.h \
     armwindow.h \
     diagnostics.h \
-    motor.h
+    motor.h \
+    videoplayer.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    VideoPlayer.ui
+
+# Edit below for custom library location
+LIBS        += -lvlc-qt -lvlc-qt-widgets
+

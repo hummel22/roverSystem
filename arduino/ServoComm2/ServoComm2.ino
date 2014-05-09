@@ -149,7 +149,6 @@ void loop(){
   
   if(dataStart())    //check to see if at start of data packet
   {
-    Serial.print(1);
     switchvalue = readData();
     switch(switchvalue){
       case 1:
@@ -238,6 +237,8 @@ void loop(){
        tilt = readData();
        power = readData();
 
+       Serial.print("Power: ");
+       Serial.println(power);
        //Set Servo Values
        FLServo.setTarget(fl);
        BLServo.setTarget(bl);
@@ -278,8 +279,8 @@ void loop(){
 
 int readData(){
   
-  char tempValue[16];
-  memset(tempValue,0,16);
+  char tempValue[32];
+  memset(tempValue,0,32);
   int returnValue;
   int index = 0;
   int END = 0;

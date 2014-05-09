@@ -455,6 +455,6 @@ void Diagnostics::syncAll()
 {
     for(int i  = 0;i < Filters.size();i++)
     {
-        updateButtons.at(i)->clicked();
+        //updateButtons.at(i)->clicked();
     }
 }
