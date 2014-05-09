@@ -53,8 +53,6 @@ private:
     int timeInterval;
     int pingInterval;
     int *shutdown;
-    int last[12];
-    int repeatCounter;
 
 
 
