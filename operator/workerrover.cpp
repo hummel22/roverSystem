@@ -3,7 +3,7 @@
 RoverController::RoverController(QObject *parent) :
     QObject(parent)
 {
-    dataSent = "40/1501/1501/1501/1501/1501/1501/0";
+    dataSent = "41/1501/1501/1501/1501/1501/1501/0";
 }
 
 void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)

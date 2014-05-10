@@ -68,6 +68,8 @@ void linkManager::setConfiguration(int A)
     disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
     disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Drive,SLOT(joystickData(int,int,int,int,int,int)));
     timer->stop();
+    disconnect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));
+    disconnect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
 
 
 
