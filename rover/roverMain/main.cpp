@@ -40,7 +40,9 @@ int main(){
     //Create Connection with arduino
     serial.initialize();
     //Create Connection with operator//
-    socks.initialize("127.0.0.1","1153");
+    //socks.initialize("127.0.0.1","1153");
+        socks.initialize("192.168.0.197","1153");
+
     //Add sending and receieving to Interpreter
     inter.initialize(serial,socks);
     //####Initialize Video Stream Here##//
