@@ -77,7 +77,7 @@ void joystickInput::getInput()
         if(event.number < 7)
         {
             x[event.number] = event.value;
-            if(spacer == 24)                    //Limit number recording each second
+            if(spacer == 30)                    //Limit number recording each second
             {
                 emit joyStickData(x[0],x[1],x[2],x[3],x[4],x[5]);
                 spacer =1;

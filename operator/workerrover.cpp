@@ -38,32 +38,44 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     if(X2<-DeadZone){X2 = X2+DeadZone;}
     }
 
-    if((Y1<DeadZone) && (Y1>-DeadZone) )
+    if((Y2<DeadZone) && (Y2>-DeadZone) )
     {
-        Y1 = 0;
+        Y2 = 0;
     }else{
-    if(Y1>DeadZone){Y1 = Y1-DeadZone;}
-    if(Y1<-DeadZone){Y1 = Y1+DeadZone;}
+    if(Y2>DeadZone){Y2 = Y2-DeadZone;}
+    if(Y2<-DeadZone){Y2 = Y2+DeadZone;}
     }
 
-    //Wheel Turn angle
+    //Wheel Turn angle - X2 - Y2 Right Joystcik
     int valueFront = X2*500/32762+1500;
     int valueBack = -X2*500/32762+1500;
-    frontleftSERVO->setServoValue(valueFront);
-    frontrightSERVO->setServoValue(valueFront);
-    backleftSERVO->setServoValue(valueBack);
-    backrightSERVO->setServoValue(valueBack);
 
     //Power calcautions
     double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
     double multiplier2 = 1-((((double)LT)+32767)*0.5/(32767*2));//From 0.5 to 1
-    int pow = -Y1*175/32767 * multiplier1*multiplier2;
+    int pow = Y2*175/32767 * multiplier1*multiplier2;
+
+
+    //Left Joystick - Controls Pan Tilit
+    int panValue = X1*500/32762+1500;
+    int tiltValue = -Y1*500/32762+1500;
+
+    frontleftSERVO->setServoValue(valueFront);
+    frontrightSERVO->setServoValue(valueFront);
+    backleftSERVO->setServoValue(valueBack);
+    backrightSERVO->setServoValue(valueBack);
+    panServo->setServoValue(panValue);
+    tiltServo->setServoValue(tiltValue);
+
+
 
     //Build Send String
     QString frontValue = QString::number(valueFront);
     QString backValue = QString::number(valueBack);
     QString Power = QString::number(-1*pow);
-    QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+Power+"/";
+    QString pan = QString::number(panValue);
+    QString tilt = QString::number(tiltValue);
+    QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+pan+"/"+tilt+"/"+Power+"/";
 
     if(send != dataSent)    //Dont send if value same as last send
     {
@@ -106,4 +118,17 @@ void RoverController::timeCheck()
 {
     qDebug()<<"received emit";
     emit Send(dataSent);
+}
+
+void RoverController::buttonPress(int x)
+{
+    switch(x)
+    {
+    case 3:
+        emit Send("37/");
+        break;
+    case 0:
+        emit Send("38/");
+        break;
+    }
 }

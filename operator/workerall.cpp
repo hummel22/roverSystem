@@ -42,8 +42,8 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     int Shoulder = -Y2*3/32175;     //Y Axis
 
     //Trigers
-    int Claw =-(LT-RT)*10/32175;    //Triggers
-    int Wrist = 0;
+    int Claw = 0;  //Triggers
+    int Wrist = -(LT-RT)*10/32175; ;
 
 
     //Angle Caluculations

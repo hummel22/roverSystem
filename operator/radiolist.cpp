@@ -70,7 +70,7 @@ void linkManager::setConfiguration(int A)
     timer->stop();
     disconnect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));
     disconnect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
-
+    disconnect(jInput,SIGNAL(buttonPressed(int)),Drive,SLOT(buttonPress(int)));
 
 
     //Make New Connections
@@ -99,6 +99,7 @@ void linkManager::setConfiguration(int A)
         QObject::connect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
         //set timout
         timer->start(300);
+        connect(jInput,SIGNAL(buttonPressed(int)),Drive,SLOT(buttonPress(int)));
     }
 
     CurrentValue = A + 1;

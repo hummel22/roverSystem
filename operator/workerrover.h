@@ -48,6 +48,7 @@ public slots:
     void keyInput(QString data);
     void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
     void timeCheck();
+    void buttonPress(int);
 
 
 };

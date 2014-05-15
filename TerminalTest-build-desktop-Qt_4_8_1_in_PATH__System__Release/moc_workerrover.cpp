@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'workerrover.h'
 **
-** Created: Mon May 5 19:57:54 2014
+** Created: Sat May 10 22:01:08 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_RoverController[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -39,6 +39,7 @@ static const uint qt_meta_data_RoverController[] = {
       91,   86,   16,   16, 0x0a,
      127,  109,   16,   16, 0x0a,
      165,   16,   16,   16, 0x0a,
+     177,   16,   16,   16, 0x0a,
 
        0        // eod
 };
@@ -48,7 +49,7 @@ static const char qt_meta_stringdata_RoverController[] = {
     "Send(QString)\0Power\0powerUpdate(int)\0"
     "data\0keyInput(QString)\0X1,Y1,LT,X2,Y2,RT\0"
     "joystickData(int,int,int,int,int,int)\0"
-    "timeCheck()\0"
+    "timeCheck()\0buttonPress(int)\0"
 };
 
 void RoverController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -63,6 +64,7 @@ void RoverController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 3: _t->keyInput((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 4: _t->joystickData((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4])),(*reinterpret_cast< int(*)>(_a[5])),(*reinterpret_cast< int(*)>(_a[6]))); break;
         case 5: _t->timeCheck(); break;
+        case 6: _t->buttonPress((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -100,9 +102,9 @@ int RoverController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

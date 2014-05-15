@@ -4,50 +4,53 @@
 #include <Servo.h>
 
 
-//Pin Setup
+//Pin Location
 //Arm
-int BasePin        = 22;
-int ShoulderPin    = 23;
-int ElbowPin       = 24;
-int WristPin       = 25;
-int WristRotatePin = 26;
-int ClawPin        = 27;
+int BASE_PIN        = 22;
+int SHOULDER_PIN    = 23;
+int ELBOW_PIN       = 24;
+int WRIST_PIN       = 25;
+int WRIST_ROTATE_PIN = 26;
+int CLAW_PIN        = 27;
+
+//Steering Servos
+int FRONT_LEFT_SERVO_PIN   = 29;
+int BACK_LEFT_SERVO_PIN   = 30;
+int FRONT_RIGHT_SERVO_PIN   = 31;
+int BACK_RIGHT_SERVO_PIN   = 32;
+
+//Motor Speed Pins
+int FRONT_LEFT_MOTOR_PIN = 2;
+int MIDDLE_LEFT_MOTOR_PIN = 4;
+int BACK_LEFT_MOTOR_PIN = 6;
+int FRONT_RIGHT_MOTOR_PIN = 3;
+int MIDDLE_RIGHT_MOTOR_PIN = 5;
+int BACK_RIGHT_MOTOR_PIN = 7;
+
+//Motor Direction
+int LEFT_DIRECTION_PIN = 33;
+int RIGHT_DIRECTION_PIN = 34;
+
 
 //Extra Items
-int PanPin;
-int TiltPin;
+int PAN_TILIT = 10;
+int TILT_PIN = 11;
+
 int Camera1Pin;
 int MastPin;
 
-//Steering Servos
-int FLServoPin   = 44;
-int BLServoPin   = 45;
-int FRServoPin   = 46;
-int BRServoPin   = 47;
 
-//Motor Speed Pins
-int FLMotorPin = 2;
-int MLMotorPin = 4;
-int BLMotorPin = 6;
-int FRMotorPin = 3;
-int MRMotorPin = 5;
-int BRMotorPin = 7;
 
-//Motor Direction
-int FLMotorDirectionPin = 28;
-int MLMotorDirectionPin = 30;
-int BLMotorDirectionPin = 32;
-int FRMotorDirectionPin = 29;
-int MRMotorDirectionPin = 31;
-int BRMotorDirectionPin = 33;
-int isFoward;
 
-int Angle;
 
-int largeServoUpper = 2000;
-int largeServoLower = 1000;
 
-//Servos
+int isFoward;  //Used for Direction change
+
+int LARGE_SERVO_UPPER_LIMIT = 2000;
+int LARGE_SERVO_LOWER_LIMIT = 1000;
+
+//Servo List
+//Arm
 servoRun Base;
 servoRun Shoulder;
 servoRun Elbow;
@@ -55,36 +58,25 @@ servoRun Wrist;
 servoRun WristRotate;
 servoRun Claw;
 
+//Steering
 servoRun FLServo;
 servoRun BLServo;
 servoRun FRServo;
 servoRun BRServo;
-servoRun list[20];
+servoRun PanServo;
+servoRun TiltServo;
 
-int newAngle;
+//Counters to see when last time arm or drive was called
+//eliminates uneccesary calls to update servos
+int armCount;     
+int driveCount;    
 
-//Arm Angle place holders
-int base;
-int shoulder;
-int elbow;
-int wrist;
-int wristrotate;
-int claw;
 
-//Drive andle place holders
-int fl;
-int bl;
-int fr;
-int br;
 int pan;
 int tilt;
 int power;
 
-int switchvalue;
-bool start;
-bool looper;
-
-int prevPower;
+int prevPower;  //used i case power is wrongswit
 
 void setup (){
   Serial.begin(115200);
@@ -95,49 +87,47 @@ void setup (){
   
   //Build Motor Pin List  
   //Assigns Servo to pIns
-  Base.buildServo(BasePin,1500);
-  Base.setBounds(largeServoLower,largeServoUpper);
-  Shoulder.buildServo(ShoulderPin,1500);
-  Shoulder.setBounds(largeServoLower,1884);
-  Elbow.buildServo(ElbowPin,1500);
-  Elbow.setBounds(largeServoLower,largeServoUpper);
-  Wrist.buildServo(WristPin,1500);
-  Wrist.setBounds(largeServoLower,largeServoUpper);
-  WristRotate.buildServo(WristRotatePin,1522);
-  WristRotate.setBounds(largeServoLower,largeServoUpper);
-  Claw.buildServo(ClawPin,1500);
+  Base.buildServo(BASE_PIN,1500);
+  Base.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  Shoulder.buildServo(SHOULDER_PIN,1500);
+  Shoulder.setBounds(LARGE_SERVO_LOWER_LIMIT,1884);
+  Elbow.buildServo(ELBOW_PIN,1500);
+  Elbow.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  Wrist.buildServo(WRIST_PIN,1500);
+  Wrist.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  WristRotate.buildServo(WRIST_ROTATE_PIN,1522);
+  WristRotate.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  Claw.buildServo(CLAW_PIN,1500);
   Claw.setBounds(1025,1733);
   
-  FLServo.buildServo(FLServoPin,1500);
-  FLServo.setBounds(largeServoLower,largeServoUpper);
-  BLServo.buildServo(BLServoPin,1500);
-  BLServo.setBounds(largeServoLower,largeServoUpper);
-  FRServo.buildServo(FRServoPin,1500);
-  FRServo.setBounds(largeServoLower,largeServoUpper);
-  BRServo.buildServo(BRServoPin,1500);
-  BRServo.setBounds(largeServoLower,largeServoUpper);
+  FLServo.buildServo(FRONT_LEFT_SERVO_PIN,1500);
+  FLServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  BLServo.buildServo(BACK_LEFT_SERVO_PIN,1500);
+  BLServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  FRServo.buildServo(FRONT_RIGHT_SERVO_PIN,1500);
+  FRServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  BRServo.buildServo(BACK_RIGHT_SERVO_PIN,1500);
+  BRServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  PanServo.buildServo(PAN_TILIT,1500);
+  PanServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  TiltServo.buildServo(TILT_PIN,1500);
+  TiltServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
   
-  pinMode(FLMotorDirectionPin,OUTPUT);
-  pinMode(MLMotorDirectionPin,OUTPUT);
-  pinMode(BLMotorDirectionPin,OUTPUT);
-  pinMode(FRMotorDirectionPin,OUTPUT);
-  pinMode(MRMotorDirectionPin,OUTPUT);
-  pinMode(BRMotorDirectionPin,OUTPUT);
+  pinMode(LEFT_DIRECTION_PIN,OUTPUT);
+  pinMode(RIGHT_DIRECTION_PIN,OUTPUT);
   delay(3);
-  digitalWrite(FLMotorDirectionPin,HIGH);
-  digitalWrite(MLMotorDirectionPin,HIGH);
-  digitalWrite(BLMotorDirectionPin,HIGH);
-  digitalWrite(FRMotorDirectionPin,LOW);
-  digitalWrite(MRMotorDirectionPin,LOW);
-  digitalWrite(BRMotorDirectionPin,LOW);
+  digitalWrite(LEFT_DIRECTION_PIN,LOW);
+  digitalWrite(RIGHT_DIRECTION_PIN,LOW);
   isFoward = 1;
+  driveCount = 0;
+  armCount = 0;
   
-  analogWrite(FLMotorPin,0);
-  analogWrite(MLMotorPin,0);
-  analogWrite(BLMotorPin,0);
-  analogWrite(FRMotorPin,0);
-  analogWrite(MRMotorPin,0);
-  analogWrite(BRMotorPin,0);
+  analogWrite(FRONT_LEFT_MOTOR_PIN,0);
+  analogWrite(MIDDLE_LEFT_MOTOR_PIN,0);
+  analogWrite(BACK_LEFT_MOTOR_PIN,0);
+  analogWrite(FRONT_RIGHT_MOTOR_PIN,0);
+  analogWrite(MIDDLE_RIGHT_MOTOR_PIN,0);
+  analogWrite(BACK_RIGHT_MOTOR_PIN,0);
   
 }
 
@@ -149,101 +139,74 @@ void loop(){
   
   if(dataStart())    //check to see if at start of data packet
   {
-    switchvalue = readData();
-    switch(switchvalue){
+    switch(readData()){
       case 1:
-        newAngle = readData();
-        Base.setTarget(newAngle);
+        Base.setTarget(readData());
         break;
       case 2:
-        newAngle = readData();
-        Shoulder.setTarget(newAngle);
+        Shoulder.setTarget(readData());
         break;  
      case 3:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 4:
-        newAngle = readData();
-        Wrist.setTarget(newAngle);
+        Wrist.setTarget(readData());
         break;
      case 5:
-        newAngle = readData();
-        WristRotate.setTarget(newAngle);
+        WristRotate.setTarget(readData());
         break;
      case 6:
-        newAngle = readData();
-        Claw.setTarget(newAngle);
+        Claw.setTarget(readData());
         break;
      case 7:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 8:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 9:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 10:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 11:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 12:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 13:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
      case 14:
-        newAngle = readData();
-        Elbow.setTarget(newAngle);
+        Elbow.setTarget(readData());
         break;
     
      case 40:
      case 4000:   
      case 4044:
-       base = readData();
-       shoulder = readData();
-       elbow = readData();
-       wrist = readData();
-       wristrotate = readData();
-       claw = readData();
-       
-       
-       Base.setTarget(base);
-       Shoulder.setTarget(shoulder);
-       Elbow.setTarget(elbow);
-       Wrist.setTarget(wrist);
-       WristRotate.setTarget(wristrotate);
-       Claw.setTarget(claw);
+       Base.setTarget(readData());
+       Shoulder.setTarget(readData());
+       Elbow.setTarget(readData());
+       Wrist.setTarget(readData());
+       WristRotate.setTarget(readData());
+       Claw.setTarget(readData());
+       armCount = 0; //reset count on Drive
        break;
        
      case 41: //Drive Control
-       //Read In values
-       fl = readData();
-       bl = readData();
-       fr = readData();
-       br = readData();
-       pan = readData();
-       tilt = readData();
-       power = readData();
-
-       Serial.print("Power: ");
-       Serial.println(power);
+       //Serial.print("Power: ");
+       //Serial.println(power);
        //Set Servo Values
-       FLServo.setTarget(fl);
-       BLServo.setTarget(bl);
-       FRServo.setTarget(fr);
-       BRServo.setTarget(br);
+       FLServo.setTarget(readData());
+       BLServo.setTarget(readData());
+       FRServo.setTarget(readData());
+       BRServo.setTarget(readData());
+       PanServo.setTarget(readData());
+       TiltServo.setTarget(readData());
+       power = readData();
+       driveCount = 0;//Reset count on drive
        
        //Reverse wheel Direction if signs of power change
        setDirection();
@@ -257,17 +220,31 @@ void loop(){
   
   
   //Smoothin Equations
+  
+  //Update 
+  if(armCount < 25)
+  {
   Shoulder.updateServo();
   Base.updateServo();
   Elbow.updateServo();
   Wrist.updateServo();
   WristRotate.updateServo();
   Claw.updateServo();
+  armCount++;
+  }
   
+  
+  if(driveCount<25)
+  {
   FLServo.updateServo();
   BLServo.updateServo();
   FRServo.updateServo();
   BRServo.updateServo();
+  PanServo.updateServo();
+  TiltServo.updateServo();
+  
+  driveCount++;
+  }
   
   delay(18);
   
@@ -279,8 +256,8 @@ void loop(){
 
 int readData(){
   
-  char tempValue[32];
-  memset(tempValue,0,32);
+  char tempValue[8];
+  memset(tempValue,0,8);
   int returnValue;
   int index = 0;
   int END = 0;
@@ -377,22 +354,14 @@ void setDirection()
          if(power > 0)
             {
               //Foward Wheel Direction
-              digitalWrite(FLMotorDirectionPin,HIGH);
-              digitalWrite(MLMotorDirectionPin,HIGH);
-              digitalWrite(BLMotorDirectionPin,HIGH);
-              digitalWrite(FRMotorDirectionPin,LOW);
-              digitalWrite(MRMotorDirectionPin,LOW);
-              digitalWrite(BRMotorDirectionPin,LOW);
+              digitalWrite(LEFT_DIRECTION_PIN,LOW);
+              digitalWrite(RIGHT_DIRECTION_PIN,LOW);
               prevPower = power;
             }  else
             {
               //Reverse Wheel 
-              digitalWrite(FLMotorDirectionPin,LOW);
-              digitalWrite(MLMotorDirectionPin,LOW);
-              digitalWrite(BLMotorDirectionPin,LOW);
-              digitalWrite(FRMotorDirectionPin,HIGH);
-              digitalWrite(MRMotorDirectionPin,HIGH);
-              digitalWrite(BRMotorDirectionPin,HIGH);;
+              digitalWrite(LEFT_DIRECTION_PIN,HIGH);
+              digitalWrite(RIGHT_DIRECTION_PIN,HIGH);
               prevPower = power;
               
             }
@@ -400,11 +369,13 @@ void setDirection()
             if(power<0){power=power*-1;}
             
             //Set power of motors
-            analogWrite(FLMotorPin,power);
-            analogWrite(MLMotorPin,power);
-            analogWrite(BLMotorPin,power);
-            analogWrite(FRMotorPin,power);
-            analogWrite(MRMotorPin,power);
-            analogWrite(BRMotorPin,power);                 
+            analogWrite(FRONT_LEFT_MOTOR_PIN,power);
+            analogWrite(MIDDLE_LEFT_MOTOR_PIN,power);
+            analogWrite(BACK_LEFT_MOTOR_PIN,power);
+            analogWrite(FRONT_RIGHT_MOTOR_PIN,power);
+            analogWrite(MIDDLE_RIGHT_MOTOR_PIN,power);
+            analogWrite(BACK_RIGHT_MOTOR_PIN,power);                 
        }    
 }
+
+  
