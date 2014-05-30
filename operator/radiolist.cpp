@@ -63,6 +63,7 @@ void linkManager::setConfiguration(int A)
         disconnect(keys,SIGNAL(sendKey(QString)),Servos.at(i),SLOT(keyboardInput(QString)));
         disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Servos.at(i),SLOT(joystickData(int,int,int,int,int,int)));
         disconnect(Servos.at(i),SIGNAL(Send(QString)),mySocket,SLOT(Send(QString)));
+        disconnect(jInput,SIGNAL(buttonPressed(int)),Servos.at(i),SLOT(buttonPress(int)));
     }
     //Disconnect Arm and Driver
     disconnect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
@@ -71,6 +72,7 @@ void linkManager::setConfiguration(int A)
     disconnect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));
     disconnect(timer,SIGNAL(timeout()),Drive,SLOT(timeCheck()));
     disconnect(jInput,SIGNAL(buttonPressed(int)),Drive,SLOT(buttonPress(int)));
+    disconnect(jInput,SIGNAL(buttonPressed(int)),Arm,SLOT(buttonPressed(int)));
 
 
     //Make New Connections
@@ -80,10 +82,12 @@ void linkManager::setConfiguration(int A)
         connect(keys,SIGNAL(sendKey(QString)),Servos.at(A),SLOT(keyboardInput(QString)));
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Servos.at(A),SLOT(joystickData(int,int,int,int,int,int)));
         connect(Servos.at(A),SIGNAL(Send(QString)),mySocket,SLOT(Send(QString)));
+        connect(jInput,SIGNAL(buttonPressed(int)),Servos.at(A),SLOT(buttonPress(int)));
 
     } else if(A == Servos.count())    //Arm Control
     {
-        qDebug()<<"Arm Radio On: conectin joystick";
+        qDebug()<<"Arm Radio On: conectin joystick";  //required for some reason
+        connect(jInput,SIGNAL(buttonPressed(int)),Arm,SLOT(buttonPressed(int)));
         connect(jInput,SIGNAL(joyStickData(int,int,int,int,int,int)),Arm,SLOT(joystickData(int,int,int,int,int,int)));
         //connect clock to timer Off
         QObject::connect(timer,SIGNAL(timeout()),Arm,SLOT(timeCheck()));

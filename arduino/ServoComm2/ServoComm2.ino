@@ -1,3 +1,5 @@
+#include <SPI.h>
+
 #include <servoRun.h>
 //Takes input over Serial Command
 
@@ -28,13 +30,13 @@ int MIDDLE_RIGHT_MOTOR_PIN = 5;
 int BACK_RIGHT_MOTOR_PIN = 7;
 
 //Motor Direction
-int LEFT_DIRECTION_PIN = 33;
-int RIGHT_DIRECTION_PIN = 34;
+int LEFT_DIRECTION_PIN = 8;
+int RIGHT_DIRECTION_PIN = 9;
 
 
 //Extra Items
-int PAN_TILIT = 10;
-int TILT_PIN = 11;
+int PAN_TILIT = 11;
+int TILT_PIN = 10;
 
 int Camera1Pin;
 int MastPin;
@@ -116,7 +118,7 @@ void setup (){
   pinMode(LEFT_DIRECTION_PIN,OUTPUT);
   pinMode(RIGHT_DIRECTION_PIN,OUTPUT);
   delay(3);
-  digitalWrite(LEFT_DIRECTION_PIN,LOW);
+  digitalWrite(LEFT_DIRECTION_PIN,HIGH);
   digitalWrite(RIGHT_DIRECTION_PIN,LOW);
   isFoward = 1;
   driveCount = 0;
@@ -354,13 +356,15 @@ void setDirection()
          if(power > 0)
             {
               //Foward Wheel Direction
-              digitalWrite(LEFT_DIRECTION_PIN,LOW);
+              //this was low/low, changing to left=high, right=low
+              digitalWrite(LEFT_DIRECTION_PIN,HIGH);
               digitalWrite(RIGHT_DIRECTION_PIN,LOW);
               prevPower = power;
             }  else
             {
               //Reverse Wheel 
-              digitalWrite(LEFT_DIRECTION_PIN,HIGH);
+              //this was high/high, changing to left=low, right=high
+              digitalWrite(LEFT_DIRECTION_PIN,LOW);
               digitalWrite(RIGHT_DIRECTION_PIN,HIGH);
               prevPower = power;
               

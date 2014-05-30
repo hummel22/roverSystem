@@ -37,6 +37,7 @@ public slots:
     void keyboardInput(QString data);
     void sliderChanged(int value);
     void joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT);
+    void buttonPress(int a);
 
 };
 

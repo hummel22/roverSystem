@@ -13,18 +13,12 @@ VideoPlayer::VideoPlayer(QWidget *parent)
     _player->setVideoWidget(ui->video);
 
     ui->video->setMediaPlayer(_player);
-    ui->volume->setMediaPlayer(_player);
-    ui->volume->setVolume(50);
     ui->seek->setMediaPlayer(_player);
 
     connect(ui->actionOpenLocal, SIGNAL(triggered()), this, SLOT(openLocal()));
     connect(ui->actionOpenUrl, SIGNAL(triggered()), this, SLOT(openUrl()));
-    connect(ui->actionPause, SIGNAL(triggered()), _player, SLOT(pause()));
-    connect(ui->actionStop, SIGNAL(triggered()), _player, SLOT(stop()));
     connect(ui->openLocal, SIGNAL(clicked()), this, SLOT(openLocal()));
     connect(ui->openUrl, SIGNAL(clicked()), this, SLOT(openUrl()));
-    connect(ui->pause, SIGNAL(clicked()), _player, SLOT(pause()));
-    connect(ui->stop, SIGNAL(clicked()), _player, SLOT(stop()));
 }
 
 VideoPlayer::~VideoPlayer()

@@ -30,6 +30,16 @@ private:
 
     QString dataSent;
     int DeadZone;
+    int X1_DEADZONE;
+    int Y1_DEADZONE;
+    int X2_DEADZONE;
+    int Y2_DEADZONE;
+
+    int deadzoneCheck(int value,int deadzone);
+    QString mapJoystickValue(Servo* servo,int joystickValue);
+
+
+
 
 
 

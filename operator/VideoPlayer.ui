@@ -18,48 +18,21 @@
     <item row="0" column="0">
      <widget class="QPushButton" name="openLocal">
       <property name="text">
-       <string>Open local file</string>
+       <string>Video 1</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
      <widget class="QPushButton" name="openUrl">
       <property name="text">
-       <string>Open URL</string>
+       <string>Video 2</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0" colspan="2">
      <widget class="VlcWidgetVideo" name="video" native="true"/>
     </item>
-    <item row="3" column="1">
-     <widget class="QPushButton" name="stop">
-      <property name="text">
-       <string>Stop</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="pause">
-      <property name="text">
-       <string>Pause</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="0" colspan="2">
-     <widget class="VlcWidgetVolumeSlider" name="volume" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
      <widget class="VlcWidgetSeek" name="seek" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -77,7 +50,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -135,17 +108,6 @@
    <slots>
     <signal>fullscreen()</signal>
     <slot>toggleFullscreen()</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
-   <class>VlcWidgetVolumeSlider</class>
-   <extends>QWidget</extends>
-   <header>vlc-qt/WidgetVolumeSlider.h</header>
-   <container>1</container>
-   <slots>
-    <slot>mute()</slot>
-    <slot>volumeUp()</slot>
-    <slot>volumeDown()</slot>
    </slots>
   </customwidget>
   <customwidget>

@@ -1,5 +1,6 @@
 ##List of Commands
 ####Operator --> Rover
+List of wanted commands
 |ID|Sub|Sub|Items|
 |:----:|:----:|:----:|:------------------------------:|
 |1-20  |      |      |Servo Number|
@@ -33,7 +34,27 @@
 |---   |15    |      |Check - Bug|
 |---   |---   |x/x/x/|Turn/Pan/Tilt/Power/|
 
-
+Acual Commands
+|ID|Sub|Sub|Items|
+|:----:|:----:|:----:|:------------------------------:|
+|1-20  |      |      |Servo Number|
+|---   |Angle |      |Set Given Servo Angle|
+|*22   |      |      |Answering Ping|
+|33    |      |      |Request 
+|37    |      |      |Reset Arduino|
+|40    |      |      |Arm Control|
+|---   |15    |      |Check|
+|---   |---   |x/x/x/|All Angles - Arm|
+|41    |      |      |Motor Control|
+|---   |15    |      |Check - Bug|
+|---   |---   |x/x/x/|Turn/Pan/Tilt/Power/|
+|50    |      |      |Storage to Ready|
+|51    |      |      |Ready to Drive|
+|52    |      |      |Drive to Ready|
+|53    |      |      |X to Bin to Ready|
+|60    |      |      |New Servo Value|
+|---   |ID #  |      |Servo ID|
+|---   |---   |x/x/x |Center/Radius/|
 
 ####Rover --> Operator
 |ID|Sub|Sub|Items|
@@ -46,7 +67,8 @@
 |---   |/1/2/3|      |FR-FL-MR-ML-BR-ML|
 |3     |      |      |Current Servo Values|
 |---   |1/2/x |      |Values order by Servo ID|
-|33    |      |      |Reset Header|
+|33    |      |      |Request U/L filter Center|
+|---   |ID #  |      |Servo to Request|
 |40    |      |      |Arduino Info|
 |50    |      |      |GPS Sensor Info|
 |99    |      |      |Misc Messages|

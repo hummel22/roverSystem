@@ -96,6 +96,7 @@ void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
 void Servo::sliderChanged(int value)
 {
     //This function checks to see if was changed by user OR program
+    // If changed by program could send signal twice
     //Program sets echo to true before changing - this nullifies this SLOT
 
     if(echo == false)   //User moved slider
@@ -127,9 +128,26 @@ void Servo::setServoValue(int microValue)
     //emit Send(sendString);   //<---- Replace this wil Drive and Arm doing sending
 }
 
+
+//set angle range for graphical window
 void Servo::angleRange(int lower, int upper)
 {
     lowerAngle = lower;
     upperAngle = upper;
     SLIDER->setRange(lower,upper);
+}
+
+//Recenter Value
+void Servo::buttonPress(int a)
+{
+    if(a == 3)      //Press Y to tare
+    {
+        int radius = centerValue - lowerBound;
+        centerValue = microSeconds;
+        lowerBound = centerValue - radius;
+        upperBound = centerValue + radius;
+
+        //TODO - send tare values to arduino
+        emit Send("60/"+QString::number(servoNumber+1)+"/"+QString::number(centerValue)+"/"+QString::number(radius)+"/");
+    }
 }

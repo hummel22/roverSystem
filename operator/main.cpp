@@ -29,11 +29,52 @@
 #include "timekeeper.h"
 #include <videoplayer.h>
 
-
+void setWheel(int center, int radius, Servo *servo);
+void setArmServo(int upper,int lower, Servo* servo, int start);
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+
+    //VARIABLES---------------------------------------------------------------------//
+    //Wheel Center Values
+    const int BACK_LEFT_CENTER = 1500;
+    const int BACK_RIGHT_CENTER = 1500;
+    const int FRONT_LEFT_CENTER = 1500;
+    const int FRONT_RIGHT_CENTER = 1500;
+    const int TURN_RADIUS = 500;  //Radius in Microseconds
+
+    //Arm Limits
+    const int BASE_LOWER_LIMIT = 1000;
+    const int BASE_UPPER_LIMIT = 2000;
+    const int SHOULDER_LOWER_LIMIT = 1000;
+    const int SHOULDER_UPPER_LIMIT = 2000;
+    const int ELBOW_LOWER_LIMIT = 1000;
+    const int ELBOW_UPPER_LIMIT = 2000;
+    const int WRIST_LOWER_LIMIT = 1000;
+    const int WRIST_UPPER_LIMIT = 2000;
+    const int WRIST_ROTATE_LOWER_LIMIT = 1000;
+    const int WRIST_ROTATE_UPPER_LIMIT = 2000;
+    const int CLAW_OPEN = 1000;
+    const int CLAW_CLOSED = 2000;
+    const int CLAW_LOWER_LIMIT = CLAW_OPEN;
+    const int CLAW_UPPER_LIMIT = CLAW_CLOSED;
+
+    const int BASE_STORAGE = 1500;
+    const int SHOULDER_STORAGE = 1500;
+    const int ELBOW_STORAGE = 1500;
+    const int WRIST_STORAGE = 1500;
+    const int WRIST_ROTATE_STORAGE = 1500;
+    const int CLAW_STORAGE = 1500;
+
+    //Window Screen Limits
+    const int TERMINAL_WIDTH = 340;
+    const int COLUMN_WIDTH = 160;
+    const int ROW_HEIGHT = 150;
+
+    //Number of Servos
+    //VARIABLES---------------------------------------------------------------------//
 
 
     //TERMINAL WINDOW --------------------------------------------------------------//
@@ -57,10 +98,10 @@ int main(int argc, char *argv[])
     TerminalReceived->isReadOnly();
     //Create Layouts
     QGridLayout *layerTerminalAll = new QGridLayout;
-    int terminalWidth = 340;
-    layerTerminalAll->setColumnMinimumWidth(0,terminalWidth);
-    layerTerminalAll->setColumnMinimumWidth(1,terminalWidth);
-    layerTerminalAll->setColumnMinimumWidth(2,terminalWidth);
+
+    layerTerminalAll->setColumnMinimumWidth(0,TERMINAL_WIDTH);
+    layerTerminalAll->setColumnMinimumWidth(1,TERMINAL_WIDTH);
+    layerTerminalAll->setColumnMinimumWidth(2,TERMINAL_WIDTH);
     //Add to Layouts
     layerTerminalAll->addWidget(Internal,0,0);
     layerTerminalAll->addWidget(TerminalInternal,1,0);
@@ -74,14 +115,11 @@ int main(int argc, char *argv[])
     //Show Window
     //TERMINAL WINDOW-----------------------------------------------------------------------//
 
-    //VideoPlayer---------------------------------------------------------------------------//
 
-
-
+    //VIDEO PLAYER---------------------------------------------------------------------------//
     VideoPlayer video;
-    video.show();
+    //VIDEO PLAYER---------------------------------------------------------------------------//
 
-    //VideoPlayer---------------------------------------------------------------------------//
 
     //SOCKET--------------------------------------------------------------------------------//
     UDPwork *MySocket = new UDPwork;
@@ -100,7 +138,6 @@ int main(int argc, char *argv[])
     //QWidget *windowSlider = new QWidget;    //Create Container for Sliders
     //windowSlider->setWindowTitle("Sliders"); //Contains Sliders
 
-
     ArmController *Arm = new ArmController;         //Arm Control Object
     RoverController *Drive = new RoverController;   //Drive Control Object
     //Build Workers and Sliders Lists
@@ -108,21 +145,13 @@ int main(int argc, char *argv[])
     QList<QSlider*> sliderList;
     QList<HRadioButton*> radioButtonList;
 
-
     //KEY INPUT
     keyWindoe *test = new keyWindoe;
     test->setMaximumHeight(200);
     test->setMaximumWidth(200);
 
-
-    //Create timer and thread for sending values every N seconds
-
-
     //Mode Manager
     linkManager *myManager = new linkManager(test);
-
-
-
     myManager->mySocket = MySocket;
 
     //For Loop to build dynamically
@@ -145,7 +174,6 @@ int main(int argc, char *argv[])
         Arm->addWorker(servoList.at(i));
         myManager->addSlide(servoList.at(i));
         myManager->addButton(radioButtonList.at(i));
-
     }
 
     //Create Drive and Arm Objects
@@ -174,7 +202,17 @@ int main(int argc, char *argv[])
     Drive->initialize(motorList,servoList);
     QObject::connect(Drive,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
 
-    //Individual Servo Valus
+    //Individual Servo Values
+    //Angle for Wheel Graphical Simulations
+    servoList.at(0)->angleRange(0,180);    //Tilt
+    servoList.at(1)->angleRange(-45,135);      //FL
+    servoList.at(2)->angleRange(0,180);      //FR
+    servoList.at(3)->angleRange(0,180);     //BL
+    servoList.at(4)->angleRange(0,180);     //BR
+    servoList.at(5)->angleRange(0,180);     //BR
+
+
+    //Angle for Wheel Graphical Simulations
     //servoList.at(6)->angleRange(-90,90);    //Pan
     servoList.at(7)->angleRange(-30,30);    //Tilt
     servoList.at(8)->angleRange(0,60);      //FL
@@ -182,30 +220,21 @@ int main(int argc, char *argv[])
     servoList.at(10)->angleRange(0,60);     //BL
     servoList.at(11)->angleRange(0,60);     //BR
 
-    //Starting Postions - Match Arduino
+    //Starting Postions and taring
     //Wheels
-    servoList.at(8)->setServoValue(1500);   //FL
-    servoList.at(9)->setServoValue(1500);   //FR
-    servoList.at(10)->setServoValue(1500);  //BL
-    servoList.at(11)->setServoValue(1500);  //BR
+    setWheel(FRONT_LEFT_CENTER,TURN_RADIUS,servoList.at(8));   //FL
+    setWheel(FRONT_RIGHT_CENTER,TURN_RADIUS,servoList.at(9));   //FR
+    setWheel(BACK_LEFT_CENTER,TURN_RADIUS,servoList.at(10)); //BL
+    setWheel(BACK_RIGHT_CENTER,TURN_RADIUS,servoList.at(11));
+
     //Arm
-    servoList.at(0)->setServoValue(1523);   //Base
-    servoList.at(1)->setServoValue(1477);   //Shoulder
-    servoList.at(2)->setServoValue(1343);   //Elbow
-    servoList.at(4)->setServoValue(1343);   //Wrist R
-    servoList.at(5)->setServoValue(1733);   //Claw -Open
-
-
-    //Set Bounds
-    servoList.at(1)->upperBound=1884;       //Shoulder Upper Bound - Hits Frame
-
+    setArmServo(BASE_UPPER_LIMIT,BASE_LOWER_LIMIT,servoList.at(0),BASE_STORAGE);
+    setArmServo(SHOULDER_UPPER_LIMIT,SHOULDER_LOWER_LIMIT,servoList.at(1),SHOULDER_STORAGE);
+    setArmServo(ELBOW_UPPER_LIMIT,ELBOW_LOWER_LIMIT,servoList.at(2),ELBOW_STORAGE);
+    setArmServo(WRIST_UPPER_LIMIT,WRIST_LOWER_LIMIT,servoList.at(3),WRIST_STORAGE);
+    setArmServo(WRIST_ROTATE_UPPER_LIMIT,WRIST_ROTATE_LOWER_LIMIT,servoList.at(4),WRIST_ROTATE_STORAGE);
+    setArmServo(CLAW_UPPER_LIMIT,CLAW_LOWER_LIMIT,servoList.at(5),CLAW_STORAGE);
     //WORKERS / SLIDERS / RADIOBUTTONS---------------------------------------------------------------------------//
-
-
-
-
-
-
 
 
 
@@ -233,7 +262,7 @@ int main(int argc, char *argv[])
 
 
 
-    //ROVER GRAPHICAL VIEW
+    //ROVER GRAPHICAL VIEW------------------------------------------------------------------------------------/
     roverWindow *rWindow = new roverWindow;
     rWindow->intialize();
     myManager->rWindow = rWindow;
@@ -244,25 +273,25 @@ int main(int argc, char *argv[])
     QObject::connect(sliderList.at(9),SIGNAL(valueChanged(int)),rWindow,SLOT(frontrightSLOT(int)));
     QObject::connect(sliderList.at(10),SIGNAL(valueChanged(int)),rWindow,SLOT(backleftSLOT(int)));
     QObject::connect(sliderList.at(11),SIGNAL(valueChanged(int)),rWindow,SLOT(backrightSLOT(int)));
-    //ROVER VIEW
+    //ROVER GRAPHICAL VIEW------------------------------------------------------------------------------------/
 
 
-    //ARM GRAPHICAL VIEW
+    //ARM GRAPHICAL VIEW------------------------------------------------------------------------------------/
     armWindow *aWindow = new armWindow;
     QObject::connect(sliderList.at(1),SIGNAL(valueChanged(int)),aWindow,SLOT(Shoulder(int)));
     QObject::connect(sliderList.at(2),SIGNAL(valueChanged(int)),aWindow,SLOT(Elbow(int)));
     QObject::connect(sliderList.at(3),SIGNAL(valueChanged(int)),aWindow,SLOT(WristBend(int)));
     QObject::connect(sliderList.at(5),SIGNAL(valueChanged(int)),aWindow,SLOT(ClawAngle(int)));
     QObject::connect(jInput,SIGNAL(buttonPressed(int)),aWindow,SLOT(showWindowButton(int)));
-    //ARM VIEW
+    //ARM GRAPHICAL VIEW------------------------------------------------------------------------------------/
 
 
 
-    //DIAGNOSTICS
+    //DIAGNOSTICS-----------------------------------------------------------------------------------/
     Diagnostics *diag = new Diagnostics;
     QObject::connect(diag,SIGNAL(toInternalTerminal(QString)),TerminalInternal,SLOT(appendPlainText(QString)));
     QObject::connect(diag,SIGNAL(Send(QString)),MySocket,SLOT(Send(QString)));
-    //DIAGNOSTICS
+    //DIAGNOSTICS-----------------------------------------------------------------------------------/
 
 
 
@@ -274,13 +303,21 @@ int main(int argc, char *argv[])
     QPushButton *showArm = new QPushButton;
     QPushButton *showDiagnostics = new QPushButton;
     QPushButton *Reset = new QPushButton;
+    QPushButton *driveToReady = new QPushButton;
+    QPushButton *readyToDrive = new QPushButton;
+    QPushButton *storageToReady = new QPushButton;
+    QPushButton *toBin = new QPushButton;
     showDiagnostics->setText("Diagnostics");
     showRover->setText("Rover View");
     showKeyInput->setText("Key Input");
     showTerminals->setText("Terminals");
     showJoystick->setText("Joystick");
     showArm->setText("Arm View");
-    Reset->setText("Reset");
+    Reset->setText("Reset Arduino");
+    driveToReady->setText("Drive -> Ready");
+    readyToDrive->setText("Ready -> Drive");
+    storageToReady->setText("Storage -> Ready");
+    toBin->setText("X to Bin");
 
 
     QObject::connect(showTerminals,SIGNAL(clicked()),windowAll,SLOT(show()));
@@ -290,6 +327,10 @@ int main(int argc, char *argv[])
     QObject::connect(showArm,SIGNAL(clicked()),aWindow,SLOT(ShowWindowClick()));
     QObject::connect(Reset,SIGNAL(clicked()),Arm,SLOT(reset()));
     QObject::connect(showDiagnostics,SIGNAL(clicked()),diag,SLOT(showWindow()));
+    QObject::connect(driveToReady,SIGNAL(clicked()),Arm,SLOT(driveToReady()));
+    QObject::connect(readyToDrive,SIGNAL(clicked()),Arm,SLOT(readyToDrive()));
+    QObject::connect(storageToReady,SIGNAL(clicked()),Arm,SLOT(storageToReady()));
+    QObject::connect(toBin,SIGNAL(clicked()),Arm,SLOT(toBin()));
     //BUTTONS--------------------------------------------------------------------------------------//
 
 
@@ -301,16 +342,32 @@ int main(int argc, char *argv[])
     QGridLayout *leftPanelLayout = new QGridLayout;
     QGridLayout *rightPanelLayout = new QGridLayout;
     QGridLayout *videoPanelLayout = new QGridLayout;
-    int columnWidth = 160;
-    int rowHeight = 90;
-    mainLayout->setColumnMinimumWidth(0,columnWidth);
-    mainLayout->setColumnMinimumWidth(1,columnWidth);
-    mainLayout->setColumnMinimumWidth(2,columnWidth);
-    mainLayout->setColumnMinimumWidth(3,columnWidth);
-    mainLayout->setRowMinimumHeight(0,rowHeight);
-    mainLayout->setRowMinimumHeight(1,rowHeight);
-    mainLayout->setRowMinimumHeight(2,rowHeight);
-    mainLayout->setRowMinimumHeight(3,rowHeight);
+    QGridLayout *layerslid = new QGridLayout;
+    QList<QString> servoNames;
+    QList<QLabel*> servolabels;
+    int width = 27;
+    servoNames.append("1");
+    servoNames.append("2");
+    servoNames.append("3");
+    servoNames.append("4");
+    servoNames.append("5");
+    servoNames.append("6");
+    servoNames.append("Pan");
+    servoNames.append("Tilt");
+    servoNames.append("FL");
+    servoNames.append("FR");
+    servoNames.append("BL");
+    servoNames.append("11");
+
+
+    mainLayout->setColumnMinimumWidth(0,COLUMN_WIDTH);
+    mainLayout->setColumnMinimumWidth(1,COLUMN_WIDTH);
+    mainLayout->setColumnMinimumWidth(2,COLUMN_WIDTH);
+    mainLayout->setColumnMinimumWidth(3,COLUMN_WIDTH);
+    mainLayout->setRowMinimumHeight(0,ROW_HEIGHT);
+    mainLayout->setRowMinimumHeight(1,ROW_HEIGHT);
+    mainLayout->setRowMinimumHeight(2,ROW_HEIGHT);
+    mainLayout->setRowMinimumHeight(3,ROW_HEIGHT);
     //LeftPanel
     leftPanelLayout->addWidget(showTerminals);
     leftPanelLayout->addWidget(showJoystick);
@@ -319,24 +376,41 @@ int main(int argc, char *argv[])
     leftPanelLayout->addWidget(showArm);
     leftPanelLayout->addWidget(showDiagnostics);
     leftPanelLayout->addWidget(Reset);
+    //Righ Panel Layout
+    rightPanelLayout->addWidget(readyToDrive);
+    rightPanelLayout->addWidget(driveToReady);
+    rightPanelLayout->addWidget(storageToReady);
+    rightPanelLayout->addWidget(toBin);
+    //Video Panel
+    videoPanelLayout->addWidget(&video);
     //Slider Window---------------------------
-    QGridLayout *layerslid = new QGridLayout;
     //layers
     for(int k = 0;k<NumberOfServors;k++)
     {
-        layerslid->addWidget(sliderList.at(k),0,k);
-        layerslid->addWidget(radioButtonList.at(k),1,k);
+        servolabels.append(new QLabel);
+        servolabels.at(k)->setText(servoNames.at(k));
+        servolabels.at(k)->setMaximumWidth(width);
+        servolabels.at(k)->setMinimumWidth(width);
+        servolabels.at(k)->setMaximumHeight(width);
+        servolabels.at(k)->setAlignment(Qt::AlignCenter);
+        sliderList.at(k)->setMinimumHeight(100);
+        layerslid->addWidget(servolabels.at(k),0,k);
+        layerslid->addWidget(new QLabel());
+        layerslid->addWidget(sliderList.at(k),1,k);
+        layerslid->addWidget(radioButtonList.at(k),2,k);
     }
     QGridLayout *sidebar = new QGridLayout;
-    sidebar->addWidget(radioButtonArm,0,0);
-    sidebar->addWidget(radioButtonRover,1,0);
+    sidebar->addWidget(radioButtonArm,1,0);
+    sidebar->addWidget(radioButtonRover,2,0);
     layerslid->addLayout(sidebar,0,NumberOfServors,2,1);
     //Slider Window --------------------------
     //Add to layouts to windows
     //windowSlider->setLayout(layerslid);
     //Show Windows
-    mainLayout->addLayout(leftPanelLayout,0,0,4,1);
+    mainLayout->addLayout(leftPanelLayout,2,0,2,1);
+    mainLayout->addLayout(rightPanelLayout,2,3,2,1);
     mainLayout->addLayout(layerslid,3,1,2,1);
+    mainLayout->addLayout(videoPanelLayout,0,1,3,2);
     mainWind->setLayout(mainLayout);
     mainWind->show();
     // windowSlider->show();
@@ -363,11 +437,29 @@ int main(int argc, char *argv[])
     cObject.DoSetup(cThread);
     cObject.moveToThread(&cThread);
     cThread.start();
+    //CREATE THREAD---------------------------------------------------------------------------------//
 
     //Initialize radioButtons
     radioButtonList.at(0)->setChecked(true);
 
-
-
     return a.exec();
+}
+
+
+
+void setArmServo(int upper,int lower, Servo* servo, int start)
+{
+    servo->upperBound = upper;
+    servo->lowerBound = lower;
+    servo->setServoValue(start);
+
+}
+
+void setWheel(int center, int radius, Servo* servo)
+{
+
+    servo->centerValue = center;//BR
+    servo->lowerBound= center - radius;
+    servo->upperBound= center + radius;
+    servo->setServoValue(center);
 }

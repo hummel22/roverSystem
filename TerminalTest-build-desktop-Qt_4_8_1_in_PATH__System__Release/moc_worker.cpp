@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'worker.h'
 **
-** Created: Tue Apr 29 16:42:12 2014
+** Created: Tue May 27 12:36:36 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Servo[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -38,6 +38,7 @@ static const uint qt_meta_data_Servo[] = {
       58,   53,    6,    6, 0x0a,
       87,   81,    6,    6, 0x0a,
      124,  106,    6,    6, 0x0a,
+     164,  162,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -47,6 +48,7 @@ static const char qt_meta_stringdata_Servo[] = {
     "Send(QString)\0data\0keyboardInput(QString)\0"
     "value\0sliderChanged(int)\0X1,Y1,LT,X2,Y2,RT\0"
     "joystickData(int,int,int,int,int,int)\0"
+    "a\0buttonPress(int)\0"
 };
 
 void Servo::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -60,6 +62,7 @@ void Servo::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void 
         case 2: _t->keyboardInput((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: _t->sliderChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 4: _t->joystickData((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4])),(*reinterpret_cast< int(*)>(_a[5])),(*reinterpret_cast< int(*)>(_a[6]))); break;
+        case 5: _t->buttonPress((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -97,9 +100,9 @@ int Servo::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

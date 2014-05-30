@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'workerall.h'
 **
-** Created: Mon May 5 19:57:53 2014
+** Created: Thu May 29 17:14:23 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_ArmController[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -39,6 +39,11 @@ static const uint qt_meta_data_ArmController[] = {
      102,   84,   14,   14, 0x0a,
      140,   14,   14,   14, 0x0a,
      148,   14,   14,   14, 0x0a,
+     162,  160,   14,   14, 0x0a,
+     181,   14,   14,   14, 0x0a,
+     196,   14,   14,   14, 0x0a,
+     211,   14,   14,   14, 0x0a,
+     219,   14,   14,   14, 0x0a,
 
        0        // eod
 };
@@ -48,7 +53,9 @@ static const char qt_meta_stringdata_ArmController[] = {
     "Send(QString)\0data\0keyInput(QString)\0"
     "X1,Y1,LT,X2,Y2,RT\0"
     "joystickData(int,int,int,int,int,int)\0"
-    "reset()\0timeCheck()\0"
+    "reset()\0timeCheck()\0a\0buttonPressed(int)\0"
+    "readyToDrive()\0driveToReady()\0toBin()\0"
+    "storageToReady()\0"
 };
 
 void ArmController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -63,6 +70,11 @@ void ArmController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 3: _t->joystickData((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4])),(*reinterpret_cast< int(*)>(_a[5])),(*reinterpret_cast< int(*)>(_a[6]))); break;
         case 4: _t->reset(); break;
         case 5: _t->timeCheck(); break;
+        case 6: _t->buttonPressed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 7: _t->readyToDrive(); break;
+        case 8: _t->driveToReady(); break;
+        case 9: _t->toBin(); break;
+        case 10: _t->storageToReady(); break;
         default: ;
         }
     }
@@ -100,9 +112,9 @@ int ArmController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 11;
     }
     return _id;
 }

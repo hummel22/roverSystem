@@ -3,7 +3,7 @@
 RoverController::RoverController(QObject *parent) :
     QObject(parent)
 {
-    dataSent = "41/1501/1501/1501/1501/1501/1501/0";
+    dataSent = "41/1501/1501/1501/1200/1501/1501/0";
 }
 
 void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)
@@ -17,6 +17,12 @@ void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)
     tiltServo = serv.at(7);
     DeadZone = 10000;
 
+    //DeadZone values
+    X1_DEADZONE = 5000;
+    Y1_DEADZONE = 5000;
+    X2_DEADZONE = 10000;
+    Y2_DEADZONE = 10000;
+
 }
 
 void RoverController::keyInput(QString data)
@@ -29,64 +35,75 @@ void RoverController::keyInput(QString data)
 void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 {
 
-    //Remove DeadZone int Right Joystick
-    if((X2<DeadZone) && (X2>-DeadZone) )
-    {
-        X2 = 0;
-    }else{
-    if(X2>DeadZone){X2 = X2-DeadZone;}
-    if(X2<-DeadZone){X2 = X2+DeadZone;}
-    }
+    //Dead Zone in joystick
+    X1 = deadzoneCheck(X1,X1_DEADZONE);
+    Y1 = deadzoneCheck(Y1,Y1_DEADZONE);
 
-    if((Y2<DeadZone) && (Y2>-DeadZone) )
-    {
-        Y2 = 0;
-    }else{
-    if(Y2>DeadZone){Y2 = Y2-DeadZone;}
-    if(Y2<-DeadZone){Y2 = Y2+DeadZone;}
-    }
+    X2 = deadzoneCheck(X2,X2_DEADZONE);
+    Y2 = deadzoneCheck(Y2,Y2_DEADZONE);
 
-    //Wheel Turn angle - X2 - Y2 Right Joystcik
-    int valueFront = X2*500/32762+1500;
-    int valueBack = -X2*500/32762+1500;
+    int STEERING = X2;
+    int POWER = Y1;
+    int PAN = X1;
+    int TILT = Y2;
+
+//    //Wheel Turn angle - X2 - Y2 Right Joystcik
+//    int valueFront = X2*500/32762+1500;
+//    int valueBack = -X2*500/32762+1500;
+//    int backRS = -X2*500/32762+backrightSERVO->centerValue;
 
     //Power calcautions
     double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
-    double multiplier2 = 1-((((double)LT)+32767)*0.5/(32767*2));//From 0.5 to 1
-    int pow = Y2*175/32767 * multiplier1*multiplier2;
+    double multiplier2 = 1-((((double)LT)+32767)*0.1/(32767*2));//From 0.1 to 1
+    int pow = POWER*175/32767 * multiplier1*multiplier2;
+
+    STEERING = STEERING*multiplier2;
 
 
-    //Left Joystick - Controls Pan Tilit
-    int panValue = X1*500/32762+1500;
-    int tiltValue = -Y1*500/32762+1500;
+//    //Left Joystick - Controls Pan Tilit
+//    int panValue = X1*500/32762+1500;
+//    int tiltValue = -Y1*500/32762+1500;
 
-    frontleftSERVO->setServoValue(valueFront);
-    frontrightSERVO->setServoValue(valueFront);
-    backleftSERVO->setServoValue(valueBack);
-    backrightSERVO->setServoValue(valueBack);
-    panServo->setServoValue(panValue);
-    tiltServo->setServoValue(tiltValue);
+//    frontleftSERVO->setServoValue(valueFront);
+//    frontrightSERVO->setServoValue(valueFront);
+//    backleftSERVO->setServoValue(valueBack);
+//    backrightSERVO->setServoValue(valueBack);
+//    panServo->setServoValue(panValue);
+//    tiltServo->setServoValue(tiltValue);
 
 
 
-    //Build Send String
-    QString frontValue = QString::number(valueFront);
-    QString backValue = QString::number(valueBack);
+//    //Build Send String
+//    QString frontValue = QString::number(valueFront);
+//    QString backValue = QString::number(valueBack);
     QString Power = QString::number(-1*pow);
-    QString pan = QString::number(panValue);
-    QString tilt = QString::number(tiltValue);
-    QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backValue+"/"+pan+"/"+tilt+"/"+Power+"/";
+//    QString pan = QString::number(panValue);
+//    QString tilt = QString::number(tiltValue);
+//    QString backRSstring = QString::number(backRS);
+//    QString send = "41/"+frontValue+"/"+backValue+"/"+frontValue+"/"+backRSstring+"/"+pan+"/"+tilt+"/"+Power+"/";
 
-    if(send != dataSent)    //Dont send if value same as last send
+
+    //TODO - future
+    //array
+    QString newSend = "41/" + mapJoystickValue(frontleftSERVO,STEERING) + "/";        //Fl
+    newSend += mapJoystickValue(backleftSERVO,-STEERING) + "/";                       //BL
+    newSend += mapJoystickValue(frontrightSERVO,STEERING) + "/";                      //FR
+    newSend += mapJoystickValue(backrightSERVO,-STEERING) + "/";                      //BR
+    newSend += mapJoystickValue(panServo,PAN) + "/";                                  //Pan
+    newSend += mapJoystickValue(tiltServo,TILT) + "/";                                //Tilt
+    newSend += Power + "/";                                                           //Power
+
+
+    if(newSend != dataSent)    //Dont send if value same as last send
     {
-        emit Send(send);
-        dataSent = send;
+        emit Send(newSend);
+        dataSent = newSend;
     }
 
 
 }
 
-//Calculate and return Microseconds for each Servo - Depreciated Note Used
+//Calculate and return Microseconds for each Servo - Depreciated Not Used
 int RoverController::turnWheel(Servo *servo, int joystickValue)
 {
     int add;
@@ -122,13 +139,38 @@ void RoverController::timeCheck()
 
 void RoverController::buttonPress(int x)
 {
-    switch(x)
+//    switch(x)
+//    {
+//    case 3:
+//        emit Send("37/");
+//        break;
+//    case 0:
+//        emit Send("38/");
+//        break;
+//    }
+}
+
+
+//Create deadzones for joysticks
+//JOysticks can be to sensitive and be left on when not touched
+int RoverController::deadzoneCheck(int value, int deadzone)
+{
+    //Check if value is within deadzon
+    if((value<deadzone) && (value>-deadzone) )
     {
-    case 3:
-        emit Send("37/");
-        break;
-    case 0:
-        emit Send("38/");
-        break;
+        value = 0;
+    }else{
+    // correct values outside fo deadzone - values start from 0
+    if(value>deadzone){value = value-deadzone;}
+    if(value<-deadzone){value = value+deadzone;}
     }
+    return value;
+}
+
+QString RoverController::mapJoystickValue(Servo *servo, int joystickValue)
+{
+    int value = joystickValue*(servo->centerValue - servo->lowerBound)/32762 + servo->centerValue;
+    servo->setServoValue(value);
+    QString tempString = QString::number(value);
+    return tempString;
 }

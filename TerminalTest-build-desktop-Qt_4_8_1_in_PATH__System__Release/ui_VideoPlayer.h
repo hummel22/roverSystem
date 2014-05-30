@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'VideoPlayer.ui'
 **
-** Created: Fri May 9 17:48:39 2014
+** Created: Fri May 30 10:34:41 2014
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -24,7 +24,6 @@
 #include <QtGui/QWidget>
 #include "vlc-qt/WidgetSeek.h"
 #include "vlc-qt/WidgetVideo.h"
-#include "vlc-qt/WidgetVolumeSlider.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -41,9 +40,6 @@ public:
     QPushButton *openLocal;
     QPushButton *openUrl;
     VlcWidgetVideo *video;
-    QPushButton *stop;
-    QPushButton *pause;
-    VlcWidgetVolumeSlider *volume;
     VlcWidgetSeek *seek;
     QMenuBar *menubar;
     QMenu *menuFile;
@@ -84,38 +80,20 @@ public:
 
         gridLayout_2->addWidget(video, 1, 0, 1, 2);
 
-        stop = new QPushButton(centralwidget);
-        stop->setObjectName(QString::fromUtf8("stop"));
-
-        gridLayout_2->addWidget(stop, 3, 1, 1, 1);
-
-        pause = new QPushButton(centralwidget);
-        pause->setObjectName(QString::fromUtf8("pause"));
-        pause->setCheckable(true);
-
-        gridLayout_2->addWidget(pause, 3, 0, 1, 1);
-
-        volume = new VlcWidgetVolumeSlider(centralwidget);
-        volume->setObjectName(QString::fromUtf8("volume"));
+        seek = new VlcWidgetSeek(centralwidget);
+        seek->setObjectName(QString::fromUtf8("seek"));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(volume->sizePolicy().hasHeightForWidth());
-        volume->setSizePolicy(sizePolicy);
-
-        gridLayout_2->addWidget(volume, 4, 0, 1, 2);
-
-        seek = new VlcWidgetSeek(centralwidget);
-        seek->setObjectName(QString::fromUtf8("seek"));
         sizePolicy.setHeightForWidth(seek->sizePolicy().hasHeightForWidth());
         seek->setSizePolicy(sizePolicy);
 
-        gridLayout_2->addWidget(seek, 5, 0, 1, 2);
+        gridLayout_2->addWidget(seek, 4, 0, 1, 2);
 
         VideoPlayer->setCentralWidget(centralwidget);
         menubar = new QMenuBar(VideoPlayer);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 640, 23));
+        menubar->setGeometry(QRect(0, 0, 640, 25));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuMedia = new QMenu(menubar);
@@ -148,10 +126,8 @@ public:
         actionStop->setText(QApplication::translate("VideoPlayer", "Stop", 0, QApplication::UnicodeUTF8));
         actionOpenLocal->setText(QApplication::translate("VideoPlayer", "Open local file", 0, QApplication::UnicodeUTF8));
         actionOpenUrl->setText(QApplication::translate("VideoPlayer", "Open URL", 0, QApplication::UnicodeUTF8));
-        openLocal->setText(QApplication::translate("VideoPlayer", "Open local file", 0, QApplication::UnicodeUTF8));
-        openUrl->setText(QApplication::translate("VideoPlayer", "Open URL", 0, QApplication::UnicodeUTF8));
-        stop->setText(QApplication::translate("VideoPlayer", "Stop", 0, QApplication::UnicodeUTF8));
-        pause->setText(QApplication::translate("VideoPlayer", "Pause", 0, QApplication::UnicodeUTF8));
+        openLocal->setText(QApplication::translate("VideoPlayer", "Video 1", 0, QApplication::UnicodeUTF8));
+        openUrl->setText(QApplication::translate("VideoPlayer", "Video 2", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("VideoPlayer", "File", 0, QApplication::UnicodeUTF8));
         menuMedia->setTitle(QApplication::translate("VideoPlayer", "Media", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

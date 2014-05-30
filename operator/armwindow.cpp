@@ -61,8 +61,8 @@ void armWindow::repaint()
     int P1y = y0 - Link1Length*qSin(Angle2Radians);
 
     //X and Y location of second joint
-    int P2x = P1x + Link2Length*qCos(3.1415926535-Angle2Radians-Angle3Radians);
-    int P2y = P1y + Link2Length*qSin(3.1415926535-Angle2Radians-Angle3Radians);
+    int P2x = P1x + -1*Link2Length*qCos((3.1415926535-Angle2Radians-Angle3Radians));
+    int P2y = P1y + 1*Link2Length*qSin((3.1415926535-Angle2Radians-Angle3Radians));
 
     //X and Y of Claw Location
     int P3x = P2x - Link3Length*qCos(3.1415926535-Angle2Radians-Angle3Radians-Angle4Radians);
