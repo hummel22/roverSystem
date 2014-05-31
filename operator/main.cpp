@@ -39,11 +39,12 @@ int main(int argc, char *argv[])
 
     //VARIABLES---------------------------------------------------------------------//
     //Wheel Center Values
-    const int BACK_LEFT_CENTER = 1500;
-    const int BACK_RIGHT_CENTER = 1500;
     const int FRONT_LEFT_CENTER = 1500;
-    const int FRONT_RIGHT_CENTER = 1500;
-    const int TURN_RADIUS = 500;  //Radius in Microseconds
+    const int BACK_LEFT_CENTER = 1021;
+    const int FRONT_RIGHT_CENTER = 1669;
+    const int BACK_RIGHT_CENTER = 1278;
+
+    const int TURN_RADIUS = 250;  //Radius in Microseconds
 
     //Arm Limits
     const int BASE_LOWER_LIMIT = 1000;
@@ -355,9 +356,9 @@ int main(int argc, char *argv[])
     servoNames.append("Pan");
     servoNames.append("Tilt");
     servoNames.append("FL");
-    servoNames.append("FR");
     servoNames.append("BL");
-    servoNames.append("11");
+    servoNames.append("FR");
+    servoNames.append("BR");
 
 
     mainLayout->setColumnMinimumWidth(0,COLUMN_WIDTH);

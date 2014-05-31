@@ -12,7 +12,7 @@ int BASE_PIN        = 22;
 int SHOULDER_PIN    = 23;
 int ELBOW_PIN       = 24;
 int WRIST_PIN       = 25;
-int WRIST_ROTATE_PIN = 26;
+int WRIST_ROTATE_PIN = 13;
 int CLAW_PIN        = 27;
 
 //Steering Servos
@@ -77,6 +77,8 @@ int driveCount;
 int pan;
 int tilt;
 int power;
+int center;
+int radius;
 
 int prevPower;  //used i case power is wrongswit
 
@@ -124,6 +126,7 @@ void setup (){
   driveCount = 0;
   armCount = 0;
   
+  
   analogWrite(FRONT_LEFT_MOTOR_PIN,0);
   analogWrite(MIDDLE_LEFT_MOTOR_PIN,0);
   analogWrite(BACK_LEFT_MOTOR_PIN,0);
@@ -131,6 +134,8 @@ void setup (){
   analogWrite(MIDDLE_RIGHT_MOTOR_PIN,0);
   analogWrite(BACK_RIGHT_MOTOR_PIN,0);
   
+  
+
 }
 
 void loop(){
@@ -144,6 +149,7 @@ void loop(){
     switch(readData()){
       case 1:
         Base.setTarget(readData());
+        
         break;
       case 2:
         Shoulder.setTarget(readData());
@@ -161,22 +167,26 @@ void loop(){
         Claw.setTarget(readData());
         break;
      case 7:
-        Elbow.setTarget(readData());
+        PanServo.setTarget(readData());
         break;
      case 8:
-        Elbow.setTarget(readData());
+        TiltServo.setTarget(readData());
         break;
      case 9:
-        Elbow.setTarget(readData());
+        FLServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 10:
-        Elbow.setTarget(readData());
+        BLServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 11:
-        Elbow.setTarget(readData());
+        FRServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 12:
-        Elbow.setTarget(readData());
+        BRServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 13:
         Elbow.setTarget(readData());
@@ -214,6 +224,93 @@ void loop(){
        setDirection();
        delay(5);
        break;
+     case 50:
+       //Run Macro
+       break;
+     case 51:
+       //Run Macro
+       break;
+     case 52:
+       //macro
+       break;
+     case 53:
+       //macro
+       break;
+     case 60:
+       //new tare
+       switch(readData()){
+       case 1:
+          center = readData();
+          radius = readData();
+          Base.setBounds(center-radius, center + radius);
+          break;
+        case 2:
+          center = readData();
+          radius = readData();
+          Shoulder.setBounds(center-radius, center + radius);
+          break;  
+       case 3:
+          center = readData();
+          radius = readData();
+          Elbow.setBounds(center-radius, center + radius);
+          break;
+       case 4:
+          center = readData();
+          radius = readData();
+          Wrist.setBounds(center-radius, center + radius);;
+          break;
+       case 5:
+          center = readData();
+          radius = readData();
+          WristRotate.setBounds(center-radius, center + radius);;
+          break;
+       case 6:
+          center = readData();
+          radius = readData();
+          Claw.setBounds(center-radius, center + radius);
+          break;
+       case 7:
+          center = readData();
+          radius = readData();
+          PanServo.setBounds(center-radius, center + radius);
+          break;
+       case 8:
+          center = readData();
+          radius = readData();
+          TiltServo.setBounds(center-radius, center + radius);
+          break;
+       case 9:
+          center = readData();
+          radius = readData();
+          FLServo.setBounds(center-radius, center + radius);
+          break;
+       case 10:
+          center = readData();
+          radius = readData();
+          BLServo.setBounds(center-radius, center + radius);
+          break;
+       case 11:
+          center = readData();
+          radius = readData();
+          FRServo.setBounds(center-radius, center + radius);
+          break;
+       case 12:
+          center = readData();
+          radius = readData();
+          BRServo.setBounds(center-radius, center + radius);
+          break;
+       case 13:
+          center = readData();
+          radius = readData();
+          Elbow.setBounds(center-radius, center + radius);
+          break;
+       case 14:
+          center = readData();
+          radius = readData();
+          Elbow.setBounds(center-radius, center + radius);
+          break;
+       }
+     
      default:
        break;
        

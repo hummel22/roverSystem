@@ -10,9 +10,10 @@ void RoverController::initialize(QList<Motor*>mot,QList<Servo*> serv)
 {
 
     frontleftSERVO = serv.at(8);
-    frontrightSERVO = serv.at(9);
-    backleftSERVO = serv.at(10);
+    backleftSERVO = serv.at(9);
+    frontrightSERVO = serv.at(10);
     backrightSERVO = serv.at(11);
+
     panServo = serv.at(6);
     tiltServo = serv.at(7);
     DeadZone = 10000;
@@ -44,8 +45,8 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 
     int STEERING = X2;
     int POWER = Y1;
-    int PAN = X1;
-    int TILT = Y2;
+    int PAN = Y2;
+    int TILT = X1;
 
 //    //Wheel Turn angle - X2 - Y2 Right Joystcik
 //    int valueFront = X2*500/32762+1500;
@@ -54,7 +55,7 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 
     //Power calcautions
     double multiplier1 = (((double)RT)+32767)/(32767*2)+1; //1 to 2
-    double multiplier2 = 1-((((double)LT)+32767)*0.1/(32767*2));//From 0.1 to 1
+    double multiplier2 = 1-((((double)LT)+32767)*0.7/(32767*2));//From 0.1 to 1
     int pow = POWER*175/32767 * multiplier1*multiplier2;
 
     STEERING = STEERING*multiplier2;
@@ -87,7 +88,7 @@ void RoverController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     //array
     QString newSend = "41/" + mapJoystickValue(frontleftSERVO,STEERING) + "/";        //Fl
     newSend += mapJoystickValue(backleftSERVO,-STEERING) + "/";                       //BL
-    newSend += mapJoystickValue(frontrightSERVO,STEERING) + "/";                      //FR
+    newSend += mapJoystickValue(frontrightSERVO,STEERING) + "/";                      //FR  --BL
     newSend += mapJoystickValue(backrightSERVO,-STEERING) + "/";                      //BR
     newSend += mapJoystickValue(panServo,PAN) + "/";                                  //Pan
     newSend += mapJoystickValue(tiltServo,TILT) + "/";                                //Tilt
@@ -139,15 +140,18 @@ void RoverController::timeCheck()
 
 void RoverController::buttonPress(int x)
 {
-//    switch(x)
-//    {
+    switch(x)
+    {
+    case 0:
+        panServo->centerValue = panServo->microSeconds;
+        tiltServo->centerValue = tiltServo->microSeconds;
 //    case 3:
 //        emit Send("37/");
 //        break;
 //    case 0:
 //        emit Send("38/");
 //        break;
-//    }
+    }
 }
 
 

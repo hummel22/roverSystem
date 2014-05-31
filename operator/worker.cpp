@@ -69,7 +69,7 @@ void Servo::keyboardInput(QString data)
 //User changes slider with Controller - Worker Selected
 void Servo::joystickData(int x0, int x1, int x2, int x3, int x4, int x5)
 {
-    int add =-x1*3/32175;
+    int add =-x1*6/32175;
     if((add != 0) && (((add >0) && (microSeconds < upperBound)) || ((add <0) && (microSeconds > lowerBound))))
         {
         microSeconds += add;

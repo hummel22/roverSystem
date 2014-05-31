@@ -66,25 +66,27 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     int Shoulder = -Y2*3/32175;     //Y Axis
 
     //Trigers
-    int Claw = servoList.at(5)->microSeconds;  //Triggers
+    //int Claw = servoList.at(5)->microSeconds;  //Triggers
+    int Claw = X1*45/32157;
     int Wrist = -(LT-RT)*10/32175; ;
 
     //Angle Caluculations
     //TODO
 
     //TODO Replace Names above with Interger array for for loop
-    int x[5];
+    int x[6];
     x[0] = Base;
     x[1] = Shoulder;
     x[2] = Elbow;
     x[3] = Wrist;
     x[4] = WristR;
     x[5] = Claw;
+    qDebug()<<"Claw: " << Claw;
 
     QString dataPart = "";      //Intialist string to build command
     //Make sure adding values dont make value go outside of bounds - set to zero if it does
     int temp;
-    for(int i = 0;i < 6; i++)
+    for(int i = 0;i < 7; i++)
     {
         temp = boundCheck(x[i],servoList.at(i));    //bound check
         dataPart += QString::number(temp) + "/";    //build datapack
@@ -156,8 +158,9 @@ int ArmController::boundCheck(int a, Servo *servo)
     //if value changed update
     if(a != 0)
     {
-        servo->setServoValue(servo->microSeconds + a);
-    }
+        a = servo->microSeconds + a;
+        servo->setServoValue(a);
+    }else{a = servo->microSeconds;}
     return a;
 }
 
