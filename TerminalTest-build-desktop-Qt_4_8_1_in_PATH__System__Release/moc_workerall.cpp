@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'workerall.h'
 **
-** Created: Fri May 30 20:50:23 2014
+** Created: Sat May 31 16:11:59 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_ArmController[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -44,6 +44,7 @@ static const uint qt_meta_data_ArmController[] = {
      196,   14,   14,   14, 0x0a,
      211,   14,   14,   14, 0x0a,
      219,   14,   14,   14, 0x0a,
+     236,   14,   14,   14, 0x0a,
 
        0        // eod
 };
@@ -55,7 +56,7 @@ static const char qt_meta_stringdata_ArmController[] = {
     "joystickData(int,int,int,int,int,int)\0"
     "reset()\0timeCheck()\0a\0buttonPressed(int)\0"
     "readyToDrive()\0driveToReady()\0toBin()\0"
-    "storageToReady()\0"
+    "storageToReady()\0mastRelease()\0"
 };
 
 void ArmController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -75,6 +76,7 @@ void ArmController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 8: _t->driveToReady(); break;
         case 9: _t->toBin(); break;
         case 10: _t->storageToReady(); break;
+        case 11: _t->mastRelease(); break;
         default: ;
         }
     }
@@ -112,9 +114,9 @@ int ArmController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }

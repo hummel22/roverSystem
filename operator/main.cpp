@@ -39,10 +39,10 @@ int main(int argc, char *argv[])
 
     //VARIABLES---------------------------------------------------------------------//
     //Wheel Center Values
-    const int FRONT_LEFT_CENTER = 1500;
-    const int BACK_LEFT_CENTER = 1021;
-    const int FRONT_RIGHT_CENTER = 1669;
-    const int BACK_RIGHT_CENTER = 1278;
+    const int FRONT_LEFT_CENTER = 1533;
+    const int BACK_LEFT_CENTER = 1238;
+    const int FRONT_RIGHT_CENTER = 1647;
+    const int BACK_RIGHT_CENTER = 1804;
 
     const int TURN_RADIUS = 250;  //Radius in Microseconds
 
@@ -57,17 +57,17 @@ int main(int argc, char *argv[])
     const int WRIST_UPPER_LIMIT = 2000;
     const int WRIST_ROTATE_LOWER_LIMIT = 1000;
     const int WRIST_ROTATE_UPPER_LIMIT = 2000;
-    const int CLAW_OPEN = 1000;
-    const int CLAW_CLOSED = 2000;
+    const int CLAW_OPEN = 500;
+    const int CLAW_CLOSED = 1500;
     const int CLAW_LOWER_LIMIT = CLAW_OPEN;
     const int CLAW_UPPER_LIMIT = CLAW_CLOSED;
 
-    const int BASE_STORAGE = 1500;
-    const int SHOULDER_STORAGE = 1500;
-    const int ELBOW_STORAGE = 1500;
-    const int WRIST_STORAGE = 1500;
-    const int WRIST_ROTATE_STORAGE = 1500;
-    const int CLAW_STORAGE = 1500;
+    const int BASE_STORAGE = 1925;
+    const int SHOULDER_STORAGE = 1430;
+    const int ELBOW_STORAGE = 1628;
+    const int WRIST_STORAGE = 1174;
+    const int WRIST_ROTATE_STORAGE = 1187;
+    const int CLAW_STORAGE = CLAW_CLOSED;
 
     //Window Screen Limits
     const int TERMINAL_WIDTH = 340;
@@ -223,9 +223,9 @@ int main(int argc, char *argv[])
 
     //Starting Postions and taring
     //Wheels
-    setWheel(FRONT_LEFT_CENTER,TURN_RADIUS,servoList.at(8));   //FL
-    setWheel(FRONT_RIGHT_CENTER,TURN_RADIUS,servoList.at(9));   //FR
-    setWheel(BACK_LEFT_CENTER,TURN_RADIUS,servoList.at(10)); //BL
+    setWheel(FRONT_LEFT_CENTER,TURN_RADIUS,servoList.at(8));
+    setWheel(BACK_LEFT_CENTER,TURN_RADIUS,servoList.at(9));    //FL
+    setWheel(FRONT_RIGHT_CENTER,TURN_RADIUS,servoList.at(10));   //FR
     setWheel(BACK_RIGHT_CENTER,TURN_RADIUS,servoList.at(11));
 
     //Arm
@@ -308,6 +308,7 @@ int main(int argc, char *argv[])
     QPushButton *readyToDrive = new QPushButton;
     QPushButton *storageToReady = new QPushButton;
     QPushButton *toBin = new QPushButton;
+    QPushButton *mast = new QPushButton;
     showDiagnostics->setText("Diagnostics");
     showRover->setText("Rover View");
     showKeyInput->setText("Key Input");
@@ -319,6 +320,7 @@ int main(int argc, char *argv[])
     readyToDrive->setText("Ready -> Drive");
     storageToReady->setText("Storage -> Ready");
     toBin->setText("X to Bin");
+    mast->setText("Mast");
 
 
     QObject::connect(showTerminals,SIGNAL(clicked()),windowAll,SLOT(show()));
@@ -332,6 +334,7 @@ int main(int argc, char *argv[])
     QObject::connect(readyToDrive,SIGNAL(clicked()),Arm,SLOT(readyToDrive()));
     QObject::connect(storageToReady,SIGNAL(clicked()),Arm,SLOT(storageToReady()));
     QObject::connect(toBin,SIGNAL(clicked()),Arm,SLOT(toBin()));
+    QObject::connect(mast,SIGNAL(clicked()),Arm,SLOT(mastRelease()));
     //BUTTONS--------------------------------------------------------------------------------------//
 
 
@@ -378,6 +381,7 @@ int main(int argc, char *argv[])
     leftPanelLayout->addWidget(showDiagnostics);
     leftPanelLayout->addWidget(Reset);
     //Righ Panel Layout
+    rightPanelLayout->addWidget(mast);
     rightPanelLayout->addWidget(readyToDrive);
     rightPanelLayout->addWidget(driveToReady);
     rightPanelLayout->addWidget(storageToReady);

@@ -28,6 +28,7 @@ private:
     int Y2_DEADZONE;
     int deadzoneCheck(int value,int deadzone);
     int boundCheck(int a, Servo* servo);
+    bool ClawOn;
 
     //Arm Postions
     //Drive
@@ -66,6 +67,7 @@ public slots:
     void driveToReady();
     void toBin();
     void storageToReady();
+    void mastRelease();
 };
 
 #endif // WORKERALL_H

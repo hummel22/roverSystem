@@ -15,21 +15,22 @@ ArmController::ArmController(QObject *parent) :
 
     //Arm Postions
     //Drive
-    BASE_DRIVE_POSTION = 1200;
-    SHOULDER_DRIVE_POSTION = 1100;
-    ELBOW_DRIVE_POSTION = 1900;
-    WRIST_DRIVE_POSTION = 1800;
-    WRIST_ROTATE_DRIVE_POSTION = 1500;
+    BASE_DRIVE_POSTION = 1847;
+    SHOULDER_DRIVE_POSTION = 1066;
+    ELBOW_DRIVE_POSTION = 1176;
+    WRIST_DRIVE_POSTION = 1610;
+    WRIST_ROTATE_DRIVE_POSTION = 1778;
 
     //Ready
-    BASE_READY_POSTION = 1500;
-    SHOULDER_READY_POSTION = 1500;
-    ELBOW_READY_POSTION = 1500;
-    WRIST_READY_POSTION = 1500;
-    WRIST_ROTATE_READY_POSTION = 1500;
+    BASE_READY_POSTION = 1310;
+    SHOULDER_READY_POSTION = 1332;
+    ELBOW_READY_POSTION = 1302;
+    WRIST_READY_POSTION = 1254;
+    WRIST_ROTATE_READY_POSTION = 1879;
 
     count = 0;
     dataSent = "40/1501/1501/1501/1501/1501/1501/";
+    ClawOn = false;
 }
 
 void ArmController::addWorker(Servo *temp)
@@ -58,7 +59,7 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 
     //Single Joint Control
     //Joystick 1
-    int WristR = X1*45/32157;        //X Axis
+
     int Elbow = Y1*3/32175;          //Y Axis
 
     //Joystick 2
@@ -67,11 +68,22 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
 
     //Trigers
     //int Claw = servoList.at(5)->microSeconds;  //Triggers
-    int Claw = X1*45/32157;
     int Wrist = -(LT-RT)*10/32175; ;
 
     //Angle Caluculations
     //TODO
+
+    int Claw;
+    int WristR;
+    if(ClawOn)
+    {
+        Claw = X1*35/32157;
+        WristR = servoList.at(4)->microSeconds;
+    }else
+    {
+        WristR = X1*50/32157;        //X Axis
+        Claw = servoList.at(5)->microSeconds;
+    }
 
     //TODO Replace Names above with Interger array for for loop
     int x[6];
@@ -81,12 +93,11 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     x[3] = Wrist;
     x[4] = WristR;
     x[5] = Claw;
-    qDebug()<<"Claw: " << Claw;
 
     QString dataPart = "";      //Intialist string to build command
     //Make sure adding values dont make value go outside of bounds - set to zero if it does
     int temp;
-    for(int i = 0;i < 7; i++)
+    for(int i = 0;i < 6; i++)
     {
         temp = boundCheck(x[i],servoList.at(i));    //bound check
         dataPart += QString::number(temp) + "/";    //build datapack
@@ -132,18 +143,17 @@ int ArmController::deadzoneCheck(int value, int deadzone)
 //Button Presses
 void ArmController::buttonPressed(int a)
 {
-    Servo* claw = servoList.at(5);          //Servo Corresponding to Claw
     if(a == 3)   //if Y is pressed
     {
-        if(claw->lowerBound == claw->microSeconds)      //check if open
+        if(ClawOn == true)      //check if open
         {
-            claw->setServoValue(claw->upperBound);      //Close
+            ClawOn = false ;     //Close
         } else
         {
-            claw->setServoValue(claw->lowerBound);      //Open
+            ClawOn = true;      //Open
         }
     }
-
+    qDebug()<<"Claw On: "<<ClawOn;
 
 }
 
@@ -219,7 +229,7 @@ void ArmController::toBin()
     //TODO
     toReady();
     //send signal
-    emit Send("52/");
+    emit Send("53/");
 }
 
 void ArmController::toReady()
@@ -238,5 +248,11 @@ void ArmController::toReady()
     {
         dataSent += QString::number(servoList.at(i)->microSeconds) + "/";    //build datapack
     }
+
 }
 
+
+void ArmController::mastRelease()
+{
+    emit Send("55/");
+}

@@ -178,3 +178,4 @@ QString RoverController::mapJoystickValue(Servo *servo, int joystickValue)
     QString tempString = QString::number(value);
     return tempString;
 }
+

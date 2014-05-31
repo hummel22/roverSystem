@@ -48,8 +48,8 @@ int MastPin;
 
 int isFoward;  //Used for Direction change
 
-int LARGE_SERVO_UPPER_LIMIT = 2000;
-int LARGE_SERVO_LOWER_LIMIT = 1000;
+int LARGE_SERVO_UPPER_LIMIT = 2500;
+int LARGE_SERVO_LOWER_LIMIT = 500;
 
 //Servo List
 //Arm
@@ -82,39 +82,48 @@ int radius;
 
 int prevPower;  //used i case power is wrongswit
 
+int mastPin = 33;
+Servo mast;
+
 void setup (){
   Serial.begin(115200);
   
   //Build Pin List
+  mast.attach(mastPin);
+  mast.write(180);
   
   //Build StartList
   
   //Build Motor Pin List  
   //Assigns Servo to pIns
-  Base.buildServo(BASE_PIN,1500);
+  Base.buildServo(BASE_PIN,1925);
   Base.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  Shoulder.buildServo(SHOULDER_PIN,1500);
+  Shoulder.buildServo(SHOULDER_PIN,1430);
   Shoulder.setBounds(LARGE_SERVO_LOWER_LIMIT,1884);
-  Elbow.buildServo(ELBOW_PIN,1500);
+  Elbow.buildServo(ELBOW_PIN,1628);
   Elbow.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  Wrist.buildServo(WRIST_PIN,1500);
+  Wrist.buildServo(WRIST_PIN,1774);
   Wrist.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  WristRotate.buildServo(WRIST_ROTATE_PIN,1522);
+  WristRotate.buildServo(WRIST_ROTATE_PIN,1187);
   WristRotate.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  Claw.buildServo(CLAW_PIN,1500);
-  Claw.setBounds(1025,1733);
+  Claw.buildServo(CLAW_PIN,544);
+  Claw.setBounds(300,1700);
   
-  FLServo.buildServo(FRONT_LEFT_SERVO_PIN,1500);
-  FLServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  BLServo.buildServo(BACK_LEFT_SERVO_PIN,1500);
-  BLServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  FRServo.buildServo(FRONT_RIGHT_SERVO_PIN,1500);
-  FRServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  BRServo.buildServo(BACK_RIGHT_SERVO_PIN,1500);
-  BRServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  PanServo.buildServo(PAN_TILIT,1500);
+  int FL = 1533;
+  int BL = 1238;
+  int FR = 1647;
+  int BR = 1804;
+  FLServo.buildServo(FRONT_LEFT_SERVO_PIN,FL);
+  FLServo.setBounds(FL-500,FL+500);
+  BLServo.buildServo(BACK_LEFT_SERVO_PIN,1238);
+  BLServo.setBounds(BL-500, FL+500);
+  FRServo.buildServo(FRONT_RIGHT_SERVO_PIN,1647);
+  FRServo.setBounds(FR-500, FR+500);
+  BRServo.buildServo(BACK_RIGHT_SERVO_PIN,1804);
+  BRServo.setBounds(BR-500, BR+500);
+  PanServo.buildServo(PAN_TILIT,1305);
   PanServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  TiltServo.buildServo(TILT_PIN,1500);
+  TiltServo.buildServo(TILT_PIN,1270);
   TiltServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
   
   pinMode(LEFT_DIRECTION_PIN,OUTPUT);
@@ -124,7 +133,7 @@ void setup (){
   digitalWrite(RIGHT_DIRECTION_PIN,LOW);
   isFoward = 1;
   driveCount = 0;
-  armCount = 0;
+  armCount = -25;
   
   
   analogWrite(FRONT_LEFT_MOTOR_PIN,0);
@@ -149,28 +158,35 @@ void loop(){
     switch(readData()){
       case 1:
         Base.setTarget(readData());
-        
+        armCount = 0;
         break;
       case 2:
         Shoulder.setTarget(readData());
+        armCount = 0;
         break;  
      case 3:
+        armCount = 0;
         Elbow.setTarget(readData());
         break;
      case 4:
+        armCount = 0;
         Wrist.setTarget(readData());
         break;
      case 5:
         WristRotate.setTarget(readData());
+        armCount = 0;
         break;
      case 6:
         Claw.setTarget(readData());
+        armCount = 0;
         break;
      case 7:
         PanServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 8:
         TiltServo.setTarget(readData());
+        driveCount = 0;
         break;
      case 9:
         FLServo.setTarget(readData());
@@ -225,10 +241,73 @@ void loop(){
        delay(5);
        break;
      case 50:
-       //Run Macro
+       //Run Macro Storage ti Ready
+       //Move 1
+       Elbow.targetAngle = 1773;
+       for(int i = 0;i<30;i++)
+       {
+          Elbow.updateServo(); 
+          delay(15);
+       }
+       //Move 2
+       Base.targetAngle = 1628;
+       for(int i = 0;i<50;i++)
+       {
+          Base.updateServo(); 
+          delay(15);
+       }
+       //Move 3
+       Base.targetAngle = 1628;
+       Shoulder.targetAngle = 1407;
+       Elbow.targetAngle = 1418;
+       Wrist.targetAngle = 1407;
+       WristRotate.targetAngle = 1854;
+       Claw.targetAngle = 1500;
+       for(int i = 0;i<500;i++)
+       {
+           Shoulder.updateServo();
+           Base.updateServo();
+           Elbow.updateServo();
+           Wrist.updateServo();
+           WristRotate.updateServo();
+           Claw.updateServo();
+          delay(15);
+       }
+       
+       
+       
        break;
      case 51:
-       //Run Macro
+       //Run Macro - Ready to Drive
+       Base.targetAngle = 1320;
+       Shoulder.targetAngle = 1066;
+       Elbow.targetAngle = 1218;
+       Wrist.targetAngle = 1610;
+       WristRotate.targetAngle = 1778;
+       Claw.targetAngle = 500;
+       for(int i = 0;i<500;i++)
+       {
+           Shoulder.updateServo();
+           Base.updateServo();
+           Elbow.updateServo();
+           Wrist.updateServo();
+           WristRotate.updateServo();
+           Claw.updateServo();
+          delay(15);
+       }
+       Base.targetAngle = 1847;
+       Elbow.targetAngle = 1176;
+       for(int i = 0;i<100;i++)
+       {
+           Shoulder.updateServo();
+           Base.updateServo();
+           Elbow.updateServo();
+           Wrist.updateServo();
+           WristRotate.updateServo();
+           Claw.updateServo();
+          delay(15);
+       }
+       
        break;
      case 52:
        //macro
@@ -236,6 +315,11 @@ void loop(){
      case 53:
        //macro
        break;
+     case 55:
+        //release mast
+        mast.write(0);
+        break;
+       
      case 60:
        //new tare
        switch(readData()){
