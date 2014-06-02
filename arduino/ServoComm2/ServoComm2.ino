@@ -5,6 +5,10 @@
 
 #include <Servo.h>
 
+int FL = 1533;
+int BL = 1238;
+int FR = 1647;
+int BR = 1804;
 
 //Pin Location
 //Arm
@@ -242,79 +246,72 @@ void loop(){
        break;
      case 50:
        //Run Macro Storage ti Ready
-       //Move 1
-       Elbow.targetAngle = 1773;
-       for(int i = 0;i<30;i++)
-       {
-          Elbow.updateServo(); 
-          delay(15);
-       }
-       //Move 2
-       Base.targetAngle = 1628;
-       for(int i = 0;i<50;i++)
-       {
-          Base.updateServo(); 
-          delay(15);
-       }
-       //Move 3
-       Base.targetAngle = 1628;
-       Shoulder.targetAngle = 1407;
-       Elbow.targetAngle = 1418;
-       Wrist.targetAngle = 1407;
-       WristRotate.targetAngle = 1854;
-       Claw.targetAngle = 1500;
-       for(int i = 0;i<500;i++)
-       {
-           Shoulder.updateServo();
-           Base.updateServo();
-           Elbow.updateServo();
-           Wrist.updateServo();
-           WristRotate.updateServo();
-           Claw.updateServo();
-          delay(15);
-       }
-       
-       
-       
+       //Move 1 - Raise elbow over wheel
+       Elbow.forceSet(1773);
+       delay(1200);
+       //Move 2  -  move arm to front - clear frame
+       Base.forceSet(1628);
+       delay(1000);
+       //Move 3 - move to ready postions
+       Base.forceSet(1628);
+       Shoulder.forceSet(1407);
+       Elbow.forceSet(1418);
+       Wrist.forceSet(1407);
+       WristRotate.forceSet(1854);
+       Claw.forceSet(1500);
+       delay(2000);      
        break;
+       
      case 51:
        //Run Macro - Ready to Drive
-       Base.targetAngle = 1320;
-       Shoulder.targetAngle = 1066;
-       Elbow.targetAngle = 1218;
-       Wrist.targetAngle = 1610;
-       WristRotate.targetAngle = 1778;
-       Claw.targetAngle = 500;
-       for(int i = 0;i<500;i++)
-       {
-           Shoulder.updateServo();
-           Base.updateServo();
-           Elbow.updateServo();
-           Wrist.updateServo();
-           WristRotate.updateServo();
-           Claw.updateServo();
-          delay(15);
-       }
-       Base.targetAngle = 1847;
-       Elbow.targetAngle = 1176;
-       for(int i = 0;i<100;i++)
-       {
-           Shoulder.updateServo();
-           Base.updateServo();
-           Elbow.updateServo();
-           Wrist.updateServo();
-           WristRotate.updateServo();
-           Claw.updateServo();
-          delay(15);
-       }
+       //Move 1 - fold arm up and above frame
+       Base.forceSet(1320);
+       Shoulder.forceSet(1066);
+       Elbow.forceSet(1218);
+       Wrist.forceSet(1610);
+       WristRotate.forceSet(1778);
+       Claw.forceSet(500);
+       delay(2000); 
+       //move 2 - place arm right above bucket
+       Base.forceSet(1847);
+       Elbow.forceSet(1176);
+       
        
        break;
      case 52:
-       //macro
+       //macro to Ready
+       //Move 1 - move arm out of frame
+       Base.forceSet(1628);
+       delay(500);
+       //Move 2 - move to final postion
+       Shoulder.forceSet(1407);
+       Elbow.forceSet(1418);
+       Wrist.forceSet(1407);
+       WristRotate.forceSet(1854);
+       Claw.forceSet(1500);
+       delay(1500);
        break;
      case 53:
-       //macro
+       //macro to bin 
+       //Move 1 - Pull up arm
+       //Run Macro - Ready to Drive
+       //Move 1 - fold arm up and above frame
+       Shoulder.forceSet(1066);
+       Elbow.forceSet(1218);
+       Wrist.forceSet(1610);
+       WristRotate.forceSet(1778);
+       Claw.forceSet(500);
+       delay(1800);
+       //Move 2 - Arm over Bin       
+       Base.forceSet(1320);
+       delay(1000);
+       //Move 3 - Open Claw
+       Claw.forceSet(1500);
+       delay(1000);
+       //Move 4 - Close Claw
+       Claw.forceSet(500);      
        break;
+       
      case 55:
         //release mast
         mast.write(0);
