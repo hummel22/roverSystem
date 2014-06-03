@@ -5,10 +5,10 @@
 
 #include <Servo.h>
 
-int FL = 1533;
+int FL = 1578;
 int BL = 1238;
 int FR = 1647;
-int BR = 1804;
+int BR = 1288;
 
 //Pin Location
 //Arm
@@ -100,23 +100,23 @@ void setup (){
   
   //Build Motor Pin List  
   //Assigns Servo to pIns
-  Base.buildServo(BASE_PIN,1925);
+  Base.buildServo(BASE_PIN,1948);
   Base.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  Shoulder.buildServo(SHOULDER_PIN,1430);
+  Shoulder.buildServo(SHOULDER_PIN,1492);
   Shoulder.setBounds(LARGE_SERVO_LOWER_LIMIT,1884);
-  Elbow.buildServo(ELBOW_PIN,1628);
-  Elbow.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  Wrist.buildServo(WRIST_PIN,1774);
+  Elbow.buildServo(ELBOW_PIN,1191);
+  Elbow.setBounds(900,LARGE_SERVO_UPPER_LIMIT);
+  Wrist.buildServo(WRIST_PIN,1522);
   Wrist.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
-  WristRotate.buildServo(WRIST_ROTATE_PIN,1187);
+  WristRotate.buildServo(WRIST_ROTATE_PIN,1230);
   WristRotate.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
   Claw.buildServo(CLAW_PIN,544);
   Claw.setBounds(300,1700);
   
-  int FL = 1533;
+  int FL = 1578;
   int BL = 1238;
   int FR = 1647;
-  int BR = 1804;
+  int BR = 1288;
   FLServo.buildServo(FRONT_LEFT_SERVO_PIN,FL);
   FLServo.setBounds(FL-500,FL+500);
   BLServo.buildServo(BACK_LEFT_SERVO_PIN,1238);
@@ -230,7 +230,8 @@ void loop(){
      case 41: //Drive Control
        //Serial.print("Power: ");
        //Serial.println(power);
-       //Set Servo Values
+       //Set Servo Values\
+      
        FLServo.setTarget(readData());
        BLServo.setTarget(readData());
        FRServo.setTarget(readData());

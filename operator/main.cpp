@@ -39,19 +39,19 @@ int main(int argc, char *argv[])
 
     //VARIABLES---------------------------------------------------------------------//
     //Wheel Center Values
-    const int FRONT_LEFT_CENTER = 1533;
+    const int FRONT_LEFT_CENTER = 1578;
     const int BACK_LEFT_CENTER = 1238;
     const int FRONT_RIGHT_CENTER = 1647;
-    const int BACK_RIGHT_CENTER = 1804;
+    const int BACK_RIGHT_CENTER = 1288;
 
     const int TURN_RADIUS = 250;  //Radius in Microseconds
 
     //Arm Limits
     const int BASE_LOWER_LIMIT = 1000;
     const int BASE_UPPER_LIMIT = 2000;
-    const int SHOULDER_LOWER_LIMIT = 1000;
+    const int SHOULDER_LOWER_LIMIT = 100;
     const int SHOULDER_UPPER_LIMIT = 2000;
-    const int ELBOW_LOWER_LIMIT = 1000;
+    const int ELBOW_LOWER_LIMIT = 100;
     const int ELBOW_UPPER_LIMIT = 2000;
     const int WRIST_LOWER_LIMIT = 1000;
     const int WRIST_UPPER_LIMIT = 2000;
@@ -62,11 +62,11 @@ int main(int argc, char *argv[])
     const int CLAW_LOWER_LIMIT = CLAW_OPEN;
     const int CLAW_UPPER_LIMIT = CLAW_CLOSED;
 
-    const int BASE_STORAGE = 1925;
-    const int SHOULDER_STORAGE = 1430;
-    const int ELBOW_STORAGE = 1628;
-    const int WRIST_STORAGE = 1174;
-    const int WRIST_ROTATE_STORAGE = 1187;
+    const int BASE_STORAGE = 1948;
+    const int SHOULDER_STORAGE = 1492;
+    const int ELBOW_STORAGE = 1191;
+    const int WRIST_STORAGE = 1522;
+    const int WRIST_ROTATE_STORAGE = 1230;
     const int CLAW_STORAGE = CLAW_CLOSED;
 
     //Window Screen Limits
