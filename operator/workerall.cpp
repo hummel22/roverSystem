@@ -15,18 +15,18 @@ ArmController::ArmController(QObject *parent) :
 
     //Arm Postions
     //Drive
-    BASE_DRIVE_POSTION = 1847;
-    SHOULDER_DRIVE_POSTION = 1066;
-    ELBOW_DRIVE_POSTION = 1176;
-    WRIST_DRIVE_POSTION = 1610;
-    WRIST_ROTATE_DRIVE_POSTION = 1778;
+    BASE_DRIVE_POSTION = 1862;
+    SHOULDER_DRIVE_POSTION = 1104;
+    ELBOW_DRIVE_POSTION = 1140;
+    WRIST_DRIVE_POSTION = 1439;
+    WRIST_ROTATE_DRIVE_POSTION = 1867;
 
     //Ready
-    BASE_READY_POSTION = 1310;
-    SHOULDER_READY_POSTION = 1332;
-    ELBOW_READY_POSTION = 1302;
-    WRIST_READY_POSTION = 1254;
-    WRIST_ROTATE_READY_POSTION = 1879;
+    BASE_READY_POSTION = 1302;
+    SHOULDER_READY_POSTION = 1407;
+    ELBOW_READY_POSTION = 1418;
+    WRIST_READY_POSTION = 1407;
+    WRIST_ROTATE_READY_POSTION = 1864;
 
     count = 0;
     dataSent = "40/1501/1501/1501/1501/1501/1501/";
@@ -77,7 +77,7 @@ void ArmController::joystickData(int X1,int Y1,int LT,int X2,int Y2,int RT)
     int WristR;
     if(ClawOn)
     {
-        Claw = X1*35/32157;
+        Claw = X1*50/32157;
         WristR = servoList.at(4)->microSeconds;
     }else
     {

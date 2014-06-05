@@ -16,7 +16,7 @@ int WRIST_ROTATE_PIN = 13;
 int CLAW_PIN        = 27;
 
 //Steering Servos
-int FRONT_LEFT_SERVO_PIN   = 29;
+int FRONT_LEFT_SERVO_PIN   = 34;
 int BACK_LEFT_SERVO_PIN   = 30;
 int FRONT_RIGHT_SERVO_PIN   = 31;
 int BACK_RIGHT_SERVO_PIN   = 32;
@@ -109,22 +109,28 @@ void setup (){
   Claw.buildServo(CLAW_PIN,544);
   Claw.setBounds(300,1700);
   
-  int FL = 1533;
+  int FL = 1372;
   int BL = 1238;
-  int FR = 1647;
-  int BR = 1804;
+  int FR = 1596;
+  int BR = 1282;
+  
   FLServo.buildServo(FRONT_LEFT_SERVO_PIN,FL);
   FLServo.setBounds(FL-500,FL+500);
-  BLServo.buildServo(BACK_LEFT_SERVO_PIN,1238);
+  BLServo.buildServo(BACK_LEFT_SERVO_PIN,BL);
   BLServo.setBounds(BL-500, FL+500);
-  FRServo.buildServo(FRONT_RIGHT_SERVO_PIN,1647);
+  FRServo.buildServo(FRONT_RIGHT_SERVO_PIN,FR);
   FRServo.setBounds(FR-500, FR+500);
-  BRServo.buildServo(BACK_RIGHT_SERVO_PIN,1804);
+  BRServo.buildServo(BACK_RIGHT_SERVO_PIN,BR);
   BRServo.setBounds(BR-500, BR+500);
   PanServo.buildServo(PAN_TILIT,1305);
   PanServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
   TiltServo.buildServo(TILT_PIN,1270);
   TiltServo.setBounds(LARGE_SERVO_LOWER_LIMIT,LARGE_SERVO_UPPER_LIMIT);
+  FLServo.targetAngle = FL;
+  BLServo.targetAngle = BL;
+  FRServo.targetAngle = FR;
+  FLServo.targetAngle = FL;
+  
   
   pinMode(LEFT_DIRECTION_PIN,OUTPUT);
   pinMode(RIGHT_DIRECTION_PIN,OUTPUT);
@@ -244,7 +250,7 @@ void loop(){
        //Run Macro Storage ti Ready
        //Move 1
        Elbow.targetAngle = 1773;
-       for(int i = 0;i<30;i++)
+       for(int i = 0;i<100;i++)
        {
           Elbow.updateServo(); 
           delay(15);
@@ -253,17 +259,18 @@ void loop(){
        Base.targetAngle = 1628;
        for(int i = 0;i<50;i++)
        {
+          Elbow.updateServo(); 
           Base.updateServo(); 
           delay(15);
        }
-       //Move 3
-       Base.targetAngle = 1628;
+       //Move 3 - Ready Postion
+       Base.targetAngle = 1302;
        Shoulder.targetAngle = 1407;
        Elbow.targetAngle = 1418;
        Wrist.targetAngle = 1407;
        WristRotate.targetAngle = 1854;
        Claw.targetAngle = 1500;
-       for(int i = 0;i<500;i++)
+       for(int i = 0;i<155;i++)
        {
            Shoulder.updateServo();
            Base.updateServo();
@@ -285,7 +292,7 @@ void loop(){
        Wrist.targetAngle = 1610;
        WristRotate.targetAngle = 1778;
        Claw.targetAngle = 500;
-       for(int i = 0;i<500;i++)
+       for(int i = 0;i<100;i++)
        {
            Shoulder.updateServo();
            Base.updateServo();
@@ -310,10 +317,96 @@ void loop(){
        
        break;
      case 52:
-       //macro
+       //DRIVE TO READY
+       Base.targetAngle = 1528;
+       for(int i = 0;i<100;i++)
+       {
+           Base.updateServo();
+          delay(15);
+       }
+       Base.targetAngle = 1302;
+       Shoulder.targetAngle = 1407;
+       Elbow.targetAngle = 1418;
+       Wrist.targetAngle = 1407;
+       WristRotate.targetAngle = 1854;
+       Claw.targetAngle = 1500;
+       for(int i = 0;i<150;i++)
+       {
+           Shoulder.updateServo();
+           Base.updateServo();
+           Elbow.updateServo();
+           Wrist.updateServo();
+           WristRotate.updateServo();
+           Claw.updateServo();
+          delay(15);
+       }
+       
        break;
      case 53:
-       //macro
+       //macro Claw to Bin
+       //Move 1 - torque Help
+       for(int i = 0;i<100;i++)
+       Shoulder.targetAngle = 1420;
+       {
+           Shoulder.updateServo();
+          delay(15);
+       }
+       Elbow.targetAngle = 1270;
+       for(int i = 0;i<100;i++)
+       {
+           Shoulder.updateServo();
+           Elbow.updateServo();
+          delay(15);
+       }
+       //Move 2
+       Base.targetAngle = 1521;
+       Shoulder.targetAngle = 1061;
+       Elbow.targetAngle = 1099;
+       for(int i = 0;i<150;i++)
+       {
+           Base.updateServo();
+           Shoulder.updateServo();
+           Elbow.updateServo();
+          delay(15);
+       }
+       //Move 3 to Drive
+       Base.targetAngle = 1862;
+       Shoulder.targetAngle = 1104;
+       Elbow.targetAngle = 1140;
+       Wrist.targetAngle = 1439;
+       WristRotate.targetAngle = 1867;
+       Claw.targetAngle = 500;
+       for(int i = 0;i<120;i++)
+       {
+           Shoulder.updateServo();
+           Base.updateServo();
+           Elbow.updateServo();
+           Wrist.updateServo();
+           WristRotate.updateServo();
+           Claw.updateServo();
+          delay(15);
+       }
+       //Open Claw
+       Claw.targetAngle = 1500;
+       for(int i = 0;i<200;i++)
+       {
+
+          Claw.updateServo();
+          delay(15);
+       }
+       //Shake Claw
+       
+       //Close Claww
+       Claw.targetAngle = 500;
+       for(int i = 0;i<120;i++)
+       {
+
+          Claw.updateServo();
+          delay(15);
+       }
+       
+         
+       
        break;
      case 55:
         //release mast

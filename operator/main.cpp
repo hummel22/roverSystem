@@ -39,12 +39,12 @@ int main(int argc, char *argv[])
 
     //VARIABLES---------------------------------------------------------------------//
     //Wheel Center Values
-    const int FRONT_LEFT_CENTER = 1533;
+    const int FRONT_LEFT_CENTER = 1372;
     const int BACK_LEFT_CENTER = 1238;
-    const int FRONT_RIGHT_CENTER = 1647;
-    const int BACK_RIGHT_CENTER = 1804;
+    const int FRONT_RIGHT_CENTER = 1596;
+    const int BACK_RIGHT_CENTER = 1282;
 
-    const int TURN_RADIUS = 250;  //Radius in Microseconds
+    const int TURN_RADIUS = 300;  //Radius in Microseconds
 
     //Arm Limits
     const int BASE_LOWER_LIMIT = 1000;
