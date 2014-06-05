@@ -39,7 +39,7 @@ int PAN_TILIT = 11;
 int TILT_PIN = 10;
 
 int Camera1Pin;
-int MastPin;
+int MastPin = 28;
 
 
 
@@ -82,7 +82,7 @@ int radius;
 
 int prevPower;  //used i case power is wrongswit
 
-int mastPin = 33;
+int mastPin = 28;
 Servo mast;
 
 void setup (){
@@ -287,10 +287,10 @@ void loop(){
      case 51:
        //Run Macro - Ready to Drive
        Base.targetAngle = 1320;
-       Shoulder.targetAngle = 1066;
+       Shoulder.targetAngle = 1104;
        Elbow.targetAngle = 1218;
-       Wrist.targetAngle = 1610;
-       WristRotate.targetAngle = 1778;
+       Wrist.targetAngle = 1439;
+       WristRotate.targetAngle = 1867;
        Claw.targetAngle = 500;
        for(int i = 0;i<100;i++)
        {
@@ -302,8 +302,8 @@ void loop(){
            Claw.updateServo();
           delay(15);
        }
-       Base.targetAngle = 1847;
-       Elbow.targetAngle = 1176;
+       Base.targetAngle = 1862;
+       Elbow.targetAngle = 1140;
        for(int i = 0;i<100;i++)
        {
            Shoulder.updateServo();
@@ -345,23 +345,17 @@ void loop(){
      case 53:
        //macro Claw to Bin
        //Move 1 - torque Help
-       for(int i = 0;i<100;i++)
        Shoulder.targetAngle = 1420;
-       {
-           Shoulder.updateServo();
-          delay(15);
-       }
-       Elbow.targetAngle = 1270;
        for(int i = 0;i<100;i++)
        {
            Shoulder.updateServo();
-           Elbow.updateServo();
           delay(15);
        }
+
        //Move 2
        Base.targetAngle = 1521;
        Shoulder.targetAngle = 1061;
-       Elbow.targetAngle = 1099;
+       Elbow.targetAngle = 1270;
        for(int i = 0;i<150;i++)
        {
            Base.updateServo();
@@ -373,7 +367,7 @@ void loop(){
        Base.targetAngle = 1862;
        Shoulder.targetAngle = 1104;
        Elbow.targetAngle = 1140;
-       Wrist.targetAngle = 1439;
+       Wrist.targetAngle = 1268;
        WristRotate.targetAngle = 1867;
        Claw.targetAngle = 500;
        for(int i = 0;i<120;i++)
